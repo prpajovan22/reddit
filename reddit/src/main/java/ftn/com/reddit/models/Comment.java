@@ -13,7 +13,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id", unique = true, nullable = false)
-    private Integer id;
+    private Integer comment_id;
 
     @Column(name = "text", unique = false, nullable = false)
     private String text;
@@ -41,8 +41,8 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ReportReason> report;
 
-    public Comment(Integer id, String text, LocalDate timestamp, boolean isDeleted, Set<ReactionType> reaction, Set<Comment> replies, Post post, Users user, Set<ReportReason> report) {
-        this.id = id;
+    public Comment(Integer comment_id, String text, LocalDate timestamp, boolean isDeleted, Set<ReactionType> reaction, Set<Comment> replies, Post post, Users user, Set<ReportReason> report) {
+        this.comment_id = comment_id;
         this.text = text;
         this.timestamp = timestamp;
         this.isDeleted = isDeleted;
@@ -57,11 +57,11 @@ public class Comment {
     }
 
     public Integer getId() {
-        return id;
+        return comment_id;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.comment_id = comment_id;
     }
 
     public String getText() {

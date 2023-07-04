@@ -8,7 +8,7 @@ public class Rule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rule_id", unique = true, nullable = false)
-    private Integer id;
+    private Integer rule_id;
 
     @Column(name = "description", unique = false, nullable = false)
     private String description;
@@ -17,18 +17,18 @@ public class Rule {
     @JoinColumn(name = "community_id", referencedColumnName = "community_id")
     private Community community;
 
-    public Rule(Integer id, String description, Community community) {
-        this.id = id;
+    public Rule(Integer rule_id, String description, Community community) {
+        this.rule_id = rule_id;
         this.description = description;
         this.community = community;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getRule_id() {
+        return rule_id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setRule_id(Integer rule_id) {
+        this.rule_id = rule_id;
     }
 
     public String getDescription() {
