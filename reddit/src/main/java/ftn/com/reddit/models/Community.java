@@ -36,8 +36,8 @@ public class Community {
     private Set<Post> post;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinTable(name = "flair_community", joinColumns = {@JoinColumn(name = "flair_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "id")})
+    @JoinTable(name = "flair_community", joinColumns = {@JoinColumn(name = "flair_id")},
+            inverseJoinColumns = {@JoinColumn(name = "id")})
     private Set<Flair> flair = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

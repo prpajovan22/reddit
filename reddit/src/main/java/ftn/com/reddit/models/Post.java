@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
-
 @Entity
 @Table(name = "post")
 public class Post {
@@ -64,6 +63,9 @@ public class Post {
         this.flair = flair;
         this.community = community;
         this.user = user;
+    }
+
+    public Post() {
     }
 
     public Integer getId() {

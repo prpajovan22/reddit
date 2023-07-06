@@ -25,7 +25,7 @@ public class Comment {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "reaction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<ReactionType> reaction;
+    private Set<Reaction> reaction;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Comment> replies;
@@ -41,7 +41,7 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ReportReason> report;
 
-    public Comment(Integer comment_id, String text, LocalDate timestamp, boolean isDeleted, Set<ReactionType> reaction, Set<Comment> replies, Post post, Users user, Set<ReportReason> report) {
+    public Comment(Integer comment_id, String text, LocalDate timestamp, boolean isDeleted, Set<Reaction> reaction, Set<Comment> replies, Post post, Users user, Set<ReportReason> report) {
         this.comment_id = comment_id;
         this.text = text;
         this.timestamp = timestamp;
@@ -88,11 +88,11 @@ public class Comment {
         isDeleted = deleted;
     }
 
-    public Set<ReactionType> getReaction() {
+    public Set<Reaction> getReaction() {
         return reaction;
     }
 
-    public void setReaction(Set<ReactionType> reaction) {
+    public void setReaction(Set<Reaction> reaction) {
         this.reaction = reaction;
     }
 

@@ -13,7 +13,11 @@ public class Banned {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "banned_id", unique = true, nullable = false)
-    private Integer id;
+    private Integer banned_id;
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "bannedBy", referencedColumnName = "user_id")
+    private Moderator bannedBy;
 
     @Column(name = "timestamp", unique = false, nullable = false)
     private LocalDate timestamp;
@@ -26,23 +30,28 @@ public class Banned {
     @JoinColumn(name = "community_id", referencedColumnName = "community_id")
     private Community community;
 
-    public Banned(Integer id, LocalDate timestamp, User user, Community community) {
-        this.id = id;
+    public Banned(Integer banned_id, Moderator bannedBy, LocalDate timestamp, User user, Community community) {
+        this.banned_id = banned_id;
+        this.bannedBy = bannedBy;
         this.timestamp = timestamp;
         this.user = user;
         this.community = community;
     }
 
-    public Banned() {
-
+    public Integer getBanned_id() {
+        return banned_id;
     }
 
-    public Integer getId() {
-        return id;
+    public void setBanned_id(Integer banned_id) {
+        this.banned_id = banned_id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Moderator getBannedBy() {
+        return bannedBy;
+    }
+
+    public void setBannedBy(Moderator bannedBy) {
+        this.bannedBy = bannedBy;
     }
 
     public LocalDate getTimestamp() {
