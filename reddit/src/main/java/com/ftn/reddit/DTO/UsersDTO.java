@@ -1,6 +1,7 @@
 package com.ftn.reddit.DTO;
 
 import com.ftn.reddit.model.UserRole;
+import com.ftn.reddit.model.Users;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,10 +16,16 @@ public class UsersDTO {
     private String avatar;
     private LocalDate registrationDate;
     private String description;
-    private boolean blocked;
-    private UserRole role;
+    private String displayName;
+    private UserRole userRole;
+    private PostDTO postDTO;
+    private BannedDTO bannedDTO;
+    private FlairDTO flairDTO;
+    private CommentDTO commentDTO;
+    private ReportDTO reportDTO;
+    private String token;
 
-    public UsersDTO(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, boolean blocked) {
+    public UsersDTO(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, PostDTO postDTO, BannedDTO bannedDTO, FlairDTO flairDTO, CommentDTO commentDTO, ReportDTO reportDTO, String token) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -26,7 +33,17 @@ public class UsersDTO {
         this.avatar = avatar;
         this.registrationDate = registrationDate;
         this.description = description;
-        this.blocked = blocked;
+        this.displayName = displayName;
+        this.userRole = userRole;
+        this.postDTO = postDTO;
+        this.bannedDTO = bannedDTO;
+        this.flairDTO = flairDTO;
+        this.commentDTO = commentDTO;
+        this.reportDTO = reportDTO;
+        this.token = token;
+    }
+
+    public UsersDTO(Users users) {
     }
 
     public Integer getUser_id() {
@@ -85,11 +102,67 @@ public class UsersDTO {
         this.description = description;
     }
 
-    public boolean isBlocked() {
-        return blocked;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public PostDTO getPostDTO() {
+        return postDTO;
+    }
+
+    public void setPostDTO(PostDTO postDTO) {
+        this.postDTO = postDTO;
+    }
+
+    public BannedDTO getBannedDTO() {
+        return bannedDTO;
+    }
+
+    public void setBannedDTO(BannedDTO bannedDTO) {
+        this.bannedDTO = bannedDTO;
+    }
+
+    public FlairDTO getFlairDTO() {
+        return flairDTO;
+    }
+
+    public void setFlairDTO(FlairDTO flairDTO) {
+        this.flairDTO = flairDTO;
+    }
+
+    public CommentDTO getCommentDTO() {
+        return commentDTO;
+    }
+
+    public void setCommentDTO(CommentDTO commentDTO) {
+        this.commentDTO = commentDTO;
+    }
+
+    public ReportDTO getReportDTO() {
+        return reportDTO;
+    }
+
+    public void setReportDTO(ReportDTO reportDTO) {
+        this.reportDTO = reportDTO;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

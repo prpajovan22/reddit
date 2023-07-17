@@ -1,5 +1,6 @@
 package com.ftn.reddit.services;
 
+import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.Interface.UserInterface;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.repositorys.UsersRepository;
@@ -38,4 +39,9 @@ public class UserService implements UserInterface {
     public void delete(Users users) {
         usersRepository.delete(users);
     }
+
+    /*@Override
+    public Users saveDTO(UsersDTO usersDTO) {
+        return usersRepository.save(usersDTO);
+    }*/
 }

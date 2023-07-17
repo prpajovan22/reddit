@@ -1,5 +1,6 @@
 package com.ftn.reddit.Interface;
 
+import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.model.Users;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface UserInterface {
     Users findById(Integer id);
 
     void delete(Users users);
+
+    //Users saveDTO(UsersDTO usersDTO);
 }
