@@ -29,25 +29,7 @@ public class PostController {
     @Autowired
     private CommunityService communityService;
 
-    @PostMapping(value = "/createPost/")
-    public ResponseEntity<PostDTO> createPost(@RequestBody @Validated @PathVariable("id") Integer id, PostDTO postDTO, Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        Users users = userService.findByUsername(userPrincipal.getUsername());
-        Community community = communityService.findById(id);
-        Post post = new Post();
-        post.setTitle(postDTO.getTitle());
-        post.setText(postDTO.getText());
-        post.setCreationDate(postDTO.getCreationDate());
-        post.setPostPDFPath(postDTO.getPostPDFPath());
-        post.setCommunity(community);
-        post.setUsers(users);
-        post = postService.save(post);
-        return new ResponseEntity<PostDTO>(new PostDTO(post), HttpStatus.CREATED);
-
-
-    }
-
-    @DeleteMapping(value = "/post/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Integer id, Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         Post post = postService.findById(id);

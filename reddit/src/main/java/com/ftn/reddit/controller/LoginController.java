@@ -9,7 +9,10 @@ import com.ftn.reddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 @RestController
@@ -54,51 +59,38 @@ public class LoginController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Users> save(@RequestBody UsersDTO usersDTO) {
-        if (usersDTO.getUsername() == null || Objects.equals(usersDTO.getUsername(), "") ) {
+    @PostMapping("/registration")
+    public ResponseEntity<UsersDTO> register(@RequestBody UsersDTO usersDTO) {
+        if (usersDTO.getUsername() == null || Objects.equals(usersDTO.getUsername(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (usersDTO.getPassword() == null || Objects.equals(usersDTO.getPassword(), "") ) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        if (usersDTO.getEmail() == null || Objects.equals(usersDTO.getEmail(), "") ) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (usersDTO.getAvatar() == null || Objects.equals(usersDTO.getAvatar(), "") ) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (usersDTO.getRegistrationDate() == null || Objects.equals(usersDTO.getRegistrationDate(), "") ) {
+        if (usersDTO.getPassword() == null || Objects.equals(usersDTO.getPassword(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if (usersDTO.getDescription() == null || Objects.equals(usersDTO.getDescription(), "") ) {
+        if (usersDTO.getEmail() == null || Objects.equals(usersDTO.getEmail(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (usersDTO.getDisplayName() == null || Objects.equals(usersDTO.getDisplayName(), "") ) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        if (usersDTO.getUserRole() == null || Objects.equals(usersDTO.getUserRole(), "") ) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (usersDTO.getPostDTO() == null || Objects.equals(usersDTO.getPostDTO(), "") ) {
+        if (usersDTO.getAvatar() == null || Objects.equals(usersDTO.getAvatar(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if (usersDTO.getBannedDTO() == null || Objects.equals(usersDTO.getBannedDTO(), "") ) {
+        if (usersDTO.getDescription() == null || Objects.equals(usersDTO.getDescription(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (usersDTO.getFlairDTO() == null || Objects.equals(usersDTO.getFlairDTO(), "") ) {
+        if (usersDTO.getDisplayName() == null || Objects.equals(usersDTO.getDisplayName(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if (usersDTO.getCommentDTO() == null || Objects.equals(usersDTO.getCommentDTO(), "") ) {
+        if (usersDTO.getUserRole() == null || Objects.equals(usersDTO.getUserRole(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Users users = userService.save(usersDTO);
-        return ResponseEntity.ok().body(users);
+
+        LocalDate registrationDate = LocalDate.now();
+        usersDTO.setRegistrationDate(registrationDate);
+        Users users = userService.save(usersDTO.ToUsersEntity());
+        usersDTO.setUser_id(users.getUser_id());
+        return ResponseEntity.ok().body(usersDTO);
 
     }
 }

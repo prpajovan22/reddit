@@ -1,6 +1,7 @@
 package com.ftn.reddit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ftn.reddit.DTO.UsersDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -71,6 +72,7 @@ public class Users implements Serializable {
 
     public Users() {
     }
+
 
     public Users(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, Set<Post> post, Set<Banned> moderator, Set<Banned> banned, Set<Flair> flairs, Set<Comment> comments, Set<Report> reports, Community community) {
         this.user_id = user_id;

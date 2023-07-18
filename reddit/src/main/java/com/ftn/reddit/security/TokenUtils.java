@@ -17,7 +17,7 @@ public class TokenUtils {
     @Value("String")
     private String secret;
 
-    @Value("String")
+    @Value("3600")
     private Long expirationTime;
 
     public String getUsernameFromToken(String token) {
