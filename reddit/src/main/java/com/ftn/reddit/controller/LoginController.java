@@ -3,16 +3,11 @@ package com.ftn.reddit.controller;
 import com.ftn.reddit.DTO.LoginDTO;
 import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.model.Users;
-import com.ftn.reddit.security.TokenUtils;
-import com.ftn.reddit.security.UserDetailServiceImpl;
 import com.ftn.reddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 @RestController
@@ -31,33 +25,6 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserDetailServiceImpl userDetailService;
-
-    @Autowired
-    TokenUtils tokenUtils;
-
-    @PostMapping("/login")
-    public ResponseEntity<UsersDTO> login(@RequestBody @Validated LoginDTO userDto) {
-
-        Users korisnik = userService.findByUsername(userDto.getUsername());
-        if (korisnik != null && korisnik.getBanned().isEmpty()) {
-            return ResponseEntity.notFound().build();
-
-        }
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDto.getUsername(), userDto.getPassword());
-        try {
-            UserDetails userDetails = userDetailService.loadUserByUsername(userDto.getUsername());
-            Users users = userService.findByUsername(userDto.getUsername());
-            UsersDTO korisnikDTO = new UsersDTO(users);
-            korisnikDTO.setToken(tokenUtils.generateToken(userDetails));
-            return ResponseEntity.ok(korisnikDTO);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @PostMapping("/registration")
     public ResponseEntity<UsersDTO> register(@RequestBody UsersDTO usersDTO) {

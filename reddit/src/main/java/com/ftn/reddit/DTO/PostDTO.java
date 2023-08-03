@@ -25,13 +25,17 @@ public class PostDTO implements Serializable {
 
     private CommunityDTO community;
 
+    private Integer community_id;
+
     private UsersDTO user;
 
     public PostDTO() {
 
     }
 
-    public PostDTO(Integer post_id, String title, String text, LocalDate creationDate, String postPDFPath, String descriptionPDF, FlairDTO flairDTO, CommunityDTO community, UsersDTO user) {
+    public PostDTO(Integer post_id, String title, String text, LocalDate creationDate,
+                   String postPDFPath, String descriptionPDF, FlairDTO flairDTO, CommunityDTO community,
+                   UsersDTO user, Integer community_id) {
         this.post_id = post_id;
         this.title = title;
         this.text = text;
@@ -41,10 +45,11 @@ public class PostDTO implements Serializable {
         this.flairDTO = flairDTO;
         this.community = community;
         this.user = user;
+        this.community_id = community_id;
     }
 
     public PostDTO(Post post) {
-        this.post_id =post.getPost_id();
+        this.post_id = post.getPost_id();
         this.title = post.getTitle();
         this.text = post.getText();
         this.creationDate = post.getCreationDate();
@@ -71,6 +76,14 @@ public class PostDTO implements Serializable {
 
     public String getText() {
         return text;
+    }
+
+    public Integer getCommunity_id() {
+        return community_id;
+    }
+
+    public void setCommunity_id(Integer community_id) {
+        this.community_id = community_id;
     }
 
     public void setText(String text) {

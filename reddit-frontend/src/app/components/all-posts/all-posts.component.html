@@ -1,0 +1,13 @@
+<table id="post-table">
+    <tr>
+      <th>Title</th>
+      <th>Text</th>
+    </tr>
+    <tr *ngFor="let a of posts">
+      <td>{{ a.title }}</td>
+      <td>{{ a.text}} </td>
+      <td>  
+        <button style="margin-left: 500px;" class="btn btn-info" (click)="updatePost(a.post_id)">Update</button>
+      </td>  
+    </tr>
+</table>

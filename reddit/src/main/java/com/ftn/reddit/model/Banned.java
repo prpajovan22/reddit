@@ -17,10 +17,6 @@ public class Banned {
 
     @Column(name = "timestamp", unique = false, nullable = false)
     private LocalDate timestamp;
-/*
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="user_id", referencedColumnName = "user_id")
-    private Users bannedBy;*/
 
 
     @ManyToOne(fetch = FetchType.EAGER)

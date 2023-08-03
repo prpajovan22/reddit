@@ -1,0 +1,56 @@
+.login{
+    width: 30%;
+    height: 40%;
+    background-color: white;
+    display: flex;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto auto;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: 5px 10px 18px #888888;
+  }
+  
+  h1{
+    width: 100%;
+    text-align: center;
+    margin: 10px;
+    background-color: white;
+  }
+  
+  .form-div{
+    width: 80%;
+    margin: 20px auto;
+  }
+  
+  form{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+  }
+  
+  
+  form input{
+    margin: 5px;
+    border-radius: 10px;
+    border: 1px solid white;
+    text-align: center;
+    height: 6vh;
+    font-size: medium;
+  }
+  
+  .input{
+    height: 5vh;
+    color: black;
+  }
+  
+  .input-submit{
+    background-color: #3dc8eb;
+    color: white;
+    font-weight: 600;
+  }
+  

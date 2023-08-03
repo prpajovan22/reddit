@@ -3,6 +3,7 @@ package com.ftn.reddit.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -21,7 +22,7 @@ public class Community {
     private String description;
 
     @Column(name = "creationDate", unique = false, nullable = true)
-    private String creationDate;
+    private LocalDate creationDate;
 
     @Column(name = "isSuspended", unique = false, nullable = true)
     private boolean isSuspended;
@@ -54,7 +55,7 @@ public class Community {
 
     }
 
-    public Community(Integer community_id, String name, String description, String creationDate, boolean isSuspended, String suspendedReason, String communityPDFPath, Rule rule, Banned banned, Set<Users> moderators, Set<Post> posts, Flair flair) {
+    public Community(Integer community_id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String communityPDFPath, Rule rule, Banned banned, Set<Users> moderators, Set<Post> posts, Flair flair) {
         this.community_id = community_id;
         this.name = name;
         this.description = description;
@@ -93,11 +94,11 @@ public class Community {
         this.description = description;
     }
 
-    public String getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 

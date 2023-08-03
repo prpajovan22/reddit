@@ -28,7 +28,7 @@ public class UserService implements UserInterface {
 
     @Override
     public Users findByUsername(String username) {
-        return usersRepository.findUsersByUsername(username);
+        return usersRepository.findUsersByUsername(username).orElse(null);
     }
 
     @Override
