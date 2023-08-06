@@ -4,6 +4,9 @@ import { LoginComponent } from './components/login/login.component';
 import { AllUsersComponent } from './components/all-users/all-users.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AllPostsComponent } from './components/all-posts/all-posts.component';
+import { AllCommunitysComponent } from './components/all-communitys/all-communitys.component';
+import { CreateCommunityComponent } from './components/create-community/create-community.component';
+import { CreatePostComponent } from './components/create-post/create-post.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -11,6 +14,9 @@ const routes: Routes = [
   {path:'login',component:LoginComponent},
   {path:'register',component:RegisterComponent},
   {path:'users',component:AllUsersComponent},
+  {path:'communitys',component:AllCommunitysComponent},
+  {path:'createCommunity',component:CreateCommunityComponent},
+  {path:'createPost/{id}',component:CreatePostComponent}
 ];
 
 @NgModule({

@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/home']);
   }
   Register(){
-    this.userServce.createUser(this.user).subscribe(data=>{
+    this.userServce.registerUser(this.user).subscribe(data=>{
       console.log(data);
       this.user = new User();
       console.log(this.user);

@@ -28,6 +28,6 @@ export class ProfileUserComponent implements OnInit {
     );
   }
   goHome(){
-    this.router.navigate(['']);
+    this.router.navigate(['home']);
   }
 }

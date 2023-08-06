@@ -1,0 +1,18 @@
+<table id="post-table">
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>isSuspended/th>
+    </tr>
+    <tr *ngFor="let a of communitys">
+      <td>{{ a.name }}</td>
+      <td>{{ a.description}} </td>
+      <td>{{ a.isSuspended}} </td>
+      <td>  
+        <button style="margin-left: 500px;" class="btn btn-info" (click)="updateCommunity(a.community_id)">Update</button>
+        <button style="margin-left: 500px;" class="btn btn-info" (click)="deleteCommunity(a.community_id)">Delete</button>
+        <button style="margin-left: 500px;" class="btn btn-info" (click)="createPost(a.community_id)">Create Post</button>
+        <button style="margin-left: 500px;" class="btn btn-info" (click)="showPost(a.community_id)">Posts</button>
+      </td>  
+    </tr>
+</table>

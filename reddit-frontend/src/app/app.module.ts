@@ -15,6 +15,11 @@ import { AllPostsComponent } from './components/all-posts/all-posts.component';
 import { ProfileUserComponent } from './components/profile-user/profile-user.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { CommunityPostsComponent } from './components/community-posts/community-posts.component';
+import { AllCommunitysComponent } from './components/all-communitys/all-communitys.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { CreateCommunityComponent } from './components/create-community/create-community.component';
+import { CreatePostComponent } from './components/create-post/create-post.component';
 
 @NgModule({
   declarations: [
@@ -25,14 +30,19 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
     UpdateUserComponent,
     AllPostsComponent,
     ProfileUserComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    CommunityPostsComponent,
+    AllCommunitysComponent,
+    NavBarComponent,
+    CreateCommunityComponent,
+    CreatePostComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [Ng2SearchPipeModule, Ng2OrderModule,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },

@@ -34,4 +34,16 @@ public class PostService implements PostInterface {
         postRepository.delete(post);
     }
 
+    @Override
+    public Post getPostByUsers_User_id(Integer id) {
+        //return postRepository.getPostByUsers_User_id(id);
+        return null;
+    }
+
+    @Override
+    public Post getPostByCommunity_Community_id(Integer id) {
+        //return postRepository.getPostByCommunity_Community_id(id);
+        return null;
+    }
+
 }

@@ -40,14 +40,14 @@ public class CommunityController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<Community> getCommunityById(@PathVariable("id") Integer id) {
         Community community = communityService.findById(id);
-        if (community == null) {
+        if (community == null && community.isSuspended() == true) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(community, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/createCommunity")
+    @PostMapping
     public ResponseEntity<Void> createCommunity(@RequestBody @Validated CommunityDTO communityDTO, Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         Users users = userService.findByUsername(userPrincipal.getUsername());
@@ -56,8 +56,8 @@ public class CommunityController {
         community.setName(communityDTO.getName());
         community.setDescription(communityDTO.getDescription());
         community.setCreationDate(creationDate);
-        community.setSuspendedReason(communityDTO.getSuspendedReason());
         community.setSuspended(false);
+        //user za moderatora
         community.setModerators((Set<Users>) users);
         communityService.save(community);
         return new ResponseEntity<Void>(HttpStatus.OK);
@@ -66,10 +66,8 @@ public class CommunityController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteCommunity(@PathVariable("id") Integer id, Authentication authentication) {
         Community community = communityService.findById(id);
-        if(community.isSuspended()){
-            community.setSuspended(true);
-            communityService.save(community);
-        }
+        community.setSuspended(true);
+        communityService.save(community);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

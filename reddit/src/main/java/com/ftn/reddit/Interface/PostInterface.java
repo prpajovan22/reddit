@@ -15,6 +15,9 @@ public interface PostInterface {
 
     void delete(Post post);
 
+    Post getPostByUsers_User_id(Integer id);
+
+    Post getPostByCommunity_Community_id(Integer id);
 
 
 }

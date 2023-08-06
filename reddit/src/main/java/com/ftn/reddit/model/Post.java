@@ -25,10 +25,10 @@ public class Post {
     @Column(name = "creationDate", unique = false, nullable = false)
     private LocalDate creationDate;
 
-    @Column(name = "postPDFPath", unique = false, nullable = false)
+    @Column(name = "postPDFPath", unique = false)
     private String postPDFPath;
 
-    @Column(name = "descriptionPDF", unique = false, nullable = false)
+    @Column(name = "descriptionPDF", unique = false)
     private String descriptionPDF;
 
     @ManyToOne(fetch = FetchType.EAGER)

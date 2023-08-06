@@ -36,8 +36,13 @@ export class UserServiceService {
     
   }
 
+  
   updateUser(id:number, user:User) : Observable<User>{
     return this.http.put<User>(`${this.apiUsersUrl}/${id}`,JSON.stringify(user), headers2);
+  }
+
+  registerUser(korisnik: User) : Observable<User>{
+    return this.http.post<User>('http://localhost:8080/registration', korisnik, createHeader);
   }
 
   createUser(korisnik: User) : Observable<User>{

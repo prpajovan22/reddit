@@ -6,6 +6,7 @@ import com.ftn.reddit.services.CommunityService;
 import com.ftn.reddit.services.PostService;
 import com.ftn.reddit.services.ReactionService;
 import com.ftn.reddit.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "post")
@@ -50,13 +51,13 @@ public class PostController {
 
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
-
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable("id") Integer id, Authentication authentication) {
-        Post post = postService.findById(id);
-        postService.delete(post);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping(value = "user/{id}")
+    public ResponseEntity<Post> getPostByUserId(@PathVariable("id") Integer id){
+        Post post = postService.getPostByUsers_User_id(id);
+        if (post == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     @PostMapping(value = "/createPost")
@@ -81,4 +82,14 @@ public class PostController {
         reactionService.save(reaction);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable("id") Integer id, Authentication authentication) {
+        Post post = postService.findById(id);
+        postService.delete(post);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }

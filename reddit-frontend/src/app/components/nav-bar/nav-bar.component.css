@@ -1,0 +1,27 @@
+.spacer{
+    flex: 1 1 auto;
+}
+ul  {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+     display: flex;
+    flex-direction: row;
+}
+li{
+    background-color: rgb(59, 59, 233);
+    font-style: normal;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+ul li a{
+    display: block;
+    font-size: 18px;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+ul li a:hover{
+    background-color: white;
+    color: rgb(59, 59, 233);
+}

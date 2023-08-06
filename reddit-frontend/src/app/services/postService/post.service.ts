@@ -23,7 +23,7 @@ const uploadHeader = {
 })
 export class PostServiceService {
 
-  private apiPostUrl = `${environment.apiURL}/artikli`;
+  private apiPostUrl = `${environment.apiURL}/post`;
 
   constructor(private http: HttpClient) { }
 
@@ -34,6 +34,10 @@ export class PostServiceService {
   getPostById(id:number): Observable<any>{
     return this.http.get(`${this.apiPostUrl}/${id}`);
     
+  }
+
+  getPostByUserId(id:number):Observable<any>{
+    return this.http.get(`${this.apiPostUrl}/user/${id}`);
   }
 
   updatePost(id:number,departments: Post) : Observable<Post>{

@@ -48,7 +48,7 @@ public class Community {
     private Set<Post> posts;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "flair_id", nullable = false)
+    @JoinColumn(name = "flair_id", nullable = true)
     private Flair flair;
 
     public Community() {
