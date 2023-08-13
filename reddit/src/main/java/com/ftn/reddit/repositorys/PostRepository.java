@@ -12,8 +12,10 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByCommunity(Community community);
 
-    List<Post> findByTitleContainingIgnoreCaseAndTextContainingIgnoreCase(
-        String title, String text
-    );
+    List<Post> findByTitleContainingIgnoreCase(String title);
+
+    List<Post> findByTextContainingIgnoreCase(String text);
+
+    List<Post> findByTitleContainingIgnoreCaseAndTextContainingIgnoreCase(String title, String text);
 
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "api/post")
@@ -40,9 +41,16 @@ public class PostController {
     private ReactionService reactionService;
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts() {
+    public ResponseEntity<List<PostDTO>> getPosts() {
         List<Post> posts = postService.findAll();
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+
+        // Filter out posts belonging to suspended communities
+        List<PostDTO> postDTOs = posts.stream()
+                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
+                .map(PostDTO::new) // Assuming a constructor in PostDTO that takes a Post object
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
@@ -98,9 +106,9 @@ public class PostController {
 
 
     @PostMapping("/search")
-    public ResponseEntity<List<Post>> seacrchPosts(@RequestBody PostSearchCriteria searchCriteria){
-        List<Post> searchResault = postService.searchPosts(searchCriteria);
-        return ResponseEntity.ok(searchResault);
+    public ResponseEntity<List<Post>> seacrchPosts(@RequestBody PostSearchCriteria searchCriteria) {
+        List<Post> searchResults = postService.searchPosts(searchCriteria);
+        return ResponseEntity.ok(searchResults);
     }
 
 }

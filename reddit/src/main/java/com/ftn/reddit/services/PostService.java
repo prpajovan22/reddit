@@ -8,8 +8,9 @@ import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.repositorys.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PostService implements PostInterface {
@@ -43,9 +44,27 @@ public class PostService implements PostInterface {
     }
 
     public List<Post> searchPosts(PostSearchCriteria searchCriteria) {
-        return postRepository.findByTitleContainingIgnoreCaseAndTextContainingIgnoreCase(
-                searchCriteria.getTitle(), searchCriteria.getText()
-        );
+        if (StringUtils.isEmpty(searchCriteria.getTitle()) && StringUtils.isEmpty(searchCriteria.getText())) {
+            // Return all posts when both title and text are empty
+            return postRepository.findAll();
+        }
+
+        List<Post> titleSearchResult = new ArrayList<>();
+        List<Post> textSearchResult = new ArrayList<>();
+
+        if (!StringUtils.isEmpty(searchCriteria.getTitle())) {
+            titleSearchResult = postRepository.findByTitleContainingIgnoreCase(searchCriteria.getTitle());
+        }
+
+        if (!StringUtils.isEmpty(searchCriteria.getText())) {
+            textSearchResult = postRepository.findByTextContainingIgnoreCase(searchCriteria.getText());
+        }
+
+        // Remove duplicates caused by overlapping criteria
+        Set<Post> combinedResult = new HashSet<>(titleSearchResult);
+        combinedResult.addAll(textSearchResult);
+
+        return new ArrayList<>(combinedResult);
     }
 
 }

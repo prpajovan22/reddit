@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "community")
@@ -33,9 +35,16 @@ public class CommunityController {
 
 
     @GetMapping
-    public ResponseEntity<List<Community>> getCommunitys() {
+    public ResponseEntity<List<CommunityDTO>> getCommunities() {
         List<Community> communities = communityService.findAll();
-        return new ResponseEntity<>(communities, HttpStatus.OK);
+
+        // Filter out banned communities
+        List<CommunityDTO> communityDTOs = communities.stream()
+                .filter(community -> !community.isSuspended())
+                .map(CommunityDTO::new) // Assuming a constructor in CommunityDTO that takes a Community object
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(communityDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
@@ -76,5 +85,11 @@ public class CommunityController {
     public ResponseEntity<List<Community>> seacrchCommunities(@RequestBody CommunitySearchCriteria searchCriteria){
         List<Community> searchResault = communityService.searchCommunities(searchCriteria);
         return ResponseEntity.ok(searchResault);
+    }
+
+    @GetMapping("/community/{id}/postCount")
+    public ResponseEntity<Long> getPostCount(@PathVariable Integer id) {
+        Long postCount = communityService.getPostCountForCommunity(id);
+        return ResponseEntity.ok(postCount);
     }
 }

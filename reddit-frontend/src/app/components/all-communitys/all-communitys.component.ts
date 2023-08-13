@@ -32,6 +32,7 @@ export class AllCommunitysComponent implements OnInit {
     });
   }
 
+
   public showPost(community_id:number){
     this.router.navigate(['communityPosts', community_id]);
   }

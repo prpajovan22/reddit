@@ -1,5 +1,6 @@
 package com.ftn.reddit.DTO;
 
+import com.ftn.reddit.model.Community;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -30,6 +31,16 @@ public class CommunityDTO implements Serializable {
     }
 
     public CommunityDTO() {
+    }
+
+    public CommunityDTO(Community community) {
+        this.community_id = community.getCommunity_id();
+        this.name = community.getName();
+        this.description = community.getDescription();
+        this.creationDate = community.getCreationDate();
+        this.isSuspended = community.isSuspended();
+        this.suspendedReason = community.getSuspendedReason();
+
     }
 
     public Integer getCommunity_id() {

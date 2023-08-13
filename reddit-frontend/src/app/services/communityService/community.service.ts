@@ -53,4 +53,8 @@ export class CommunityService {
   searchCommunities(searchCriteria: CommunitySearchCriteria): Observable<Community[]> {
     return this.http.post<Community[]>(`${this.apiCommunityUrl}/search`, searchCriteria);
 }
+
+  getPostCountForCommunity(communityId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiCommunityUrl}/community/${communityId}/postCount`);
+}
 }
