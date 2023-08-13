@@ -2,6 +2,7 @@ package com.ftn.reddit.services;
 
 import com.ftn.reddit.Interface.CommunityInterface;
 import com.ftn.reddit.model.Community;
+import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.repositorys.CommunityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,11 @@ public class CommunityService implements CommunityInterface {
     @Override
     public void delete(Community post) {
         communityRepository.delete(post);
+    }
+
+    public List<Community> searchCommunities(CommunitySearchCriteria searchCriteria){
+        return communityRepository.findByNameContainingIgnoreCaseAndDescriptionContainingIgnoreCase(
+                searchCriteria.getName(), searchCriteria.getDescription()
+        );
     }
 }

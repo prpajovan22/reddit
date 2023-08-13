@@ -2,11 +2,14 @@ package com.ftn.reddit.controller;
 
 import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.model.*;
+import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
+import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.services.CommunityService;
 import com.ftn.reddit.services.PostService;
 import com.ftn.reddit.services.ReactionService;
 import com.ftn.reddit.services.UserService;
 import jakarta.transaction.Transactional;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +23,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RestController
-@RequestMapping(value = "post")
+@RequestMapping(value = "api/post")
 @CrossOrigin("*")
 public class PostController {
 
@@ -51,13 +54,15 @@ public class PostController {
 
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
-    @GetMapping(value = "user/{id}")
-    public ResponseEntity<Post> getPostByUserId(@PathVariable("id") Integer id){
-        Post post = postService.getPostByUsers_User_id(id);
-        if (post == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    @GetMapping("/byCommunity/{community_id}")
+    public ResponseEntity<List<Post>> getPostsByCommunity(@PathVariable Integer community_id){
+        Community community = communityService.findById(community_id);
+        if(community == null){
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(post, HttpStatus.OK);
+        List<Post> posts = postService.getPostsByCommunity(community);
+        return ResponseEntity.ok(posts);
     }
 
     @PostMapping(value = "/createPost")
@@ -91,5 +96,11 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Post>> seacrchPosts(@RequestBody PostSearchCriteria searchCriteria){
+        List<Post> searchResault = postService.searchPosts(searchCriteria);
+        return ResponseEntity.ok(searchResault);
+    }
 
 }

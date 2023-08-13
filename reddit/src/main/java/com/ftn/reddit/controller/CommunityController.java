@@ -5,6 +5,7 @@ import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.model.Community;
 import com.ftn.reddit.model.Post;
 import com.ftn.reddit.model.Users;
+import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.services.CommunityService;
 import com.ftn.reddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,11 @@ public class CommunityController {
         community.setSuspended(true);
         communityService.save(community);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Community>> seacrchCommunities(@RequestBody CommunitySearchCriteria searchCriteria){
+        List<Community> searchResault = communityService.searchCommunities(searchCriteria);
+        return ResponseEntity.ok(searchResault);
     }
 }

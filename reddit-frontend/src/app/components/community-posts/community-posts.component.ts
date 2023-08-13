@@ -13,24 +13,14 @@ import { PostServiceService } from 'src/app/services/postService/post.service';
 })
 export class CommunityPostsComponent implements OnInit {
 
-  posts: Post[] = [];
-  postCopy:Post[] = [];
-  post: any;
-  community: Community[] = [];
-  community_id: number;
+  posts: any[];
 
-  constructor(private route: ActivatedRoute, private postService: PostServiceService,private communityService: CommunityService, private router: Router) { }
-
+  constructor(private route:ActivatedRoute, private postService: PostServiceService){}
 
   ngOnInit(): void {
-    this.community_id = this.route.snapshot.params['id'];
-
-    this.post = {community: this.community_id, post:0};
-
-    this.postService.getPosts().subscribe((post) => { 
-    this.postCopy = post;
-    this.posts = post;
-    });
-    
+      const community_id = this.route.snapshot.params['id'];
+      this.postService.getPostsByCommunity(community_id).subscribe(data => {
+        this.posts = data;
+      })
   }
 }

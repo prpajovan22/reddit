@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Community } from 'src/app/models/Community';
+import { CommunitySearchCriteria } from 'src/app/models/Searchers/CommunitySearchCriteria';
 import { environment } from 'src/environments/environment';
 
 const createHeader = {
@@ -48,4 +49,8 @@ export class CommunityService {
   deleteCommunity(id:any) : Observable<any>{
     return this.http.delete<Community>(`${this.apiCommunityUrl}/${id}`);
   }
+
+  searchCommunities(searchCriteria: CommunitySearchCriteria): Observable<Community[]> {
+    return this.http.post<Community[]>(`${this.apiCommunityUrl}/search`, searchCriteria);
+}
 }

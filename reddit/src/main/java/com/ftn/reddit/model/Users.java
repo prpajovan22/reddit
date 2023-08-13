@@ -27,16 +27,16 @@ public class Users implements Serializable {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "avatar", unique = false)
+    @Column(name = "avatar", unique = true)
     private String avatar;
 
     @Column(name = "registrationDate", unique = false, nullable = false)
     private LocalDate registrationDate;
 
-    @Column(name = "description", unique = false, nullable = false)
+    @Column(name = "description", unique = false, nullable = true)
     private String description;
 
-    @Column(name = "displayName", unique = false, nullable = false)
+    @Column(name = "displayName", unique = false, nullable = true)
     private String displayName;
 
     @Column(name = "userRole", unique = false, nullable = false)
@@ -75,22 +75,22 @@ public class Users implements Serializable {
 
 
     public Users(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, Set<Post> post, Set<Banned> moderator, Set<Banned> banned, Set<Flair> flairs, Set<Comment> comments, Set<Report> reports, Community community) {
-        this.user_id = user_id;
+        this.user_id = user_id;//
         this.username = username;
         this.password = password;
         this.email = email;
-        this.avatar = avatar;
-        this.registrationDate = registrationDate;
+        this.avatar = avatar;//
+        this.registrationDate = registrationDate;//
         this.description = description;
         this.displayName = displayName;
-        this.userRole = userRole;
+        this.userRole = userRole;//
         this.post = post;
         //this.moderator = moderator;
         this.banned = banned;
         this.flairs = flairs;
         this.comments = comments;
         this.reports = reports;
-        this.community = community;
+        this.community = community;//
     }
 
     public Integer getUser_id() {

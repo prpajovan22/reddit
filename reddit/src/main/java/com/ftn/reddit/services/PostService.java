@@ -1,7 +1,10 @@
 package com.ftn.reddit.services;
 
 import com.ftn.reddit.Interface.PostInterface;
+import com.ftn.reddit.model.Community;
 import com.ftn.reddit.model.Post;
+import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
+import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.repositorys.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,16 +37,15 @@ public class PostService implements PostInterface {
         postRepository.delete(post);
     }
 
-    @Override
-    public Post getPostByUsers_User_id(Integer id) {
-        //return postRepository.getPostByUsers_User_id(id);
-        return null;
+
+    public List<Post> getPostsByCommunity(Community community){
+        return postRepository.findByCommunity(community);
     }
 
-    @Override
-    public Post getPostByCommunity_Community_id(Integer id) {
-        //return postRepository.getPostByCommunity_Community_id(id);
-        return null;
+    public List<Post> searchPosts(PostSearchCriteria searchCriteria) {
+        return postRepository.findByTitleContainingIgnoreCaseAndTextContainingIgnoreCase(
+                searchCriteria.getTitle(), searchCriteria.getText()
+        );
     }
 
 }

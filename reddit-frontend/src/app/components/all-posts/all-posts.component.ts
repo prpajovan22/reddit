@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Post } from 'src/app/models/Post';
+import { PostSearchCriteria } from 'src/app/models/Searchers/PostSearchCriteria';
 import { PostServiceService } from 'src/app/services/postService/post.service';
 
 @Component({
@@ -10,14 +12,26 @@ import { PostServiceService } from 'src/app/services/postService/post.service';
 })
 export class AllPostsComponent implements OnInit {
 
-  posts:Post[] = [];
-  post:any;
+  searchForm: FormGroup;
+  searchResults: Post[] = [];
 
-  constructor(private postService:PostServiceService, private router:Router) { }
+  constructor(private formBuilder: FormBuilder, private postService: PostServiceService,private router:Router) {}
 
   ngOnInit(): void {
-    this.postService.getPosts().subscribe((posts) => this.posts = posts)
+    this.searchForm = this.formBuilder.group({
+      title: [''],
+      text: ['']
+    });
+    this.search();
   }
+
+  search(): void {
+    const searchCriteria: PostSearchCriteria = this.searchForm.value;
+    this.postService.searchPosts(searchCriteria).subscribe(results => {
+      this.searchResults = results;
+    });
+  }
+
 
   public updatePost(post_id:number){
     this.router.navigate(['updatePost', post_id]);
@@ -30,7 +44,7 @@ export class AllPostsComponent implements OnInit {
   public deletePost(post_id:number) {
     console.log(post_id);
     let response = this.postService.deletePost(post_id);
-    response.subscribe((posts)=> this.posts = posts)
+    response.subscribe((searchResults)=> this.searchResults = searchResults)
   }
 
 }

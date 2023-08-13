@@ -25,11 +25,12 @@ public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
 
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
-                        request.getPassword()
+                        passwordEncoder.encode(request.getPassword())
                 )
         );
         var user = repository.findByEmail(request.getEmail());

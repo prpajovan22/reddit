@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Post } from 'src/app/models/Post';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { PostSearchCriteria } from 'src/app/models/Searchers/PostSearchCriteria';
 
 const createHeader = {
   headers: new HttpHeaders({
@@ -23,7 +24,7 @@ const uploadHeader = {
 })
 export class PostServiceService {
 
-  private apiPostUrl = `${environment.apiURL}/post`;
+  private apiPostUrl = `${environment.apiURL}/api/post`;
 
   constructor(private http: HttpClient) { }
 
@@ -34,6 +35,10 @@ export class PostServiceService {
   getPostById(id:number): Observable<any>{
     return this.http.get(`${this.apiPostUrl}/${id}`);
     
+  }
+
+  getPostsByCommunity(id:number): Observable<any> {
+    return this.http.get(`${this.apiPostUrl}/byCommunity/${id}`);
   }
 
   getPostByUserId(id:number):Observable<any>{
@@ -52,5 +57,9 @@ export class PostServiceService {
   deletePost(id:any) : Observable<any>{
     return this.http.delete<Post>(`${this.apiPostUrl}/${id}`);
   }
+
+  searchPosts(searchCriteria: PostSearchCriteria): Observable<Post[]> {
+    return this.http.post<Post[]>(`${this.apiPostUrl}/search`, searchCriteria);
+}
 }
 

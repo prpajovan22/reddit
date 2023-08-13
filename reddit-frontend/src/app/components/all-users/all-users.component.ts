@@ -18,8 +18,8 @@ export class AllUsersComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUsers().subscribe((users) => this.users = users)
   }
-  public updateUser(user_id:number){
-    this.router.navigate(['updateUser', user_id]);
+  public updateUser(){
+    this.router.navigate(['changePassword']);
   }
 
 }

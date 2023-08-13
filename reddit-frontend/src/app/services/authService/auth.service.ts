@@ -17,25 +17,30 @@ const httpOptions = {
 })
 export class AuthService {
 
-  private apiUrl = `${environment.apiURL}/api/auth/login`;
+  private apiUrl = `${environment.apiURL}/api/login/login`;
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService) { }
 
-  login(request: LoginRequest) : Observable<LoginRequest>{
-    return this.http.post<LoginRequest>(this.apiUrl,  request, httpOptions)
+  login(request: LoginRequest) : Observable<AuthenticationResponse>{
+    return this.http.post<AuthenticationResponse>(this.apiUrl,  request, httpOptions)
   }
 
+
   getToken(){
-    let user = JSON.parse(localStorage.getItem('user') || '{}');
+    let user = JSON.parse(localStorage.getItem('token') || '{}');
     return user;
   }
 
   logout(){
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
   }
 
   public isAuthenticated(): boolean {
-    const {token} = JSON.parse(localStorage.getItem('user') || '{}');
+    const {token} = JSON.parse(localStorage.getItem('token') || '{}');
     return !this.jwtHelper.isTokenExpired(token);
   }
+  
+}
+export interface AuthenticationResponse{
+  token:string
 }

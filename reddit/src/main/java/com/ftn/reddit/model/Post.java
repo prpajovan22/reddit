@@ -35,6 +35,7 @@ public class Post {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="community_id", referencedColumnName = "community_id")
     private Community community;

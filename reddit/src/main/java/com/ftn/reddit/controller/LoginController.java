@@ -2,29 +2,43 @@ package com.ftn.reddit.controller;
 
 import com.ftn.reddit.DTO.LoginDTO;
 import com.ftn.reddit.DTO.UsersDTO;
+import com.ftn.reddit.auth.AuthenticationRequest;
+import com.ftn.reddit.auth.AuthenticationResponse;
+import com.ftn.reddit.auth.AuthenticationService;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 @RestController
-@RequestMapping
+@RequestMapping("api/login")
+@CrossOrigin("*")
 public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
+
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 
     @PostMapping("/registration")
     public ResponseEntity<UsersDTO> register(@RequestBody UsersDTO usersDTO) {

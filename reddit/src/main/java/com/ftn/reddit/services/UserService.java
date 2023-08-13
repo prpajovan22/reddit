@@ -5,6 +5,8 @@ import com.ftn.reddit.Interface.UserInterface;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.repositorys.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,9 @@ public class UserService implements UserInterface {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Users> findAll() {
@@ -41,8 +46,20 @@ public class UserService implements UserInterface {
         usersRepository.delete(users);
     }
 
-    /*@Override
-    public Users saveDTO(UsersDTO usersDTO) {
-        return usersRepository.save(usersDTO);
-    }*/
+    public boolean verifyOldPassword(String username, String oldPassword) {
+        Users user = usersRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        Users user = usersRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        usersRepository.save(user);
+    }
 }

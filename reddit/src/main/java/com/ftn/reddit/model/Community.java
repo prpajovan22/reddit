@@ -1,6 +1,7 @@
 package com.ftn.reddit.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -44,6 +45,7 @@ public class Community {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Users> moderators;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Post> posts;
 

@@ -3,7 +3,7 @@
       <th>Title</th>
       <th>Text</th>
     </tr>
-    <tr *ngFor="let a of posts">
+    <tr *ngFor="let a of searchResults">
       <td>{{ a.title }}</td>
       <td>{{ a.text}} </td>
       <td>  
@@ -11,3 +11,13 @@
       </td>  
     </tr>
 </table>
+<form [formGroup]="searchForm" (ngSubmit)="search()">
+  <label for="name">Title:</label>
+  <input type="text" id="title" formControlName="title">
+  <br>
+  <label for="description">Text:</label>
+  <input type="text" id="text" formControlName="text">
+  <br>
+  <button type="submit">Search</button>
+</form>
+

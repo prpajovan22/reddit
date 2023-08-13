@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/services/authService/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  username:string;
+  email:string;
   password:string;
 
   constructor(private authService:AuthService, private router: Router) {
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.username) {
+    if (!this.email) {
       alert('Please enter a username!');
       return;
     }else if(!this.password){
@@ -30,17 +30,17 @@ export class LoginComponent implements OnInit {
     }
 
     const object:LoginRequest = {
-      username: this.username,
+      email: this.email,
       password: this.password,
     };
 
-    this.authService.login(object).subscribe((value) => (localStorage.setItem("user",JSON.stringify(value))));
-    
-
-    this.username = '';
+    this.authService.login(object).subscribe((authResponse) => {localStorage.setItem("token",JSON.stringify(authResponse.token))
+    this.email = '';
     this.password = '';
 
     this.router.navigate(['home']);
+  });
+
     
   }
 

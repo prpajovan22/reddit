@@ -27,6 +27,23 @@ export class UserServiceService {
 
   constructor(private http: HttpClient) { }
 
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const payload = {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    };
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.http.post<any>(`${this.apiUsersUrl}/change-password`, payload, httpOptions);
+  }
+
+
+
+
   getUsers(): Observable<User[]>{
     return this.http.get<User[]>(this.apiUsersUrl);
   }
@@ -35,14 +52,13 @@ export class UserServiceService {
     return this.http.get(`${this.apiUsersUrl}/${id}`);
     
   }
-
   
   updateUser(id:number, user:User) : Observable<User>{
     return this.http.put<User>(`${this.apiUsersUrl}/${id}`,JSON.stringify(user), headers2);
   }
 
   registerUser(korisnik: User) : Observable<User>{
-    return this.http.post<User>('http://localhost:8080/registration', korisnik, createHeader);
+    return this.http.post<User>('http://localhost:8080/login/registration', korisnik, createHeader);
   }
 
   createUser(korisnik: User) : Observable<User>{
