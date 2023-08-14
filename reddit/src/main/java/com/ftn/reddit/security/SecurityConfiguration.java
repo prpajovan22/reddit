@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/login/**", "api/post/search", "/community/**"
-                        , "api/post/byCommunity/**")
+                        , "api/post/byCommunity/**","api/post/{post_id}/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

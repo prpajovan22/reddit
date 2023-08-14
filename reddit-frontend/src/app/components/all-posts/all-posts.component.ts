@@ -32,7 +32,6 @@ export class AllPostsComponent implements OnInit {
     });
   }
 
-
   public updatePost(post_id:number){
     this.router.navigate(['updatePost', post_id]);
   }
@@ -45,6 +44,10 @@ export class AllPostsComponent implements OnInit {
     console.log(post_id);
     let response = this.postService.deletePost(post_id);
     response.subscribe((searchResults)=> this.searchResults = searchResults)
+  }
+
+  public showComments(post_id:number){
+    this.router.navigate(['showComments', post_id]);
   }
 
 }

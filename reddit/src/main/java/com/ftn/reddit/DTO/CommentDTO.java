@@ -1,5 +1,6 @@
 package com.ftn.reddit.DTO;
 
+import com.ftn.reddit.model.Comment;
 import com.ftn.reddit.model.ReactionType;
 import com.ftn.reddit.model.ReportReason;
 import lombok.Data;
@@ -42,6 +43,16 @@ public class CommentDTO implements Serializable {
 
     public CommentDTO() {
 
+    }
+
+    public CommentDTO(Comment comment){
+        this.comment_id = comment.getComment_id();
+        this.text = comment.getText();
+        this.timeStamp = comment.getTimestamp();
+        this.isDeleted = comment.isDeleted();
+        this.commentDTO = this;
+        this.usersDTO = new UsersDTO(comment.getUsers());
+        this.postDTO = new PostDTO(comment.getPost());
     }
 
     public Integer getComment_id() {

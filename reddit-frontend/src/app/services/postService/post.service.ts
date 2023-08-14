@@ -61,5 +61,9 @@ export class PostServiceService {
   searchPosts(searchCriteria: PostSearchCriteria): Observable<Post[]> {
     return this.http.post<Post[]>(`${this.apiPostUrl}/search`, searchCriteria);
 }
+
+  getCommentsByPost(post_id: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiPostUrl}/${post_id}/comments`);
+}
 }
 

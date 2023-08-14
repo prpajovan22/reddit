@@ -1,5 +1,6 @@
 package com.ftn.reddit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftn.reddit.model.Users;
 import jakarta.persistence.*;
 
@@ -28,6 +29,7 @@ public class Comment {
     @JoinColumn(name = "comment_id", referencedColumnName = "comment_id")
     private Comment comment;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Reaction> reactions;
 

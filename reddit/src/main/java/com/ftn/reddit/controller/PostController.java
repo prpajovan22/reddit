@@ -1,13 +1,12 @@
 package com.ftn.reddit.controller;
 
+import co.elastic.clients.elasticsearch.nodes.Ingest;
+import com.ftn.reddit.DTO.CommentDTO;
 import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.model.*;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.model.pretraga.PostSearchCriteria;
-import com.ftn.reddit.services.CommunityService;
-import com.ftn.reddit.services.PostService;
-import com.ftn.reddit.services.ReactionService;
-import com.ftn.reddit.services.UserService;
+import com.ftn.reddit.services.*;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,9 @@ public class PostController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private CommunityService communityService;
@@ -61,16 +63,6 @@ public class PostController {
         }
 
         return new ResponseEntity<>(post, HttpStatus.OK);
-    }
-
-    @GetMapping("/byCommunity/{community_id}")
-    public ResponseEntity<List<Post>> getPostsByCommunity(@PathVariable Integer community_id){
-        Community community = communityService.findById(community_id);
-        if(community == null){
-            return ResponseEntity.notFound().build();
-        }
-        List<Post> posts = postService.getPostsByCommunity(community);
-        return ResponseEntity.ok(posts);
     }
 
     @PostMapping(value = "/createPost")
@@ -109,6 +101,26 @@ public class PostController {
     public ResponseEntity<List<Post>> seacrchPosts(@RequestBody PostSearchCriteria searchCriteria) {
         List<Post> searchResults = postService.searchPosts(searchCriteria);
         return ResponseEntity.ok(searchResults);
+    }
+
+    @GetMapping("/byCommunity/{community_id}")
+    public ResponseEntity<List<Post>> getPostsByCommunity(@PathVariable Integer community_id){
+        Community community = communityService.findById(community_id);
+        if(community == null){
+            return ResponseEntity.notFound().build();
+        }
+        List<Post> posts = postService.getPostsByCommunity(community);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/{post_id}/comments")
+    public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
+        Post post = postService.findById(post_id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<CommentDTO> commentDTOs = commentService.findCommentDTOsByPost(post);
+        return ResponseEntity.ok(commentDTOs);
     }
 
 }

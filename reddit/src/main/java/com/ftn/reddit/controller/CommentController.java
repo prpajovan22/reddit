@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "comment")
+@RequestMapping(value = "api/comment")
 @CrossOrigin("*")
 public class CommentController {
 
@@ -36,9 +37,14 @@ public class CommentController {
     private PostService postService;
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getComments() {
+    public ResponseEntity<List<CommentDTO>> getComments() {
         List<Comment> comments = commentService.findAll();
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+
+        List<CommentDTO> commentDTOs = comments.stream()
+                .map(CommentDTO::new)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(commentDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
