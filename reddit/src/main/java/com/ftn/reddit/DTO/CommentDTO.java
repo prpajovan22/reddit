@@ -51,7 +51,7 @@ public class CommentDTO implements Serializable {
         this.timeStamp = comment.getTimestamp();
         this.isDeleted = comment.isDeleted();
         this.commentDTO = this;
-        this.usersDTO = new UsersDTO(comment.getUsers());
+        this.usersDTO = new UsersDTO(comment.getUser());
         this.postDTO = new PostDTO(comment.getPost());
     }
 

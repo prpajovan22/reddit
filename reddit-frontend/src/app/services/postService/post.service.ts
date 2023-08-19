@@ -4,6 +4,7 @@ import { Post } from 'src/app/models/Post';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { PostSearchCriteria } from 'src/app/models/Searchers/PostSearchCriteria';
+import { PostRequestDto } from 'src/app/models/Searchers/PostRequestDTO';
 
 const createHeader = {
   headers: new HttpHeaders({
@@ -45,13 +46,14 @@ export class PostServiceService {
     return this.http.get(`${this.apiPostUrl}/user/${id}`);
   }
 
-  updatePost(id:number,departments: Post) : Observable<Post>{
-    return this.http.put<Post>(`${this.apiPostUrl}/${id}`, JSON.stringify(departments),uploadHeader);
+  updatePost(post_id:number,posts: Post) : Observable<Post>{
+    return this.http.put<Post>(`${this.apiPostUrl}/${post_id}`, JSON.stringify(posts),uploadHeader);
 
   }
 
-  createPost(departments: Post) : Observable<Post>{
-    return this.http.post<Post>(this.apiPostUrl, departments, createHeader);
+  createPost(communityId: number, postRequest: PostRequestDto): Observable<any> {
+    const url = `${this.apiPostUrl}/create/${communityId}`;
+    return this.http.post(url, postRequest);
   }
 
   deletePost(id:any) : Observable<any>{

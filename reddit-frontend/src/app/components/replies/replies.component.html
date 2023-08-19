@@ -1,0 +1,9 @@
+<div>
+    <h3>Replies for Comment {{ comment_id }}</h3>
+    <ul *ngIf="replies">
+      <li *ngFor="let reply of replies">
+        <p>{{ reply.text }}</p>
+        <button (click)="navigateToReplies(reply.comment_id)">Show Replies</button>
+      </li>
+    </ul>
+  </div>

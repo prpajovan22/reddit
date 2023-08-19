@@ -31,6 +31,9 @@ public class LoginController {
     private UserService userService;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private AuthenticationService authenticationService;
 
 
@@ -52,9 +55,9 @@ public class LoginController {
         if (usersDTO.getEmail() == null || Objects.equals(usersDTO.getEmail(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (usersDTO.getAvatar() == null || Objects.equals(usersDTO.getAvatar(), "")) {
+        /*if (usersDTO.getAvatar() == null || Objects.equals(usersDTO.getAvatar(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         if (usersDTO.getDescription() == null || Objects.equals(usersDTO.getDescription(), "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -69,6 +72,7 @@ public class LoginController {
 
         LocalDate registrationDate = LocalDate.now();
         usersDTO.setRegistrationDate(registrationDate);
+        usersDTO.setPassword(passwordEncoder.encode(usersDTO.getPassword()));
         Users users = userService.save(usersDTO.ToUsersEntity());
         usersDTO.setUser_id(users.getUser_id());
         return ResponseEntity.ok().body(usersDTO);

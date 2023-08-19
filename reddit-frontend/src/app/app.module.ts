@@ -21,6 +21,8 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { CreateCommunityComponent } from './components/create-community/create-community.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { AllCommentsComponent } from './components/all-comments/all-comments.component';
+import { UpdatePostComponent } from './components/update-post/update-post.component';
+import { RepliesComponent } from './components/replies/replies.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { AllCommentsComponent } from './components/all-comments/all-comments.com
     NavBarComponent,
     CreateCommunityComponent,
     CreatePostComponent,
-    AllCommentsComponent
+    AllCommentsComponent,
+    UpdatePostComponent,
+    RepliesComponent
   ],
   imports: [
     BrowserModule,

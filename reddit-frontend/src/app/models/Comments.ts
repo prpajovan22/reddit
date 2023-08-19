@@ -10,4 +10,5 @@ export class Comments{
     isDeleted:boolean;
     reactions:Reaction;
     reports:Reports;
+    comments: Comments[];
 }

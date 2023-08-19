@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,12 +47,12 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getPosts() {
         List<Post> posts = postService.findAll();
 
-        // Filter out posts belonging to suspended communities
         List<PostDTO> postDTOs = posts.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
-                .map(PostDTO::new) // Assuming a constructor in PostDTO that takes a Post object
+                .map(PostDTO::new)
                 .collect(Collectors.toList());
 
+        Collections.shuffle(postDTOs);
         return new ResponseEntity<>(postDTOs, HttpStatus.OK);
     }
 
@@ -65,27 +66,30 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/createPost")
-    public ResponseEntity<Void> createPost(@RequestBody @Validated PostDTO postDTO, Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        Users users = userService.findByUsername(userPrincipal.getUsername());
-        Community community = communityService.findById(postDTO.getCommunity_id());
-        Reaction reaction = new Reaction();
-        LocalDate registrationDate = LocalDate.now();
+    @PostMapping("/create/{communityId}")
+    public ResponseEntity<Void> createPost(
+            @PathVariable Integer community_id,
+            @RequestBody PostDTO postRequest,
+            Authentication authentication
+    ) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users author = userService.findByUsername(userDetails.getUsername());
+
+        Community community = communityService.findById(community_id);
+        if (community == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         Post post = new Post();
-        post.setTitle(postDTO.getTitle());
-        post.setText(postDTO.getText());
-        post.setCreationDate(registrationDate);
-        post.setPostPDFPath(post.getPostPDFPath());
-        post.setUsers(users);
+        post.setTitle(postRequest.getTitle());
+        post.setText(postRequest.getText());
         post.setCommunity(community);
+        post.setUsers(author);
+        post.setCreationDate(LocalDate.from(LocalDateTime.now()));
+
         postService.save(post);
-        reaction.setPost(post);
-        reaction.setUser(users);
-        reaction.setType(ReactionType.UPWOTE);
-        reaction.setTimestamp(registrationDate);
-        reactionService.save(reaction);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return ResponseEntity.ok().build();
     }
 
 
@@ -122,5 +126,4 @@ public class PostController {
         List<CommentDTO> commentDTOs = commentService.findCommentDTOsByPost(post);
         return ResponseEntity.ok(commentDTOs);
     }
-
 }

@@ -27,7 +27,6 @@ public class UserController {
         if (!isOldPasswordValid) {
             return ResponseEntity.badRequest().body("Invalid old password");
         }
-
         userService.updatePassword(username, request.getNewPassword());
         return ResponseEntity.ok("Password changed successfully");
     }

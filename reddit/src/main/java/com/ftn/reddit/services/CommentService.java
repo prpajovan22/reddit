@@ -6,6 +6,7 @@ import com.ftn.reddit.Interface.CommentInterface;
 import com.ftn.reddit.model.Comment;
 import com.ftn.reddit.model.Community;
 import com.ftn.reddit.model.Post;
+import com.ftn.reddit.model.pretraga.CommentSerachCriteria;
 import com.ftn.reddit.repositorys.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,18 @@ public class CommentService implements CommentInterface {
         }
 
         return commentDTOs;
+    }
+
+    public List<Comment> searchCommentsInPost(Post post, CommentSerachCriteria searchCriteria) {
+        return commentRepository.findByPostAndTextContainingIgnoreCase(post, searchCriteria.getText());
+    }
+
+    public List<Comment> getRepliesForComment(Comment comment) {
+        return commentRepository.findByParentComment(comment);
+    }
+
+    public List<Comment> searchCommentsByTextContainingIgnoreCase(String text) {
+        return commentRepository.findByTextContainingIgnoreCase(text);
     }
 
 }

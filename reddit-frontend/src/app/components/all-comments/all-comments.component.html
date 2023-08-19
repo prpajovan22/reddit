@@ -4,5 +4,12 @@
   </tr>
   <tr *ngFor="let post of comments">
     <td>{{ post.text }}</td> 
+    <button (click)="navigateToReplies(post.comment_id)">Show Replies</button>
   </tr>   
 </table>
+<form [formGroup]="searchForm" (ngSubmit)="search()">
+  <label for="description">Text:</label>
+  <input type="text" id="text" formControlName="text">
+  <br>
+  <button type="submit">Search</button>
+</form>

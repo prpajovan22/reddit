@@ -23,7 +23,7 @@ const createHeader = {
 })
 export class UserServiceService {
 
-  private apiUsersUrl = `${environment.apiURL}/korisnici`;
+  private apiUsersUrl = `${environment.apiURL}/api/user`;
 
   constructor(private http: HttpClient) { }
 
@@ -58,7 +58,7 @@ export class UserServiceService {
   }
 
   registerUser(korisnik: User) : Observable<User>{
-    return this.http.post<User>('http://localhost:8080/login/registration', korisnik, createHeader);
+    return this.http.post<User>('http://localhost:8080/api/login/registration', korisnik, createHeader);
   }
 
   createUser(korisnik: User) : Observable<User>{

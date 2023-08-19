@@ -48,14 +48,14 @@ public class UsersDTO {
     }
 
 
-
-
     public Users ToUsersEntity(){
         Users users = new Users();
         users.setUser_id(this.user_id);
         users.setUsername(this.username);
         users.setPassword(this.password);
         users.setEmail(this.email);
+        users.setRegistrationDate(this.registrationDate);
+        users.setUserRole(this.userRole);
         return users;
     }
 

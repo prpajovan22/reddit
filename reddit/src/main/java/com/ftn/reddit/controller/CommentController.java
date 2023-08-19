@@ -6,6 +6,7 @@ import com.ftn.reddit.model.Comment;
 import com.ftn.reddit.model.Community;
 import com.ftn.reddit.model.Post;
 import com.ftn.reddit.model.Users;
+import com.ftn.reddit.model.pretraga.CommentSerachCriteria;
 import com.ftn.reddit.services.CommentService;
 import com.ftn.reddit.services.PostService;
 import com.ftn.reddit.services.UserService;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +70,7 @@ public class CommentController {
         comment.setText(commentDTO.getText());
         comment.setTimestamp(creationDate);
         comment.setDeleted(false);
-        comment.setUsers(users);
+        comment.setUser(users);
         comment.setPost(post);
         commentService.save(comment);
         return new ResponseEntity<Void>(HttpStatus.OK);
@@ -82,5 +84,51 @@ public class CommentController {
             commentService.save(comment);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/byPost/{post_id}")
+    public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Integer post_id) {
+        Post post = postService.findById(post_id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Comment> comments = commentService.getCommentsByPost(post);
+        return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/searchInPost/{post_id}")
+    public ResponseEntity<List<Comment>> searchCommentsInPost(
+            @PathVariable Integer post_id, @RequestBody CommentSerachCriteria searchCriteria
+    ) {
+        Post post = postService.findById(post_id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Comment> searchResults = commentService.searchCommentsInPost(post, searchCriteria);
+        return ResponseEntity.ok(searchResults);
+    }
+
+    @GetMapping("/{comment_id}/replies")
+    public ResponseEntity<List<Comment>> getRepliesForComment(@PathVariable Integer comment_id) {
+        Comment comment = commentService.findById(comment_id);
+        if (comment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Comment> replies = commentService.getRepliesForComment(comment);
+        return ResponseEntity.ok(replies);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Comment>> searchComments(@RequestBody CommentSerachCriteria searchCriteria) {
+        List<Comment> searchResult;
+
+        if (StringUtils.isEmpty(searchCriteria.getText())) {
+            searchResult = commentService.findAll(); // Fetch all comments when text is empty
+        } else {
+            searchResult = commentService.searchCommentsByTextContainingIgnoreCase(searchCriteria.getText());
+        }
+
+        return ResponseEntity.ok(searchResult);
     }
 }

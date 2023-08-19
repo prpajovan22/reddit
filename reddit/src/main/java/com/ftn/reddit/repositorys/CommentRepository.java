@@ -13,4 +13,11 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     List<Comment> findByPost(Post post);
+
+    List<Comment> findByPostAndTextContainingIgnoreCase(Post post, String text);
+
+    List<Comment> findByParentComment(Comment parentComment);
+
+    List<Comment> findByTextContainingIgnoreCase(String text);
+
 }

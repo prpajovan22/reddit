@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from 'src/app/models/Post';
 import { PostServiceService } from 'src/app/services/postService/post.service';
@@ -8,30 +9,30 @@ import { PostServiceService } from 'src/app/services/postService/post.service';
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.css']
 })
-export class CreatePostComponent implements OnInit {
+export class CreatePostComponent{
 
-  community_id:number;
-  post_id:number;
-  posts: Post;
+  createPostForm: FormGroup;
+  community_id: number;
 
-  constructor(private route: ActivatedRoute, private router: Router, private postService: PostServiceService) { }
-
-  ngOnInit(): void {
-    this.posts = new Post();
+  constructor(
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private postService: PostServiceService
+  ) {
+    this.community_id = this.route.snapshot.params['community_id'];
+    this.createPostForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      text: ['', Validators.required]
+    });
   }
-  redirectToPosts(){
-    this.router.navigate(['/home']);
-  }
 
-  createPost(){
-    this.postService.createPost(this.posts).subscribe(data=>{
-      console.log(data);
-      this.posts = new Post();
-      console.log(this.posts);
-      this.redirectToPosts();
-    }, error=>console.log(error));
-  }
-  onSubmit(){
-    this.createPost();
+  onSubmit(): void {
+    if (this.createPostForm.invalid) {
+      return;
+    }
+
+    this.postService.createPost(this.community_id, this.createPostForm.value)
+      .subscribe(response => {
+      });
   }
 }

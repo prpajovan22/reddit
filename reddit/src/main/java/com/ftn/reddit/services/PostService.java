@@ -53,18 +53,23 @@ public class PostService implements PostInterface {
         List<Post> textSearchResult = new ArrayList<>();
 
         if (!StringUtils.isEmpty(searchCriteria.getTitle())) {
-            titleSearchResult = postRepository.findByTitleContainingIgnoreCase(searchCriteria.getTitle());
+            titleSearchResult = postRepository.findByTitleContainingIgnoreCase(searchCriteria.getTitle().toLowerCase());
         }
 
         if (!StringUtils.isEmpty(searchCriteria.getText())) {
-            textSearchResult = postRepository.findByTextContainingIgnoreCase(searchCriteria.getText());
+            textSearchResult = postRepository.findByTextContainingIgnoreCase(searchCriteria.getText().toLowerCase());
         }
 
-        // Remove duplicates caused by overlapping criteria
         Set<Post> combinedResult = new HashSet<>(titleSearchResult);
         combinedResult.addAll(textSearchResult);
 
         return new ArrayList<>(combinedResult);
+    }
+
+    public List<Post> searchPostsInCommunity(Community community, PostSearchCriteria searchCriteria) {
+        return postRepository.findByCommunityAndTitleContainingIgnoreCaseAndTextContainingIgnoreCase(
+                community, searchCriteria.getTitle(), searchCriteria.getText()
+        );
     }
 
 }

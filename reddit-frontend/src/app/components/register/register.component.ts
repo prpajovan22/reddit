@@ -12,6 +12,7 @@ export class RegisterComponent implements OnInit {
 
   user:User;
   constructor(private router:Router,private route: ActivatedRoute,private userServce:UserServiceService) { }
+  selectedUserRole : string;
 
   ngOnInit(): void {
     this.user = new User();

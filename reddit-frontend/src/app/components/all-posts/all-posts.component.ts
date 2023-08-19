@@ -19,8 +19,8 @@ export class AllPostsComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
-      title: [''],
-      text: ['']
+      text: [''],
+      title: ['']
     });
     this.search();
   }
@@ -36,8 +36,8 @@ export class AllPostsComponent implements OnInit {
     this.router.navigate(['updatePost', post_id]);
   }
 
-  public createPost() {
-    this.router.navigate(['createPost']);
+  public createPost(community_id) {
+    this.router.navigate(['createPost',community_id]);
   }
 
   public deletePost(post_id:number) {

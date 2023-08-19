@@ -26,8 +26,7 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final JwtAuthenticatonFilter jwtAuthFilter;
-    @Autowired
-    private  AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public PasswordEncoder encoder() {
@@ -54,7 +53,8 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/login/**", "api/post/search", "/community/**"
-                        , "api/post/byCommunity/**","api/post/{post_id}/**")
+                        , "api/post/byCommunity/**","api/post/{post_id}/**","api/comment/searchInPost/{post_id}"
+                ,"api/comment/byPost/{post_id}","api/post/create/{communityId}","api/comment/search")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

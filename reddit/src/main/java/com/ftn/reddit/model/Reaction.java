@@ -14,10 +14,10 @@ public class Reaction {
     @Column(name = "reaction_id", unique = true, nullable = false)
     private Integer reaction_id;
 
-    @Column(name = "timestamp", unique = true, nullable = false)
+    @Column(name = "timestamp", unique = false, nullable = false)
     private LocalDate timestamp;
 
-    @Column(name = "type", unique = true, nullable = false)
+    @Column(name = "type", unique = false, nullable = false)
     private ReactionType type;
 
     @OneToOne(cascade = CascadeType.ALL)

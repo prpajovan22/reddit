@@ -10,6 +10,8 @@ import { CreatePostComponent } from './components/create-post/create-post.compon
 import { CommunityPostsComponent } from './components/community-posts/community-posts.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { AllCommentsComponent } from './components/all-comments/all-comments.component';
+import { UpdatePostComponent } from './components/update-post/update-post.component';
+import { RepliesComponent } from './components/replies/replies.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -19,10 +21,12 @@ const routes: Routes = [
   {path:'users',component:AllUsersComponent},
   {path:'communitys',component:AllCommunitysComponent},
   {path:'createCommunity',component:CreateCommunityComponent},
-  {path:'createPost/:id',component:CreatePostComponent},
+  {path:'createPost/:community_id',component:CreatePostComponent},
   {path:'communityPosts/:id',component:CommunityPostsComponent},
   {path:'updateUser',component:ChangePasswordComponent},
-  {path:'showComments/:post_id',component:AllCommentsComponent}
+  {path:'showComments/:post_id',component:AllCommentsComponent},
+  {path:'updatePost/:post_id',component:UpdatePostComponent},
+  {path:'replies/:comment_id',component:RepliesComponent}
 ];
 
 @NgModule({

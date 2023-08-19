@@ -25,10 +25,12 @@ public class Comment {
     @Column(name = "isDeleted", unique = false, nullable = false)
     private boolean isDeleted;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "comment_id", referencedColumnName = "comment_id")
-    private Comment comment;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_comment_id", referencedColumnName = "comment_id")
+    private Comment parentComment;
 
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Comment> replies;
     @JsonIgnore
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Reaction> reactions;
@@ -49,12 +51,13 @@ public class Comment {
 
     }
 
-    public Comment(Integer comment_id, String text, LocalDate timestamp, boolean isDeleted, Comment comment, Set<Reaction> reactions, Set<Report> reports, Post post, Users user) {
+    public Comment(Integer comment_id, String text, LocalDate timestamp, boolean isDeleted, Comment parentComment, Set<Comment> replies, Set<Reaction> reactions, Set<Report> reports, Post post, Users user) {
         this.comment_id = comment_id;
         this.text = text;
         this.timestamp = timestamp;
         this.isDeleted = isDeleted;
-        this.comment = comment;
+        this.parentComment = parentComment;
+        this.replies = replies;
         this.reactions = reactions;
         this.reports = reports;
         this.post = post;
@@ -93,12 +96,20 @@ public class Comment {
         isDeleted = deleted;
     }
 
-    public Comment getComment() {
-        return comment;
+    public Comment getParentComment() {
+        return parentComment;
     }
 
-    public void setComment(Comment comment) {
-        this.comment = comment;
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
+    }
+
+    public Set<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(Set<Comment> replies) {
+        this.replies = replies;
     }
 
     public Set<Reaction> getReactions() {
@@ -125,11 +136,11 @@ public class Comment {
         this.post = post;
     }
 
-    public Users getUsers() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUsers(Users users) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }
