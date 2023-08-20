@@ -1,16 +1,21 @@
 package com.ftn.reddit.services;
 
+import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.Interface.PostInterface;
 import com.ftn.reddit.model.Community;
 import com.ftn.reddit.model.Post;
+import com.ftn.reddit.model.Reaction;
+import com.ftn.reddit.model.ReactionType;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.repositorys.PostRepository;
+import com.ftn.reddit.repositorys.ReactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService implements PostInterface {
@@ -70,6 +75,31 @@ public class PostService implements PostInterface {
         return postRepository.findByCommunityAndTitleContainingIgnoreCaseAndTextContainingIgnoreCase(
                 community, searchCriteria.getTitle(), searchCriteria.getText()
         );
+    }
+
+    public List<PostDTO> findAllPostsWithNetReactions() {
+        List<Post> posts = postRepository.findAll();
+
+        List<PostDTO> postDTOs = posts.stream()
+                .map(post -> {
+                    int netReactions = post.getReactions().stream()
+                            .mapToInt(reaction -> {
+                                if (reaction.getType() == ReactionType.UPWOTE) {
+                                    return 1;
+                                } else if (reaction.getType() == ReactionType.DOWNWOTE) {
+                                    return -1;
+                                }
+                                return 0;
+                            })
+                            .sum();
+
+                    PostDTO postDTO = new PostDTO(post);
+                    postDTO.setNetReactions(netReactions);
+                    return postDTO;
+                })
+                .collect(Collectors.toList());
+
+        return postDTOs;
     }
 
 }

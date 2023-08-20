@@ -29,13 +29,15 @@ public class PostDTO implements Serializable {
 
     private UsersDTO user;
 
+    private int netReactions;
+
     public PostDTO() {
 
     }
 
     public PostDTO(Integer post_id, String title, String text, LocalDate creationDate,
                    String postPDFPath, String descriptionPDF, FlairDTO flairDTO, CommunityDTO community,
-                   UsersDTO user, Integer community_id) {
+                   UsersDTO user, Integer community_id,int netReactions) {
         this.post_id = post_id;
         this.title = title;
         this.text = text;
@@ -46,6 +48,7 @@ public class PostDTO implements Serializable {
         this.community = community;
         this.user = user;
         this.community_id = community_id;
+        this.netReactions = netReactions;
     }
 
     public PostDTO(Post post) {
@@ -55,6 +58,14 @@ public class PostDTO implements Serializable {
         this.creationDate = post.getCreationDate();
         this.postPDFPath = post.getPostPDFPath();
         this.descriptionPDF = post.getDescriptionPDF();
+    }
+
+    public PostDTO(Post post, int netReaction) {
+        this.post_id = post.getPost_id();
+        this.title = post.getTitle();
+        this.text = post.getText();
+        this.creationDate = post.getCreationDate();
+        this.netReactions = netReaction;
     }
 
 
@@ -136,5 +147,13 @@ public class PostDTO implements Serializable {
 
     public void setUser(UsersDTO user) {
         this.user = user;
+    }
+
+    public int getNetReactions() {
+        return netReactions;
+    }
+
+    public void setNetReactions(int netReactions) {
+        this.netReactions = netReactions;
     }
 }

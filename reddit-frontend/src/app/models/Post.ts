@@ -15,4 +15,5 @@ export class Post{
     reaction:Reaction;
     comments:Comments;
     communityId: number;
+    reactionCount: number;
 }

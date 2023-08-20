@@ -3,6 +3,7 @@ package com.ftn.reddit.controller;
 import co.elastic.clients.elasticsearch.nodes.Ingest;
 import com.ftn.reddit.DTO.CommentDTO;
 import com.ftn.reddit.DTO.PostDTO;
+import com.ftn.reddit.DTO.ReactionDTO;
 import com.ftn.reddit.model.*;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.model.pretraga.PostSearchCriteria;
@@ -43,13 +44,26 @@ public class PostController {
     @Autowired
     private ReactionService reactionService;
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<PostDTO>> getPosts() {
         List<Post> posts = postService.findAll();
 
         List<PostDTO> postDTOs = posts.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
                 .map(PostDTO::new)
+                .collect(Collectors.toList());
+
+        Collections.shuffle(postDTOs);
+        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<List<PostDTO>> getPosts() {
+        List<Post> posts = postService.findAll();
+
+        List<PostDTO> postDTOs = posts.stream()
+                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
+                .map(post -> new PostDTO(post, reactionService.getNetReactionForPost(post)))
                 .collect(Collectors.toList());
 
         Collections.shuffle(postDTOs);
@@ -107,6 +121,8 @@ public class PostController {
         return ResponseEntity.ok(searchResults);
     }
 
+    ////////////////////////////////// Community  ////////////////////////////////////////
+
     @GetMapping("/byCommunity/{community_id}")
     public ResponseEntity<List<Post>> getPostsByCommunity(@PathVariable Integer community_id){
         Community community = communityService.findById(community_id);
@@ -117,6 +133,9 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    ////////////////////////////////// Comments  ////////////////////////////////////////
+
+
     @GetMapping("/{post_id}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
         Post post = postService.findById(post_id);
@@ -125,5 +144,25 @@ public class PostController {
         }
         List<CommentDTO> commentDTOs = commentService.findCommentDTOsByPost(post);
         return ResponseEntity.ok(commentDTOs);
+    }
+
+    ////////////////////////////////// Upwote  ////////////////////////////////////////
+
+    @PostMapping("/upvote/{post_id}")
+    public ResponseEntity<Void> upvotePost(@PathVariable Integer post_id, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users user = userService.findByUsername(userDetails.getUsername());
+
+        reactionService.upvotePost(post_id, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/downvote/{post_id}")
+    public ResponseEntity<Void> downvotePost(@PathVariable Integer post_id, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users user = userService.findByUsername(userDetails.getUsername());
+
+        reactionService.downvotePost(post_id, user);
+        return ResponseEntity.ok().build();
     }
 }

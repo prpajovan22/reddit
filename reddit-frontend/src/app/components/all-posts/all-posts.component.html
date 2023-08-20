@@ -2,10 +2,12 @@
     <tr>
       <th>Title</th>
       <th>Text</th>
+      <th>Reaction count</th>
     </tr>
     <tr *ngFor="let a of searchResults">
       <td>{{ a.title }}</td>
       <td>{{ a.text}} </td>
+      <td>{{ a.reactionCount || 0}} </td>
       <td>  
         <button style="margin-left: 500px;" class="btn btn-info" (click)="updatePost(a.post_id)">Update</button>
         <button style="margin-left: 500px;" class="btn btn-info" (click)="showComments(a.post_id)">Comments</button>
