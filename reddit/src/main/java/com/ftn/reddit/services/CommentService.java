@@ -3,9 +3,7 @@ package com.ftn.reddit.services;
 import com.ftn.reddit.DTO.CommentDTO;
 import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.Interface.CommentInterface;
-import com.ftn.reddit.model.Comment;
-import com.ftn.reddit.model.Community;
-import com.ftn.reddit.model.Post;
+import com.ftn.reddit.model.*;
 import com.ftn.reddit.model.pretraga.CommentSerachCriteria;
 import com.ftn.reddit.repositorys.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +72,22 @@ public class CommentService implements CommentInterface {
 
     public List<Comment> searchCommentsByTextContainingIgnoreCase(String text) {
         return commentRepository.findByTextContainingIgnoreCase(text);
+    }
+
+    public int calculateNetReactionsForComments(List<Comment> comments) {
+        int netReactions = 0;
+
+        for (Comment comment : comments) {
+            for (Reaction reaction : comment.getReactions()) {
+                if (reaction.getType() == ReactionType.UPWOTE) {
+                    netReactions++;
+                } else if (reaction.getType() == ReactionType.DOWNWOTE) {
+                    netReactions--;
+                }
+            }
+        }
+
+        return netReactions;
     }
 
 }

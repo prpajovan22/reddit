@@ -2,6 +2,8 @@ package com.ftn.reddit.repositorys;
 
 import com.ftn.reddit.model.Community;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +18,7 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
     List<Community> findByNameContainingIgnoreCase(String name);
 
     List<Community> findByDescriptionContainingIgnoreCase(String description);
+
+    List<Community> findAll();
+
 }

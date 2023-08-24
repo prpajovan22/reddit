@@ -38,12 +38,29 @@ public class CommentController {
     @Autowired
     private PostService postService;
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<CommentDTO>> getComments() {
         List<Comment> comments = commentService.findAll();
 
         List<CommentDTO> commentDTOs = comments.stream()
                 .map(CommentDTO::new)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(commentDTOs, HttpStatus.OK);
+    }*/
+
+
+    @GetMapping
+    public ResponseEntity<List<CommentDTO>> getComments() {
+        List<Comment> comments = commentService.findAll();
+
+        List<CommentDTO> commentDTOs = comments.stream()
+                .map(comment -> {
+                    CommentDTO commentDTO = new CommentDTO(comment);
+                    /*int netReactions = commentService.calculateNetReactionsForComments(comment.getReactions());
+                    commentDTO.setNetReactions(netReactions);
+                    */return commentDTO;
+                })
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(commentDTOs, HttpStatus.OK);

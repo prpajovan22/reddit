@@ -3,6 +3,7 @@ package com.ftn.reddit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 @EntityScan("com.ftn.reddit.*")
+@EnableWebMvc
 public class RedditApplication {
 
 	public static void main(String[] args){

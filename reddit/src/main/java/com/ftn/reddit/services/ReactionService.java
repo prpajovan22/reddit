@@ -10,6 +10,8 @@ import com.ftn.reddit.repositorys.ReactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,6 +28,10 @@ public class ReactionService implements ReactionInterface {
         return reactionRepository.save(reaction);
     }
 
+    public List<Reaction> findByPost(Post post) {
+        return reactionRepository.findByPost(post);
+    }
+
     public void upvotePost(Integer postId, Users user) {
         Reaction existingReaction = reactionRepository.findByUserAndPost(user, postRepository.findById(postId).orElse(null));
         if (existingReaction != null && existingReaction.getType() == ReactionType.UPWOTE) {
@@ -37,6 +43,7 @@ public class ReactionService implements ReactionInterface {
         }
 
         Reaction reaction = new Reaction();
+        reaction.setTimestamp(LocalDate.from(LocalDateTime.now()));
         reaction.setType(ReactionType.UPWOTE);
         reaction.setPost(postRepository.findById(postId).orElse(null));
         reaction.setUser(user);
@@ -55,6 +62,7 @@ public class ReactionService implements ReactionInterface {
         }
 
         Reaction reaction = new Reaction();
+        reaction.setTimestamp(LocalDate.from(LocalDateTime.now()));
         reaction.setType(ReactionType.DOWNWOTE);
         reaction.setPost(postRepository.findById(postId).orElse(null));
         reaction.setUser(user);

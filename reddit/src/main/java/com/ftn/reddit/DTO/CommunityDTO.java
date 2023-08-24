@@ -21,13 +21,21 @@ public class CommunityDTO implements Serializable {
 
     private String suspendedReason;
 
-    public CommunityDTO(Integer community_id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason) {
+    private Long postCount;
+
+    private Long totalReaction;
+
+    public CommunityDTO(Integer community_id, String name, String description,
+                        LocalDate creationDate, boolean isSuspended, String suspendedReason,
+                        Long postCount,Long totalReaction) {
         this.community_id = community_id;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.isSuspended = isSuspended;
         this.suspendedReason = suspendedReason;
+        this.postCount = postCount;
+        this.totalReaction = totalReaction;
     }
 
     public CommunityDTO() {
@@ -41,6 +49,22 @@ public class CommunityDTO implements Serializable {
         this.isSuspended = community.isSuspended();
         this.suspendedReason = community.getSuspendedReason();
 
+    }
+
+    public Long getPostCount() {
+        return postCount;
+    }
+
+    public void setPostCount(Long postCount) {
+        this.postCount = postCount;
+    }
+
+    public Long getTotalReaction() {
+        return totalReaction;
+    }
+
+    public void setTotalReaction(Long totalReaction) {
+        this.totalReaction = totalReaction;
     }
 
     public Integer getCommunity_id() {

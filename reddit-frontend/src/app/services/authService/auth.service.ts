@@ -17,7 +17,7 @@ const httpOptions = {
 })
 export class AuthService {
 
-  private apiUrl = `${environment.apiURL}/api/login/login`;
+  private apiUrl = `${environment.apiURL}/api/login/signIn`;
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService) { }
 

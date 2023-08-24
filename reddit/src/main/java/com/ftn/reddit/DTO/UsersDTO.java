@@ -47,6 +47,7 @@ public class UsersDTO {
         this.user_id = users.getUser_id();
     }
 
+    public UsersDTO(){}
 
     public Users ToUsersEntity(){
         Users users = new Users();
@@ -54,6 +55,8 @@ public class UsersDTO {
         users.setUsername(this.username);
         users.setPassword(this.password);
         users.setEmail(this.email);
+        users.setDescription(this.description);
+        users.setDisplayName(this.displayName);
         users.setRegistrationDate(this.registrationDate);
         users.setUserRole(this.userRole);
         return users;

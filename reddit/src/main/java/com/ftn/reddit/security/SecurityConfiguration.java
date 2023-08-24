@@ -54,7 +54,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/login/**", "api/post/search", "/community/**"
                         , "api/post/byCommunity/**","api/post/{post_id}/**","api/comment/searchInPost/{post_id}"
-                ,"api/comment/byPost/{post_id}","api/post/create/{communityId}","api/comment/search")
+                ,"api/comment/byPost/{post_id}","api/post/create/{communityId}","api/comment/search",
+                        "api/community/allWithTotalReactions","api/comment/{comment_id}/replies")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

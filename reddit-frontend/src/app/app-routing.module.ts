@@ -12,6 +12,8 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { AllCommentsComponent } from './components/all-comments/all-comments.component';
 import { UpdatePostComponent } from './components/update-post/update-post.component';
 import { RepliesComponent } from './components/replies/replies.component';
+import { OneCommunityComponent } from './components/one-community/one-community.component';
+import { UpdateCommunityComponent } from './components/update-community/update-community.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -26,7 +28,9 @@ const routes: Routes = [
   {path:'updateUser',component:ChangePasswordComponent},
   {path:'showComments/:post_id',component:AllCommentsComponent},
   {path:'updatePost/:post_id',component:UpdatePostComponent},
-  {path:'replies/:comment_id',component:RepliesComponent}
+  {path:'replies/:comment_id',component:RepliesComponent},
+  {path:'one-community/:communiy_id',component:OneCommunityComponent},
+  {path:'updateCommunity/:community_id',component:UpdateCommunityComponent}
 ];
 
 @NgModule({

@@ -53,7 +53,7 @@ public class Post {
     private List<Reaction> reactions = new ArrayList<Reaction>();
 
     @JsonIgnore
-    @OneToMany(mappedBy="post")
+    @OneToMany(mappedBy="post",fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<Comment>();
 
     public Post(){

@@ -5,6 +5,7 @@ import com.ftn.reddit.DTO.CommunityDTO;
 import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.model.Community;
 import com.ftn.reddit.model.Post;
+import com.ftn.reddit.model.UserRole;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.services.CommunityService;
@@ -16,7 +17,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -58,19 +64,86 @@ public class CommunityController {
         return new ResponseEntity<>(community, HttpStatus.OK);
     }
 
+    @GetMapping("/{post_id}")
+    public ResponseEntity<CommunityDTO> getCommunityByPostId(@PathVariable Integer post_id) {
+        CommunityDTO community = communityService.getCommunityByPostId(post_id);
+        if (community == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(community);
+    }
+
     @PostMapping
-    public ResponseEntity<Void> createCommunity(@RequestBody @Validated CommunityDTO communityDTO, Authentication authentication) {
-        //UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        //Users users = userService.findByUsername(userPrincipal.getUsername());
+    public ResponseEntity<Void> createCommunity(
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam(value = "communityPDF", required = false) MultipartFile communityPDF,
+            Authentication authentication) {
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        Users user = userService.findByUsername(userPrincipal.getUsername());
+
+        if (!user.getUserRole().equals("MODERATOR")) {
+            user.setUserRole(UserRole.valueOf("MODERATOR"));
+            userService.save(user);
+        }
+
         LocalDate creationDate = LocalDate.now();
         Community community = new Community();
-        community.setName(communityDTO.getName());
-        community.setDescription(communityDTO.getDescription());
+        community.setName(name);
+        community.setDescription(description);
         community.setCreationDate(creationDate);
         community.setSuspended(false);
-        //community.setModerators((Set<Users>) users);
+        community.getModerators().add(user); // Add the user as a moderator
+
+        if (communityPDF != null && !communityPDF.isEmpty()) {
+            try {
+                String communityPDFPath = saveCommunityPDF(communityPDF);
+                community.setCommunityPDFPath(communityPDFPath);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
+
         communityService.save(community);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping("/{community_id}")
+    public ResponseEntity<Community> updateCommunity(
+            @PathVariable Integer community_id,
+            @RequestBody Community updatedCommunity) {
+
+        Community existingCommunity = communityService.findById(community_id);
+        if (existingCommunity == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingCommunity.setName(updatedCommunity.getName());
+        existingCommunity.setDescription(updatedCommunity.getDescription());
+
+        Community updated = communityService.save(existingCommunity);
+        return ResponseEntity.ok(updated);
+    }
+
+    private String saveCommunityPDF(MultipartFile communityPDF) throws IOException {
+        String uploadDir = "path/to/your/upload/directory";
+
+        Path uploadPath = Path.of(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        String uniqueFileName = System.currentTimeMillis() + "_" + communityPDF.getOriginalFilename();
+
+        Path filePath = uploadPath.resolve(uniqueFileName);
+
+        try {
+            Files.copy(communityPDF.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new IOException("Could not save the PDF file: " + e.getMessage());
+        }
+
+        return uploadDir + "/" + uniqueFileName;
     }
 
     @DeleteMapping(value = "/{id}")
@@ -87,9 +160,15 @@ public class CommunityController {
         return ResponseEntity.ok(searchResault);
     }
 
-    @GetMapping("/community/{id}/postCount")
-    public ResponseEntity<Long> getPostCount(@PathVariable Integer id) {
-        Long postCount = communityService.getPostCountForCommunity(id);
+    @GetMapping("/{community_id}/postCount")
+    public ResponseEntity<Long> getPostCountForCommunity(@PathVariable Integer community_id) {
+        Long postCount = communityService.getPostCountForCommunity(community_id);
         return ResponseEntity.ok(postCount);
+    }
+
+    @GetMapping("/{community_id}/totalReactions")
+    public ResponseEntity<Double> getAverageReactionsForCommunity(@PathVariable("community_id") Integer community_id) {
+        Double averageReactions = communityService.getAverageReactionsPerPost(community_id);
+        return ResponseEntity.ok(averageReactions);
     }
 }

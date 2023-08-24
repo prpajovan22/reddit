@@ -12,6 +12,7 @@ export class CreateCommunityComponent implements OnInit {
 
   community_id:number;
   communitys: Community;
+  selectedPDF: File | null = null;
 
   constructor(private route: ActivatedRoute, private router: Router, private communityService: CommunityService) { }
 
@@ -22,18 +23,29 @@ export class CreateCommunityComponent implements OnInit {
     this.router.navigate(['/communitys']);
   }
 
-  createCommunity(){
-    this.communityService.createCommunity(this.communitys).subscribe(data=>{
+  createCommunity():void{
+    const formData = new FormData();
+    formData.append('name', this.communitys.name);
+    formData.append('description', this.communitys.description);
+    if (this.selectedPDF) {
+      formData.append('communityPDF', this.selectedPDF);
+    }
+    
+    this.communityService.createCommunity(this.communitys).subscribe(
+      data=>{
       console.log(data);
       this.communitys = new Community();
       console.log(this.communitys);
       this.redirectToCommunitys();
-    }, error=>console.log(error));
+    }, 
+    error=>console.log(error));
   }
   onSubmit(){
     this.createCommunity();
   }
 
- 
+  onFileChange(event: any): void {
+    this.selectedPDF = event.target.files[0]; // Get the selected PDF file
+  }
 
 }

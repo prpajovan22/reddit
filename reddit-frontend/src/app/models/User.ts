@@ -9,7 +9,7 @@ export class User{
     username:string;
     password:string;
     email:string;
-    avatar:string;
+    avatar:File;
     registrationDate:Date;
     description:String;
     displayName:string;

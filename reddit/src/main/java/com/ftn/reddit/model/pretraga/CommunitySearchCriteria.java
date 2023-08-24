@@ -10,6 +10,10 @@ public class CommunitySearchCriteria {
         this.description = description;
     }
 
+    public CommunitySearchCriteria(){
+
+    }
+
     public String getName() {
         return name;
     }

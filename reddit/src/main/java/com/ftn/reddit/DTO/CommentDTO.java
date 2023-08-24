@@ -1,12 +1,14 @@
 package com.ftn.reddit.DTO;
 
 import com.ftn.reddit.model.Comment;
+import com.ftn.reddit.model.Reaction;
 import com.ftn.reddit.model.ReactionType;
 import com.ftn.reddit.model.ReportReason;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class CommentDTO implements Serializable {
@@ -29,7 +31,10 @@ public class CommentDTO implements Serializable {
 
     private ReportReason reportReason;
 
-    public CommentDTO(Integer comment_id, String text, LocalDate timeStamp, boolean isDeleted, ReactionType reactionType, CommentDTO commentDTO, PostDTO postDTO, UsersDTO usersDTO, ReportReason reportReason) {
+    private int netReactions;
+
+    public CommentDTO(Integer comment_id, String text, LocalDate timeStamp, boolean isDeleted, ReactionType reactionType,
+                      CommentDTO commentDTO, PostDTO postDTO, UsersDTO usersDTO, ReportReason reportReason, int netReactions) {
         this.comment_id = comment_id;
         this.text = text;
         this.timeStamp = timeStamp;
@@ -39,6 +44,7 @@ public class CommentDTO implements Serializable {
         this.postDTO = postDTO;
         this.usersDTO = usersDTO;
         this.reportReason = reportReason;
+        this.netReactions = netReactions;
     }
 
     public CommentDTO() {
@@ -53,6 +59,7 @@ public class CommentDTO implements Serializable {
         this.commentDTO = this;
         this.usersDTO = new UsersDTO(comment.getUser());
         this.postDTO = new PostDTO(comment.getPost());
+        this.netReactions = calculateNetReactions((List<Reaction>) comment.getReactions());
     }
 
     public Integer getComment_id() {
@@ -125,5 +132,28 @@ public class CommentDTO implements Serializable {
 
     public void setReportReason(ReportReason reportReason) {
         this.reportReason = reportReason;
+    }
+
+    public int getNetReactions() {
+        return netReactions;
+    }
+
+    public void setNetReactions(int netReactions) {
+        this.netReactions = netReactions;
+    }
+
+    // Helper method to calculate net reactions
+    private int calculateNetReactions(List<Reaction> reactions) {
+        int netReactions = 0;
+
+        for (Reaction reaction : reactions) {
+            if (reaction.getType() == ReactionType.UPWOTE) {
+                netReactions++;
+            } else if (reaction.getType() == ReactionType.DOWNWOTE) {
+                netReactions--;
+            }
+        }
+
+        return netReactions;
     }
 }

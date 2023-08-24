@@ -43,31 +43,20 @@ public class PostController {
 
     @Autowired
     private ReactionService reactionService;
-
-    /*@GetMapping
-    public ResponseEntity<List<PostDTO>> getPosts() {
-        List<Post> posts = postService.findAll();
-
-        List<PostDTO> postDTOs = posts.stream()
-                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
-                .map(PostDTO::new)
-                .collect(Collectors.toList());
-
-        Collections.shuffle(postDTOs);
-        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }*/
-
     @GetMapping
     public ResponseEntity<List<PostDTO>> getPosts() {
         List<Post> posts = postService.findAll();
 
         List<PostDTO> postDTOs = posts.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
-                .map(post -> new PostDTO(post, reactionService.getNetReactionForPost(post)))
+                .map(post -> {
+                    int netReactions = calculateNetReactions(post.getReactions());
+                    return new PostDTO(post, netReactions);
+                })
                 .collect(Collectors.toList());
 
         Collections.shuffle(postDTOs);
-        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
+        return ResponseEntity.ok(postDTOs);
     }
 
     @GetMapping(value = "/{id}")
@@ -78,6 +67,27 @@ public class PostController {
         }
 
         return new ResponseEntity<>(post, HttpStatus.OK);
+    }
+
+    @PutMapping("/{post_id}")
+    public ResponseEntity<Post> updatePost(
+            @PathVariable Integer post_id,
+            @RequestBody Post updatedPost) {
+
+        Post existingPost = postService.findById(post_id);
+        if (existingPost == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Community originalCommunity = existingPost.getCommunity();
+
+        existingPost.setTitle(updatedPost.getTitle());
+        existingPost.setText(updatedPost.getText());
+
+        existingPost.setCommunity(originalCommunity);
+
+        Post updated = postService.save(existingPost);
+        return ResponseEntity.ok(updated);
     }
 
     @PostMapping("/create/{communityId}")
@@ -106,6 +116,12 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{post_id}/commentCount")
+    public ResponseEntity<Long> getCommentCountForPost(@PathVariable Integer post_id) {
+        Long commentCount = postService.getCommentCountForPost(post_id);
+        return ResponseEntity.ok(commentCount);
+    }
+
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Integer id, Authentication authentication) {
@@ -116,9 +132,26 @@ public class PostController {
 
 
     @PostMapping("/search")
-    public ResponseEntity<List<Post>> seacrchPosts(@RequestBody PostSearchCriteria searchCriteria) {
+    public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
         List<Post> searchResults = postService.searchPosts(searchCriteria);
-        return ResponseEntity.ok(searchResults);
+
+        List<PostDTO> postDTOs = searchResults.stream()
+                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
+                .map(post -> {
+                    List<ReactionDTO> reactions = reactionService.findByPost(post).stream()
+                            .map(ReactionDTO::new)
+                            .collect(Collectors.toList());
+
+                    int upvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.UPWOTE).count();
+                    int downvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.DOWNWOTE).count();
+                    int netReaction = upvotes - downvotes;
+
+                    return new PostDTO(post, netReaction);
+                })
+                .collect(Collectors.toList());
+
+        Collections.shuffle(postDTOs);
+        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
     }
 
     ////////////////////////////////// Community  ////////////////////////////////////////
@@ -164,5 +197,17 @@ public class PostController {
 
         reactionService.downvotePost(post_id, user);
         return ResponseEntity.ok().build();
+    }
+
+    private int calculateNetReactions(List<Reaction> reactions) {
+        int netReactions = 0;
+        for (Reaction reaction : reactions) {
+            if (reaction.getType() == ReactionType.UPWOTE) {
+                netReactions++;
+            } else if (reaction.getType() == ReactionType.DOWNWOTE) {
+                netReactions--;
+            }
+        }
+        return netReactions;
     }
 }

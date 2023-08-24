@@ -9,8 +9,10 @@ export class Community{
     creationDate:Date;
     isSuspended:boolean;
     suspendedReason:String;
-    communityPDFPath:string;
+    communityPDF:string;
     banned:Banned;
     moderators:User;
     posts:Post;
+    postCount: number;
+    totalReaction:number;
 }

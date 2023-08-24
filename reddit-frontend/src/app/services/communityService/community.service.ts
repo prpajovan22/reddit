@@ -37,8 +37,13 @@ export class CommunityService {
     
   }
 
-  updateCommunity(id:number,communitys: Community) : Observable<Community>{
-    return this.http.put<Community>(`${this.apiCommunityUrl}/${id}`, JSON.stringify(communitys),uploadHeader);
+  getCommunityByPostId(post_id: number): Observable<Community> {
+    const url = `${this.apiCommunityUrl}/community/${post_id}`;
+    return this.http.get<Community>(url);
+  }
+
+  updateCommunity(community_id:number,communitys: Community) : Observable<Community>{
+    return this.http.put<Community>(`${this.apiCommunityUrl}/${community_id}`, JSON.stringify(communitys),uploadHeader);
 
   }
 
@@ -54,7 +59,17 @@ export class CommunityService {
     return this.http.post<Community[]>(`${this.apiCommunityUrl}/search`, searchCriteria);
 }
 
-  getPostCountForCommunity(communityId: number): Observable<number> {
-    return this.http.get<number>(`${this.apiCommunityUrl}/community/${communityId}/postCount`);
+getPostCountForCommunity(communityId: number): Observable<number> {
+  return this.http.get<number>(`${this.apiCommunityUrl}/${communityId}/postCount`);
+}
+
+getTotalReactionsForCommunity(communityId: number): Observable<number> {
+  const url = `${this.apiCommunityUrl}/${communityId}/totalReactions`;
+  return this.http.get<number>(url);
+}
+
+getCommunity(communityId: number): Observable<any> {
+  const url = `${this.apiCommunityUrl}/${communityId}`;
+  return this.http.get<any>(url);
 }
 }

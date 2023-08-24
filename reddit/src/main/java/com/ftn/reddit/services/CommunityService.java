@@ -1,11 +1,16 @@
 package com.ftn.reddit.services;
 
+import com.ftn.reddit.DTO.CommunityDTO;
 import com.ftn.reddit.Interface.CommunityInterface;
 import com.ftn.reddit.model.Community;
+import com.ftn.reddit.model.Post;
+import com.ftn.reddit.model.ReactionType;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.repositorys.CommunityRepository;
+import com.ftn.reddit.repositorys.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -15,6 +20,8 @@ public class CommunityService implements CommunityInterface {
 
     @Autowired
     private CommunityRepository communityRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @Override
     public List<Community> findAll() {
@@ -38,20 +45,17 @@ public class CommunityService implements CommunityInterface {
 
     public List<Community> searchCommunities(CommunitySearchCriteria searchCriteria) {
         if (StringUtils.isEmpty(searchCriteria.getName()) && StringUtils.isEmpty(searchCriteria.getDescription())) {
-            // Return all communities when both name and description are empty
             return communityRepository.findAll();
         }
 
         Set<Community> combinedSearchResult = new HashSet<>();
 
         if (!StringUtils.isEmpty(searchCriteria.getName())) {
-            // Search based on name criteria
             List<Community> nameSearchResult = communityRepository.findByNameContainingIgnoreCase(searchCriteria.getName().toLowerCase());
             combinedSearchResult.addAll(nameSearchResult);
         }
 
         if (!StringUtils.isEmpty(searchCriteria.getDescription())) {
-            // Search based on description criteria
             List<Community> descriptionSearchResult = communityRepository.findByDescriptionContainingIgnoreCase(searchCriteria.getDescription().toLowerCase());
             combinedSearchResult.addAll(descriptionSearchResult);
         }
@@ -74,10 +78,46 @@ public class CommunityService implements CommunityInterface {
 
         if (communityOptional.isPresent()) {
             Community community = communityOptional.get();
-            return community.isSuspended(); // Assuming you have a method to check if the community is suspended
+            return community.isSuspended();
         }
 
-        // Community not found, consider it as not suspended
         return false;
     }
+
+    @Transactional
+    public Double getAverageReactionsPerPost(Integer communityId) {
+        Optional<Community> communityOptional = communityRepository.findById(communityId);
+
+        if (communityOptional.isPresent()) {
+            Community community = communityOptional.get();
+            Set<Post> posts = community.getPosts();
+
+            long totalReactions = posts.stream()
+                    .flatMap(post -> post.getReactions().stream())
+                    .filter(reaction -> reaction.getType() == ReactionType.UPWOTE || reaction.getType() == ReactionType.DOWNWOTE)
+                    .count();
+
+            double averageReactionsPerPost = (double) totalReactions / posts.size();
+            return averageReactionsPerPost;
+        }
+
+        return 0.0;
+    }
+
+    public CommunityDTO getCommunityByPostId(Integer postId) {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            Community community = post.getCommunity();
+
+            CommunityDTO communityDTO = new CommunityDTO();
+            communityDTO.setCommunity_id(community.getCommunity_id());
+            communityDTO.setName(community.getName());
+            communityDTO.setDescription(community.getDescription());
+
+            return communityDTO;
+        }
+        return null;
+    }
+
 }

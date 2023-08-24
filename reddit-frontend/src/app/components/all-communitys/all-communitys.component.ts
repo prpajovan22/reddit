@@ -25,11 +25,37 @@ export class AllCommunitysComponent implements OnInit {
     this.search();
   }
 
+
   search(): void {
     const searchCriteria: CommunitySearchCriteria = this.searchForm.value;
     this.communityService.searchCommunities(searchCriteria).subscribe(results => {
       this.searchResults = results;
+
+      this.fetchPostCountsForCommunities();
+      this.fetchTotalReactionsForCommunities();
     });
+  }
+
+  private async fetchPostCountsForCommunities(): Promise<void> {
+    for (const community of this.searchResults) {
+      try {
+        const count = await this.communityService.getPostCountForCommunity(community.community_id).toPromise();
+        community.postCount = count;
+      } catch (error) {
+        console.error(`Error fetching post count for community ${community.name}:`, error);
+      }
+    }
+  }
+
+  private async fetchTotalReactionsForCommunities(): Promise<void> {
+    for (const community of this.searchResults) {
+      try {
+        const totalReactions = await this.communityService.getTotalReactionsForCommunity(community.community_id).toPromise();
+        community.totalReaction = totalReactions;
+      } catch (error) {
+        console.error(`Error fetching total reactions for community ${community.name}:`, error);
+      }
+    }
   }
 
   public createCommunity() {
@@ -38,6 +64,10 @@ export class AllCommunitysComponent implements OnInit {
 
   public showPost(community_id:number){
     this.router.navigate(['communityPosts', community_id]);
+  }
+
+  public updateCommunity(community_id:number){
+    this.router.navigate(['updateCommunity', community_id]);
   }
 }
 

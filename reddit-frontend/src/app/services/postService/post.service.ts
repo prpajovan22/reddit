@@ -67,5 +67,17 @@ export class PostServiceService {
   getCommentsByPost(post_id: number): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.apiPostUrl}/${post_id}/comments`);
 }
+
+upvotePost(post_id: number): Observable<any> {
+  return this.http.post<any>(`${this.apiPostUrl}/upvote/${post_id}`, {});
+}
+
+downvotePost(post_id: number): Observable<any> {
+  return this.http.post<any>(`${this.apiPostUrl}/downvote/${post_id}`, {});
+}
+
+getCommentCountForPost(post_id: number): Observable<number> {
+  return this.http.get<number>(`${this.apiPostUrl}/${post_id}/commentCount`);
+}
 }
 

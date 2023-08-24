@@ -23,6 +23,10 @@ import { CreatePostComponent } from './components/create-post/create-post.compon
 import { AllCommentsComponent } from './components/all-comments/all-comments.component';
 import { UpdatePostComponent } from './components/update-post/update-post.component';
 import { RepliesComponent } from './components/replies/replies.component';
+import { OneCommunityComponent } from './components/one-community/one-community.component';
+import { UpdateCommunityComponent } from './components/update-community/update-community.component';
+import { UpdateCommentComponent } from './components/update-comment/update-comment.component';
+import { CreateCommentComponent } from './components/create-comment/create-comment.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +45,11 @@ import { RepliesComponent } from './components/replies/replies.component';
     CreatePostComponent,
     AllCommentsComponent,
     UpdatePostComponent,
-    RepliesComponent
+    RepliesComponent,
+    OneCommunityComponent,
+    UpdateCommunityComponent,
+    UpdateCommentComponent,
+    CreateCommentComponent
   ],
   imports: [
     BrowserModule,

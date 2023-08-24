@@ -12,8 +12,9 @@ export class Post{
     descriptionPDF:string;
     flair:Flair;
     reports:Reports;
-    reaction:Reaction;
+    reaction:Reaction[];
     comments:Comments;
     communityId: number;
-    reactionCount: number;
+    netReactions: number;
+    commentCount:number;
 }

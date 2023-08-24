@@ -241,11 +241,4 @@ public class Users implements Serializable, UserDetails {
         this.reports = reports;
     }
 
-    /*public Set<Banned> getModerator() {
-        return moderator;
-    }
-
-    public void setModerator(Set<Banned> moderator) {
-        this.moderator = moderator;
-    }*/
 }
