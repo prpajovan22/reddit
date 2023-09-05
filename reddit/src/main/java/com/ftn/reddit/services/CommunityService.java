@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CommunityService implements CommunityInterface {
@@ -44,23 +45,33 @@ public class CommunityService implements CommunityInterface {
     }
 
     public List<Community> searchCommunities(CommunitySearchCriteria searchCriteria) {
+        Set<Community> combinedSearchResult = new HashSet<>();
+        boolean shouldSearchMore = true;
         if (StringUtils.isEmpty(searchCriteria.getName()) && StringUtils.isEmpty(searchCriteria.getDescription())) {
-            return communityRepository.findAll();
+            combinedSearchResult.addAll(communityRepository.findAll());
+            shouldSearchMore = false;
         }
 
-        Set<Community> combinedSearchResult = new HashSet<>();
 
-        if (!StringUtils.isEmpty(searchCriteria.getName())) {
+        if (!StringUtils.isEmpty(searchCriteria.getName()) && shouldSearchMore) {
             List<Community> nameSearchResult = communityRepository.findByNameContainingIgnoreCase(searchCriteria.getName().toLowerCase());
             combinedSearchResult.addAll(nameSearchResult);
         }
 
-        if (!StringUtils.isEmpty(searchCriteria.getDescription())) {
+        if (!StringUtils.isEmpty(searchCriteria.getDescription()) && shouldSearchMore) {
             List<Community> descriptionSearchResult = communityRepository.findByDescriptionContainingIgnoreCase(searchCriteria.getDescription().toLowerCase());
             combinedSearchResult.addAll(descriptionSearchResult);
         }
 
-        return new ArrayList<>(combinedSearchResult);
+        Set<Community> uniqueResault = new HashSet<>(combinedSearchResult);
+
+        if(searchCriteria.getFromPostCount() > 0 || searchCriteria.getToPostCount() > 0){
+            uniqueResault = uniqueResault.stream().filter(post -> {
+                return post.getPosts().size() >= searchCriteria.getFromPostCount() && post.getPosts().size() <= searchCriteria.getToPostCount();
+            }).collect(Collectors.toSet());
+        }
+
+        return new ArrayList<>(uniqueResault);
     }
 
     public Long getPostCountForCommunity(Integer communityId) {

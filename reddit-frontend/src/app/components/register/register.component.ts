@@ -39,10 +39,6 @@ export class RegisterComponent implements OnInit {
       }
     }
 
-    formData.forEach((value,key) => {
-      console.log("This is value: "+ value )
-      console.log("For the key: " + key )
-    })
 
     if (this.user.avatar instanceof File) {
       formData.append('avatar', this.user.avatar);

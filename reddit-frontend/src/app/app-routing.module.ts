@@ -29,8 +29,9 @@ const routes: Routes = [
   {path:'showComments/:post_id',component:AllCommentsComponent},
   {path:'updatePost/:post_id',component:UpdatePostComponent},
   {path:'replies/:comment_id',component:RepliesComponent},
-  {path:'one-community/:communiy_id',component:OneCommunityComponent},
-  {path:'updateCommunity/:community_id',component:UpdateCommunityComponent}
+  {path:'one-community/:community_id',component:OneCommunityComponent},
+  {path:'updateCommunity/:community_id',component:UpdateCommunityComponent},
+  {path:'replies/:comment_id',component:RepliesComponent}
 ];
 
 @NgModule({

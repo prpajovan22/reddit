@@ -25,10 +25,12 @@ public class Comment {
     @Column(name = "isDeleted", unique = false, nullable = false)
     private boolean isDeleted;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_comment_id", referencedColumnName = "comment_id")
     private Comment parentComment;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Comment> replies;
     @JsonIgnore

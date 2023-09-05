@@ -66,6 +66,7 @@ public class PostDTO implements Serializable {
         this.text = post.getText();
         this.creationDate = post.getCreationDate();
         this.netReactions = netReaction;
+        this.community_id = post.getCommunity().getCommunity_id();
     }
 
 

@@ -11,7 +11,7 @@
       <td>{{ a.netReactions}} </td>
       <td>{{ a.commentCount }}</td>
       <td>  
-        <button (click)="navigateToCommunity(a.communityId)">View Community</button>
+        <button (click)="navigateToCommunity(a.community_id)">View Community</button>
         <button style="margin-left: 20px;" class="btn btn-success" (click)="upvotePost(a.post_id)">Upvote</button>
         <button style="margin-left: 10px;" class="btn btn-danger" (click)="downvotePost(a.post_id)">Downvote</button>
         <button style="margin-left: 500px;" class="btn btn-info" (click)="updatePost(a.post_id)">Update</button>
@@ -26,11 +26,17 @@
   <label for="text">Text:</label>
   <input type="text" id="text" formControlName="text">
 
-  <label for="fromReactionCount">From Reaction Count:</label>
+  <label for="fromReactionCount">From Comment Count:</label>
   <input type="number" id="fromReactionCount" formControlName="fromReactionCount">
 
-  <label for="toReactionCount">To Reaction Count:</label>
+  <label for="toReactionCount">To Comment Count:</label>
   <input type="number" id="toReactionCount" formControlName="toReactionCount">
+
+  <label for="fromCommentCount">From Reaction Count:</label>
+  <input type="number" id="fromCommentCount" formControlName="fromCommentCount">
+
+  <label for="toCommentCount">To Reaction Count:</label>
+  <input type="number" id="toCommentCount" formControlName="toCommentCount">
 
   <button type="submit">Search</button>
 </form>

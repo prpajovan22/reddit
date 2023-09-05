@@ -18,7 +18,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -72,7 +78,10 @@ public class PostController {
     @PutMapping("/{post_id}")
     public ResponseEntity<Post> updatePost(
             @PathVariable Integer post_id,
-            @RequestBody Post updatedPost) {
+            @RequestParam(value = "postPDFPath", required = false) MultipartFile postPDFPath,
+            @RequestPart("text") String text,
+            @RequestPart("title") String title,
+            @RequestPart(value = "descriptionPDF", required = false) String descriptionPDF) {
 
         Post existingPost = postService.findById(post_id);
         if (existingPost == null) {
@@ -81,13 +90,40 @@ public class PostController {
 
         Community originalCommunity = existingPost.getCommunity();
 
-        existingPost.setTitle(updatedPost.getTitle());
-        existingPost.setText(updatedPost.getText());
-
         existingPost.setCommunity(originalCommunity);
+        existingPost.setTitle(title);
+        existingPost.setText(text);
 
+        if (postPDFPath != null && !postPDFPath.isEmpty()) {
+            String pdfFilePath = savePDFFile(postPDFPath);
+            existingPost.setPostPDFPath(pdfFilePath);
+        }
+
+        if (descriptionPDF != null && !descriptionPDF.isEmpty()) {
+            existingPost.setDescriptionPDF(descriptionPDF);
+        }
         Post updated = postService.save(existingPost);
         return ResponseEntity.ok(updated);
+    }
+
+    private String savePDFFile(MultipartFile pdfFile) {
+        if (pdfFile == null || pdfFile.isEmpty()) {
+            return null;
+        }
+        String uploadDir = "files";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + pdfFile.getOriginalFilename();
+        Path filePath = Paths.get(uploadDir, uniqueFileName);
+        try {
+            Files.copy(pdfFile.getInputStream(), filePath);
+            return uniqueFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @PostMapping("/create/{communityId}")

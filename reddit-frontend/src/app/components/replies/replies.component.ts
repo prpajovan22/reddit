@@ -17,16 +17,23 @@ export class RepliesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private commentService: CommentService
-  ) {}
+  ) {
+    
+  
+  }
 
   ngOnInit(): void {
-    this.comment_id = this.route.snapshot.params['comment_id'];
-    this.commentService.getRepliesForComment(this.comment_id).subscribe(replies => {
-      this.replies = replies;
-    });
+    this.route.params.subscribe((param) =>{
+      if(param && param["comment_id"]) {
+        this.comment_id = this.route.snapshot.params['comment_id'];
+        this.commentService.getRepliesForComment(this.comment_id).subscribe(replies => {
+          this.replies = replies;
+        });
+      }
+    })
   }
 
   navigateToReplies(commentId: number): void {
-    this.router.navigate(['replies', commentId], { relativeTo: this.route });
+    this.router.navigate(['/replies', commentId], { relativeTo: this.route });
   }
 }

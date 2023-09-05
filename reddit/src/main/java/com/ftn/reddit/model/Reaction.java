@@ -20,7 +20,7 @@ public class Reaction {
     @Column(name = "type", unique = false, nullable = false)
     private ReactionType type;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 

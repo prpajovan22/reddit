@@ -19,19 +19,18 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "community")
+@RequestMapping(value = "api/community")
 @CrossOrigin("*")
 public class CommunityController {
 
@@ -54,7 +53,7 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOs, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/byId/{id}")
     public ResponseEntity<Community> getCommunityById(@PathVariable("id") Integer id) {
         Community community = communityService.findById(id);
         if (community == null && community.isSuspended() == true) {
@@ -110,7 +109,7 @@ public class CommunityController {
     }
 
 
-    @PutMapping("/{community_id}")
+    /*@PutMapping("/{community_id}")
     public ResponseEntity<Community> updateCommunity(
             @PathVariable Integer community_id,
             @RequestBody Community updatedCommunity) {
@@ -124,19 +123,65 @@ public class CommunityController {
 
         Community updated = communityService.save(existingCommunity);
         return ResponseEntity.ok(updated);
+    }*/
+
+    @PutMapping("/{community_id}")
+    public ResponseEntity<Community> updateCommunity(
+            @PathVariable Integer community_id,
+            @RequestParam(value = "communityPDF", required = false) MultipartFile communityPDF,
+            @RequestPart("name") String name,
+            @RequestPart("description") String description,
+            @RequestPart(value = "communityPDFName", required = false) String communityPDFName) {
+
+        Community existingCommunity = communityService.findById(community_id);
+        if (existingCommunity == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        existingCommunity.setName(name);
+        existingCommunity.setDescription(description);
+
+        if (communityPDF != null && !communityPDF.isEmpty()) {
+            String pdfFilePath = savePDFFile(communityPDF);
+            existingCommunity.setCommunityPDFPath(pdfFilePath);
+        }
+
+        if (communityPDFName != null && !communityPDFName.isEmpty()) {
+            existingCommunity.setCommunityPDFName(communityPDFName);
+        }
+
+        Community updated = communityService.save(existingCommunity);
+        return ResponseEntity.ok(updated);
+    }
+
+    private String savePDFFile(MultipartFile pdfFile) {
+        if (pdfFile == null || pdfFile.isEmpty()) {
+            return null;
+        }
+        String uploadDir = "files";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + pdfFile.getOriginalFilename();
+        Path filePath = Paths.get(uploadDir, uniqueFileName);
+        try {
+            Files.copy(pdfFile.getInputStream(), filePath);
+            return uniqueFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private String saveCommunityPDF(MultipartFile communityPDF) throws IOException {
-        String uploadDir = "path/to/your/upload/directory";
-
+        String uploadDir = "files";
         Path uploadPath = Path.of(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
         String uniqueFileName = System.currentTimeMillis() + "_" + communityPDF.getOriginalFilename();
-
         Path filePath = uploadPath.resolve(uniqueFileName);
-
         try {
             Files.copy(communityPDF.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -147,8 +192,8 @@ public class CommunityController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteCommunity(@PathVariable("id") Integer id, Authentication authentication) {
-        Community community = communityService.findById(id);
+    public ResponseEntity<Void> deleteCommunity(@PathVariable("community_id") Integer community_id, Authentication authentication) {
+        Community community = communityService.findById(community_id);
         community.setSuspended(true);
         communityService.save(community);
         return new ResponseEntity<>(HttpStatus.OK);

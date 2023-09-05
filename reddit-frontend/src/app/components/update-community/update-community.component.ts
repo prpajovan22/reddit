@@ -31,7 +31,11 @@ export class UpdateCommunityComponent implements OnInit {
   }
 
   updateDepartment(){
-    this.communityService.updateCommunity(this.id, this.communities).subscribe(data=>{
+    const formData = new FormData();
+    formData.append("communityPDF", this.communities.communityPDF);
+    formData.append("name", this.communities.name);
+    formData.append("description", this.communities.description);
+    this.communityService.updateCommunity(this.id, formData).subscribe(data=>{
       console.log(data);
       this.communities = new Community();
       this.redirectToListOfAllDepartments();
@@ -40,5 +44,9 @@ export class UpdateCommunityComponent implements OnInit {
   onSubmit(){
     this.updateDepartment();
   }
+
+  handleFileInput(event: any) {
+    this.communities.communityPDF = event.target.files[0];
+}
 
 }

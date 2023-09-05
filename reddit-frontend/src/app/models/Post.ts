@@ -14,7 +14,7 @@ export class Post{
     reports:Reports;
     reaction:Reaction[];
     comments:Comments;
-    communityId: number;
+    community_id: number;
     netReactions: number;
     commentCount:number;
 }

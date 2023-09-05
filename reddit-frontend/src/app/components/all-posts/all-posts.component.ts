@@ -28,6 +28,8 @@ export class AllPostsComponent implements OnInit {
       title: [''],
       fromReactionCount: [0], 
       toReactionCount: [0],
+      fromCommentCount:[0],
+      toCommentCount:[0]
     });
     this.search();
   }
@@ -35,8 +37,7 @@ export class AllPostsComponent implements OnInit {
   search(): void {
     const searchCriteria: PostSearchCriteria = this.searchForm.value;
     this.postService.searchPosts(searchCriteria).subscribe(results => {
-      this.searchResults = results;
-      
+      this.searchResults = results;      
       this.fetchCommentCountsForPost();
     });
   }

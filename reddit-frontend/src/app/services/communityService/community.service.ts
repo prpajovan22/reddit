@@ -24,7 +24,7 @@ const uploadHeader = {
 })
 export class CommunityService {
 
-  private apiCommunityUrl = `${environment.apiURL}/community`;
+  private apiCommunityUrl = `${environment.apiURL}/api/community`;
 
   constructor(private http: HttpClient) { }
 
@@ -32,8 +32,8 @@ export class CommunityService {
     return this.http.get<Community[]>(this.apiCommunityUrl);
   }
 
-  getCommunityById(id:number): Observable<any>{
-    return this.http.get(`${this.apiCommunityUrl}/${id}`);
+  getCommunityById(community_id:number): Observable<any>{
+    return this.http.get(`${this.apiCommunityUrl}/byId/${community_id}`);
     
   }
 
@@ -42,8 +42,8 @@ export class CommunityService {
     return this.http.get<Community>(url);
   }
 
-  updateCommunity(community_id:number,communitys: Community) : Observable<Community>{
-    return this.http.put<Community>(`${this.apiCommunityUrl}/${community_id}`, JSON.stringify(communitys),uploadHeader);
+  updateCommunity(community_id:number,formData: FormData) : Observable<Community>{
+    return this.http.put<Community>(`${this.apiCommunityUrl}/${community_id}`, formData);
 
   }
 

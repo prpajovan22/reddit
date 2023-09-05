@@ -34,6 +34,9 @@ public class Community {
     @Column(name = "communityPDFPath", unique = false, nullable = true)
     private String communityPDFPath;
 
+    @Column(name = "communityPDFName", unique = false, nullable = true)
+    private String communityPDFName;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rule_id", referencedColumnName = "rule_id")
     private Rule rule;
@@ -57,7 +60,7 @@ public class Community {
 
     }
 
-    public Community(Integer community_id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String communityPDFPath, Rule rule, Banned banned, Set<Users> moderators, Set<Post> posts, Flair flair) {
+    public Community(Integer community_id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String communityPDFPath, String communityPDFName, Rule rule, Banned banned, Set<Users> moderators, Set<Post> posts, Flair flair) {
         this.community_id = community_id;
         this.name = name;
         this.description = description;
@@ -65,6 +68,7 @@ public class Community {
         this.isSuspended = isSuspended;
         this.suspendedReason = suspendedReason;
         this.communityPDFPath = communityPDFPath;
+        this.communityPDFName = communityPDFName;
         this.rule = rule;
         this.banned = banned;
         this.moderators = moderators;
@@ -166,5 +170,13 @@ public class Community {
 
     public void setFlair(Flair flair) {
         this.flair = flair;
+    }
+
+    public String getCommunityPDFName() {
+        return communityPDFName;
+    }
+
+    public void setCommunityPDFName(String communityPDFName) {
+        this.communityPDFName = communityPDFName;
     }
 }

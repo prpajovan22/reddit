@@ -76,14 +76,26 @@ public class PostService implements PostInterface {
                 return post.getComments().size() >= searchCriteria.getFromReactionCount() && post.getComments().size() <= searchCriteria.getToReactionCount();
             }).collect(Collectors.toSet());
         }
-        if(searchCriteria.getCommunity_id() > 0){
+        if((searchCriteria.getFromCommentCount() != null && searchCriteria.getFromCommentCount() > 0) || (searchCriteria.getToCommentCount() != null && searchCriteria.getToCommentCount() > 0)){
+            uniqueResault = uniqueResault.stream().filter(post -> {
+                return post.getReactions().size() >= searchCriteria.getFromCommentCount() && post.getReactions().size() <= searchCriteria.getToCommentCount();
+            }).collect(Collectors.toSet());
+        }
+        /*if(searchCriteria.getCommunity_id() > 0){
             uniqueResault = uniqueResault.stream().filter(post -> post.getCommunity().getCommunity_id().equals(searchCriteria.getCommunity_id())).collect(Collectors.toSet());
+        }*/
+        if (searchCriteria.getCommunity_id() != null && searchCriteria.getCommunity_id() > 0) {
+            uniqueResault = uniqueResault.stream()
+                    .filter(post -> post.getCommunity() != null &&
+                            post.getCommunity().getCommunity_id() != null &&
+                            post.getCommunity().getCommunity_id().equals(searchCriteria.getCommunity_id()))
+                    .collect(Collectors.toSet());
         }
         return new ArrayList<>(uniqueResault);
     }
 
 
-    @Transactional(readOnly = true) // Add this annotation
+    @Transactional(readOnly = true)
     public Long getCommentCountForPost(Integer post_id) {
         Optional<Post> postOptional = postRepository.findById(post_id);
 

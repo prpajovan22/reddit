@@ -10,6 +10,7 @@ export class Community{
     isSuspended:boolean;
     suspendedReason:String;
     communityPDF:string;
+    communityPDFName:string;
     banned:Banned;
     moderators:User;
     posts:Post;

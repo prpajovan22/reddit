@@ -20,7 +20,11 @@ export class AllCommunitysComponent implements OnInit {
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
       name: [''],
-      description: ['']
+      description: [''],
+      fromPostCount: [0], 
+      toPostCount: [0],
+      fromReactionCount:[0],
+      toReactionCount:[0]
     });
     this.search();
   }

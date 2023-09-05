@@ -10,15 +10,22 @@ public class PostSearchCriteria {
 
     Long toReactionCount;
 
+    Long fromCommentCount;
+
+    Long toCommentCount;
+
     Integer community_id;
 
-    public PostSearchCriteria(String text, String title, Long fromReactionCount, Long toReactionCount,Integer community_id) {
+    public PostSearchCriteria(String text, String title, Long fromReactionCount, Long toReactionCount, Long fromCommentCount, Long toCommentCount, Integer community_id) {
         this.text = text;
         this.title = title;
         this.fromReactionCount = fromReactionCount;
         this.toReactionCount = toReactionCount;
+        this.fromCommentCount = fromCommentCount;
+        this.toCommentCount = toCommentCount;
         this.community_id = community_id;
     }
+
     public  PostSearchCriteria(){}
 
     public String getText() {
@@ -59,5 +66,21 @@ public class PostSearchCriteria {
 
     public void setCommunity_id(Integer community_id) {
         this.community_id = community_id;
+    }
+
+    public Long getFromCommentCount() {
+        return fromCommentCount;
+    }
+
+    public void setFromCommentCount(Long fromCommentCount) {
+        this.fromCommentCount = fromCommentCount;
+    }
+
+    public Long getToCommentCount() {
+        return toCommentCount;
+    }
+
+    public void setToCommentCount(Long toCommentCount) {
+        this.toCommentCount = toCommentCount;
     }
 }

@@ -3,12 +3,14 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th>PDF</th>
       <th>Post count</th>
       <th>Average reactions</th>
     </tr>
     <tr *ngFor="let a of searchResults">
       <td>{{ a.name }}</td>
       <td>{{ a.description}} </td>
+      <td>{{ a.communityPDFName}} </td>
       <td>{{ a.postCount }}</td>
       <td>{{ a.totalReaction}}</td>
       <td>  
@@ -25,5 +27,16 @@
   <label for="description">Description:</label>
   <input type="text" id="description" formControlName="description">
   <br>
+  <label for="fromPostCount">From Post Count:</label>
+  <input type="number" id="fromPostCount" formControlName="fromPostCount">
+
+  <label for="toPostCount">To Post Count:</label>
+  <input type="number" id="toPostCount" formControlName="toPostCount">
+
+  <label for="fromReactionCount">From Reaction Count:</label>
+  <input type="number" id="fromReactionCount" formControlName="fromReactionCount">
+
+  <label for="toReactionCount">To Reaction Count:</label>
+  <input type="number" id="toReactionCount" formControlName="toReactionCount">
   <button type="submit">Search</button>
 </form>

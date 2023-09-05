@@ -9,6 +9,10 @@
                 <label for="name">Description</label>
                 <input type="text" class="form-control" id="description" required [(ngModel)]="communities.description" name="description">
             </div>
+            <div class="form-group">
+                <label for="pdfFile">PDF File</label>
+                <input type="file" class="form-control" id="communityPDF" (change)="handleFileInput($event)" name="communityPDF">
+            </div>
             <button type="submit" class="btn btn-success">Submit</button>
         </form> 
 </div>

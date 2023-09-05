@@ -1,1 +1,21 @@
-<p>one-community works!</p>
+<div class="center">
+    <h2 style="margin-left: auto; margin-right: auto;">Community</h2> 
+    
+    <hr/>
+    <div *ngIf="community">
+      <div class="field">
+        <label><b>Name: </b></label> {{community.name}}
+      </div>
+      <div  class="field">
+        <label><b>Description: </b></label> {{community.description}}
+      </div>
+    </div>
+    <br>
+    <br>
+    <div class="buttons">
+        <button (click)="goHome()" class="btn btn-primary">Home</button><br>
+        <button style="margin-left: 10px;" class="btn btn-danger">Change Password</button><br>
+    
+    </div>
+    
+    </div>

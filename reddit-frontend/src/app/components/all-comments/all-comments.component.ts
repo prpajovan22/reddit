@@ -44,7 +44,7 @@ export class AllCommentsComponent implements OnInit {
   }
 
   navigateToReplies(comment_id: number): void {
-    this.router.navigate(['replies', comment_id], { relativeTo: this.route });
+    this.router.navigate(['/replies', comment_id], { relativeTo: this.route });
   }
 
   

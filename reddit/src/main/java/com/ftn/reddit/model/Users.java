@@ -49,10 +49,9 @@ public class Users implements Serializable, UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Post> post;
 
-    /*@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Banned> moderator*/;
-
+    private Set<Reaction> reactions;
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Banned> banned;
@@ -77,23 +76,23 @@ public class Users implements Serializable, UserDetails {
     }
 
 
-    public Users(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, Set<Post> post, Set<Banned> moderator, Set<Banned> banned, Set<Flair> flairs, Set<Comment> comments, Set<Report> reports, Community community) {
-        this.user_id = user_id;//
+    public Users(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, Set<Post> post, Set<Reaction> reactions, Set<Banned> banned, Set<Flair> flairs, Set<Comment> comments, Set<Report> reports, Community community) {
+        this.user_id = user_id;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.avatar = avatar;//
-        this.registrationDate = registrationDate;//
+        this.avatar = avatar;
+        this.registrationDate = registrationDate;
         this.description = description;
         this.displayName = displayName;
-        this.userRole = userRole;//
+        this.userRole = userRole;
         this.post = post;
-        //this.moderator = moderator;
+        this.reactions = reactions;
         this.banned = banned;
         this.flairs = flairs;
         this.comments = comments;
         this.reports = reports;
-        this.community = community;//
+        this.community = community;
     }
 
     public Integer getUser_id() {
@@ -241,4 +240,11 @@ public class Users implements Serializable, UserDetails {
         this.reports = reports;
     }
 
+    public Set<Reaction> getReactions() {
+        return reactions;
+    }
+
+    public void setReactions(Set<Reaction> reactions) {
+        this.reactions = reactions;
+    }
 }
