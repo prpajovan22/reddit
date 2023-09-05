@@ -41,4 +41,12 @@ getRepliesForComment(comment_id: number): Observable<Comments[]> {
 searchComments(searchCriteria: CommentSearchCriteria): Observable<Comments[]> {
   return this.http.post<Comments[]>(`${this.apiCommentUrl}/search`, searchCriteria);
 }
+
+upvoteComment(comment_id: number): Observable<any> {
+  return this.http.post<any>(`${this.apiCommentUrl}/upvote/${comment_id}`, {});
+}
+
+downvoteComment(comment_id: number): Observable<any> {
+  return this.http.post<any>(`${this.apiCommentUrl}/downvote/${comment_id}`, {});
+}
 }

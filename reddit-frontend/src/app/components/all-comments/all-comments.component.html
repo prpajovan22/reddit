@@ -1,9 +1,11 @@
 <table id="comments-table">
   <tr>
     <th>Text</th>
+    <th>Reaction</th>
   </tr>
   <tr *ngFor="let post of comments">
     <td>{{ post.text }}</td> 
+    <td>{{ post.netReactions}} </td>
     <button (click)="navigateToReplies(post.comment_id)">Show Replies</button>
   </tr>   
 </table>

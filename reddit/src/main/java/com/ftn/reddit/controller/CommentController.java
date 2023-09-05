@@ -9,6 +9,7 @@ import com.ftn.reddit.model.Users;
 import com.ftn.reddit.model.pretraga.CommentSerachCriteria;
 import com.ftn.reddit.services.CommentService;
 import com.ftn.reddit.services.PostService;
+import com.ftn.reddit.services.ReactionService;
 import com.ftn.reddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,16 +39,8 @@ public class CommentController {
     @Autowired
     private PostService postService;
 
-    /*@GetMapping
-    public ResponseEntity<List<CommentDTO>> getComments() {
-        List<Comment> comments = commentService.findAll();
-
-        List<CommentDTO> commentDTOs = comments.stream()
-                .map(CommentDTO::new)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(commentDTOs, HttpStatus.OK);
-    }*/
+    @Autowired
+    private ReactionService reactionService;
 
 
     @GetMapping
@@ -147,5 +140,23 @@ public class CommentController {
         }
 
         return ResponseEntity.ok(searchResult);
+    }
+
+    @PostMapping("/upvote/{comment_id}")
+    public ResponseEntity<Void> upvoteComment(@PathVariable Integer comment_id, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users user = userService.findByUsername(userDetails.getUsername());
+
+        reactionService.upvoteComment(comment_id, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/downvote/{comment_id}")
+    public ResponseEntity<Void> downvoteComment(@PathVariable Integer comment_id, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users user = userService.findByUsername(userDetails.getUsername());
+
+        reactionService.downvoteComment(comment_id, user);
+        return ResponseEntity.ok().build();
     }
 }

@@ -11,4 +11,5 @@ export class Comments{
     reactions:Reaction;
     reports:Reports;
     comments: Comments[];
+    netReactions: number;
 }

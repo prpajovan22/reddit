@@ -130,8 +130,7 @@ public class CommunityController {
             @PathVariable Integer community_id,
             @RequestParam(value = "communityPDF", required = false) MultipartFile communityPDF,
             @RequestPart("name") String name,
-            @RequestPart("description") String description,
-            @RequestPart(value = "communityPDFName", required = false) String communityPDFName) {
+            @RequestPart("description") String description) {
 
         Community existingCommunity = communityService.findById(community_id);
         if (existingCommunity == null) {
@@ -144,10 +143,11 @@ public class CommunityController {
         if (communityPDF != null && !communityPDF.isEmpty()) {
             String pdfFilePath = savePDFFile(communityPDF);
             existingCommunity.setCommunityPDFPath(pdfFilePath);
-        }
 
-        if (communityPDFName != null && !communityPDFName.isEmpty()) {
-            existingCommunity.setCommunityPDFName(communityPDFName);
+            String originalFilename = communityPDF.getOriginalFilename();
+            if (originalFilename != null && !originalFilename.isEmpty()) {
+                existingCommunity.setCommunityPDFName(originalFilename);
+            }
         }
 
         Community updated = communityService.save(existingCommunity);

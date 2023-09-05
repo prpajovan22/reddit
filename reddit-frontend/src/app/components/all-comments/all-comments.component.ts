@@ -21,7 +21,8 @@ export class AllCommentsComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private postService: CommentService,
-    private router: Router
+    private router: Router,
+    private commentService: CommentService
   ) {
     this.searchForm = this.formBuilder.group({
       text: ['']
@@ -45,6 +46,24 @@ export class AllCommentsComponent implements OnInit {
 
   navigateToReplies(comment_id: number): void {
     this.router.navigate(['/replies', comment_id], { relativeTo: this.route });
+  }
+
+  upvoteComment(comment_id: number): void {
+    this.commentService.upvoteComment(comment_id).subscribe(response => {
+      const updatedPost = this.searchResults.find(post => post.comment_id === comment_id);
+      if (updatedPost) {
+        updatedPost.netReactions++;
+      }
+    });
+  }
+
+  downvoteComment(comment_id: number): void {
+    this.postService.downvoteComment(comment_id).subscribe(response => {
+      const updatedPost = this.searchResults.find(post => post.comment_id === comment_id);
+      if (updatedPost) {
+        updatedPost.netReactions--; 
+      }
+    });
   }
 
   

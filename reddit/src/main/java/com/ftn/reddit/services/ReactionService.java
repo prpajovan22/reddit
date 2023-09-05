@@ -5,6 +5,7 @@ import com.ftn.reddit.model.Post;
 import com.ftn.reddit.model.Reaction;
 import com.ftn.reddit.model.ReactionType;
 import com.ftn.reddit.model.Users;
+import com.ftn.reddit.repositorys.CommentRepository;
 import com.ftn.reddit.repositorys.PostRepository;
 import com.ftn.reddit.repositorys.ReactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ReactionService implements ReactionInterface {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Override
     public Reaction save(Reaction reaction) {
@@ -85,5 +89,43 @@ public class ReactionService implements ReactionInterface {
         }
 
         return upvotes - downvotes;
+    }
+
+    public void upvoteComment(Integer comment_id, Users user) {
+        Reaction existingReaction = reactionRepository.findByUserAndComment(user, commentRepository.findById(comment_id).orElse(null));
+        if (existingReaction != null && existingReaction.getType() == ReactionType.UPWOTE) {
+            return;
+        }
+
+        if (existingReaction != null && existingReaction.getType() == ReactionType.DOWNWOTE) {
+            reactionRepository.delete(existingReaction);
+        }
+
+        Reaction reaction = new Reaction();
+        reaction.setTimestamp(LocalDate.from(LocalDateTime.now()));
+        reaction.setType(ReactionType.UPWOTE);
+        reaction.setComment(commentRepository.findById(comment_id).orElse(null));
+        reaction.setUser(user);
+
+        reactionRepository.save(reaction);
+    }
+
+    public void downvoteComment(Integer comment_id, Users user) {
+        Reaction existingReaction = reactionRepository.findByUserAndComment(user, commentRepository.findById(comment_id).orElse(null));
+        if (existingReaction != null && existingReaction.getType() == ReactionType.DOWNWOTE) {
+            return;
+        }
+
+        if (existingReaction != null && existingReaction.getType() == ReactionType.UPWOTE) {
+            reactionRepository.delete(existingReaction);
+        }
+
+        Reaction reaction = new Reaction();
+        reaction.setTimestamp(LocalDate.from(LocalDateTime.now()));
+        reaction.setType(ReactionType.DOWNWOTE);
+        reaction.setComment(commentRepository.findById(comment_id).orElse(null));
+        reaction.setUser(user);
+
+        reactionRepository.save(reaction);
     }
 }
