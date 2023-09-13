@@ -2,6 +2,7 @@ package com.ftn.reddit.services;
 
 import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.Interface.UserInterface;
+import com.ftn.reddit.model.UserRole;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.repositorys.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserInterface {
@@ -61,5 +63,19 @@ public class UserService implements UserInterface {
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         usersRepository.save(user);
+    }
+
+    public boolean switchUserRoleToUser(Integer user_id) {
+        Optional<Users> userOptional = usersRepository.findById(user_id);
+
+        if (userOptional.isPresent()) {
+            Users user = userOptional.get();
+            user.setUserRole(UserRole.USER);
+
+            usersRepository.save(user);
+            return true;
+        }
+
+        return false;
     }
 }

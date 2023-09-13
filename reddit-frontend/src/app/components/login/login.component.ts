@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginRequest } from 'src/app/models/LoginRequest';
-import { AuthService } from 'src/app/services/authService/auth.service';
+import { AuthService, AuthenticationResponse } from 'src/app/services/authService/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -34,14 +34,19 @@ export class LoginComponent implements OnInit {
       password: this.password,
     };
 
-    this.authService.login(object).subscribe((authResponse) => {localStorage.setItem("token",JSON.stringify(authResponse.token))
-    this.email = '';
-    this.password = '';
-
-    this.router.navigate(['home']);
+    this.authService.login(object).subscribe((authResponse:AuthenticationResponse) => {
+    if(authResponse.successfull){
+      localStorage.setItem("isUserLoggedIn","true");
+      localStorage.setItem("userRole",authResponse.role);
+      this.email = '';
+      this.password = '';
+      this.authService.setUserLoggedIn(true);
+  
+      this.router.navigate(['home']);
+    }else{
+      alert(authResponse.message)
+    }
   });
-
-    
   }
 
 }

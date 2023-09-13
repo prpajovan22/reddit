@@ -1,5 +1,7 @@
 package com.ftn.reddit.controller;
 
+import com.ftn.reddit.DTO.UsersDTO;
+import com.ftn.reddit.model.Users;
 import com.ftn.reddit.model.pretraga.ChangePasswordRequest;
 import com.ftn.reddit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/user")
@@ -29,6 +33,23 @@ public class UserController {
         }
         userService.updatePassword(username, request.getNewPassword());
         return ResponseEntity.ok("Password changed successfully");
+    }
+
+    @GetMapping("/all")
+    public List<Users> getAllUsers() {
+        return userService.findAll();
+    }
+
+    @PostMapping("/switch-role/{userId}")
+    public ResponseEntity<String> switchUserRoleToUser(@PathVariable Integer user_id) {
+
+        boolean success = userService.switchUserRoleToUser(user_id);
+
+        if (success) {
+            return ResponseEntity.ok("User role switched to USER successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to switch user role.");
+        }
     }
 
 }

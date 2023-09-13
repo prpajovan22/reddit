@@ -1,3 +1,4 @@
+/*
 package com.ftn.reddit.security;
 
 import com.ftn.reddit.repositorys.UsersRepository;
@@ -47,3 +48,4 @@ public class ApplicationConfig {
     }
 
 }
+*/

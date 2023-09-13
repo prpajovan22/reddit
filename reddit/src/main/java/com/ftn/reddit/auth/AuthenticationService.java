@@ -1,4 +1,4 @@
-package com.ftn.reddit.auth;
+/*package com.ftn.reddit.auth;
 
 import com.ftn.reddit.model.UserRole;
 import com.ftn.reddit.model.Users;
@@ -32,7 +32,6 @@ public class AuthenticationService implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
 
 
-
     public AuthenticationResponse generateToken(AuthenticationRequest request) {
         var user = repository.findByEmail(request.getEmail());
         var jwtToken = jwtService.generateToken((UserDetails) user);
@@ -56,9 +55,9 @@ public class AuthenticationService implements AuthenticationProvider {
     }
 
 
-
-@Override
+    @Override
     public boolean supports(Class<?> authentication) {
         return false;
     }
 }
+*/

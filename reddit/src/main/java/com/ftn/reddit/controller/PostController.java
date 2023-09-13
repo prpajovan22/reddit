@@ -8,6 +8,7 @@ import com.ftn.reddit.model.*;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.services.*;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,10 +131,10 @@ public class PostController {
     public ResponseEntity<Void> createPost(
             @PathVariable Integer community_id,
             @RequestBody PostDTO postRequest,
-            Authentication authentication
+            HttpSession session
     ) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Users author = userService.findByUsername(userDetails.getUsername());
+        //user koristiti svuda
+        Users author = (Users) session.getAttribute("loggedUser");
 
         Community community = communityService.findById(community_id);
         if (community == null) {
@@ -218,20 +219,26 @@ public class PostController {
     ////////////////////////////////// Upwote  ////////////////////////////////////////
 
     @PostMapping("/upvote/{post_id}")
-    public ResponseEntity<Void> upvotePost(@PathVariable Integer post_id, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Users user = userService.findByUsername(userDetails.getUsername());
+    public ResponseEntity<String> upvotePost(@PathVariable Integer post_id, HttpSession session) {
+        Users author = (Users) session.getAttribute("loggedUser");
 
-        reactionService.upvotePost(post_id, user);
+        if (author.isSuspended()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
+        }
+
+        reactionService.upvotePost(post_id, author);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/downvote/{post_id}")
-    public ResponseEntity<Void> downvotePost(@PathVariable Integer post_id, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Users user = userService.findByUsername(userDetails.getUsername());
+    public ResponseEntity<String> downvotePost(@PathVariable Integer post_id, HttpSession session) {
+        Users author = (Users) session.getAttribute("loggedUser");
 
-        reactionService.downvotePost(post_id, user);
+        if (author.isSuspended()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
+        }
+
+        reactionService.downvotePost(post_id, author);
         return ResponseEntity.ok().build();
     }
 

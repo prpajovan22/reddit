@@ -10,6 +10,7 @@ import com.ftn.reddit.model.Users;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.services.CommunityService;
 import com.ftn.reddit.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,13 +78,12 @@ public class CommunityController {
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam(value = "communityPDF", required = false) MultipartFile communityPDF,
-            Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        Users user = userService.findByUsername(userPrincipal.getUsername());
+            HttpSession session) {
+        Users author = (Users) session.getAttribute("loggedUser");
 
-        if (!user.getUserRole().equals("MODERATOR")) {
-            user.setUserRole(UserRole.valueOf("MODERATOR"));
-            userService.save(user);
+        if (!author.getUserRole().equals("MODERATOR")) {
+            author.setUserRole(UserRole.valueOf("MODERATOR"));
+            userService.save(author);
         }
 
         LocalDate creationDate = LocalDate.now();
@@ -92,7 +92,7 @@ public class CommunityController {
         community.setDescription(description);
         community.setCreationDate(creationDate);
         community.setSuspended(false);
-        community.getModerators().add(user); // Add the user as a moderator
+        community.getModerators().add(author); // Add the user as a moderator
 
         if (communityPDF != null && !communityPDF.isEmpty()) {
             try {
@@ -108,22 +108,6 @@ public class CommunityController {
         return ResponseEntity.ok().build();
     }
 
-
-    /*@PutMapping("/{community_id}")
-    public ResponseEntity<Community> updateCommunity(
-            @PathVariable Integer community_id,
-            @RequestBody Community updatedCommunity) {
-
-        Community existingCommunity = communityService.findById(community_id);
-        if (existingCommunity == null) {
-            return ResponseEntity.notFound().build();
-        }
-        existingCommunity.setName(updatedCommunity.getName());
-        existingCommunity.setDescription(updatedCommunity.getDescription());
-
-        Community updated = communityService.save(existingCommunity);
-        return ResponseEntity.ok(updated);
-    }*/
 
     @PutMapping("/{community_id}")
     public ResponseEntity<Community> updateCommunity(

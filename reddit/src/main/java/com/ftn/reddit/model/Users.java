@@ -42,8 +42,12 @@ public class Users implements Serializable, UserDetails {
     @Column(name = "displayName", unique = false, nullable = true)
     private String displayName;
 
+    @Column(name = "suspended", unique = false, nullable = true)
+    private boolean isSuspended;
+
     @Column(name = "userRole", unique = false, nullable = false)
     private UserRole userRole;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -76,7 +80,7 @@ public class Users implements Serializable, UserDetails {
     }
 
 
-    public Users(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, Set<Post> post, Set<Reaction> reactions, Set<Banned> banned, Set<Flair> flairs, Set<Comment> comments, Set<Report> reports, Community community) {
+    public Users(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, boolean isSuspended, UserRole userRole, Set<Post> post, Set<Reaction> reactions, Set<Banned> banned, Set<Flair> flairs, Set<Comment> comments, Set<Report> reports, Community community) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -85,6 +89,7 @@ public class Users implements Serializable, UserDetails {
         this.registrationDate = registrationDate;
         this.description = description;
         this.displayName = displayName;
+        this.isSuspended = isSuspended;
         this.userRole = userRole;
         this.post = post;
         this.reactions = reactions;
@@ -246,5 +251,13 @@ public class Users implements Serializable, UserDetails {
 
     public void setReactions(Set<Reaction> reactions) {
         this.reactions = reactions;
+    }
+
+    public boolean isSuspended() {
+        return isSuspended;
+    }
+
+    public void setSuspended(boolean suspended) {
+        isSuspended = suspended;
     }
 }

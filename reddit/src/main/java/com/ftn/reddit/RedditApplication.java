@@ -1,8 +1,13 @@
 package com.ftn.reddit;
 
+import com.ftn.reddit.model.UserRole;
+import com.ftn.reddit.model.Users;
+import com.ftn.reddit.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.sql.Connection;

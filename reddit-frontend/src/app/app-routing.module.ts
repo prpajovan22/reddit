@@ -19,7 +19,7 @@ const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
   {path:'home',component:AllPostsComponent},
   {path:'login',component:LoginComponent},
-  {path:'register',component:RegisterComponent},
+  {path:'registration',component:RegisterComponent},
   {path:'users',component:AllUsersComponent},
   {path:'communitys',component:AllCommunitysComponent},
   {path:'createCommunity',component:CreateCommunityComponent},

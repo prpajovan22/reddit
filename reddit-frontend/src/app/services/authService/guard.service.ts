@@ -18,9 +18,7 @@ export class GuardService implements CanActivate {
     const tokenPayload:any = jwtDecode(token);
     console.log(expectedRole)
     if (
-      !this.auth.isAuthenticated() || 
-      tokenPayload.role.authority !== expectedRole
-    ) {
+      !this.auth.isUserLoggedIn() ) {
       this.router.navigate(['login']);
       return false;
     }

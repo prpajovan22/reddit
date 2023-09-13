@@ -4,10 +4,11 @@ import com.ftn.reddit.DTO.LoginDTO;
 import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.auth.AuthenticationRequest;
 import com.ftn.reddit.auth.AuthenticationResponse;
-import com.ftn.reddit.auth.AuthenticationService;
+//import com.ftn.reddit.auth.AuthenticationService;
 import com.ftn.reddit.model.UserRole;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +43,8 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    /*@Autowired
+    private AuthenticationService authenticationService;*/
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -52,18 +54,37 @@ public class LoginController {
 
 
     @PostMapping("/signIn")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-            AuthenticationResponse response =  authenticationService.generateToken(request);
-            return new ResponseEntity<>(response,HttpStatus.OK);
-        } catch (AuthenticationException e) {
-            // Authentication failed
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpSession session){
+
+        Users user = userService.findByUsername(request.getEmail());
+        AuthenticationResponse response = new AuthenticationResponse();
+        if(user == null){
+            response.setMessage("User does not exist!");
+            response.setSuccessfull(false);
+            return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.BAD_REQUEST);
         }
+        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
+            response.setMessage("Wrong username or password!.");
+            response.setSuccessfull(false);
+            return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.BAD_REQUEST);
+        }
+        session.setAttribute("loggedUser",user);
+        response.setSuccessfull(true);
+        response.setRole(user.getUserRole().toString());
+
+        return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.OK);
     }
+
+
+
+    /*@PostMapping("/signIn")
+    public ResponseEntity<String> login(@RequestBody AuthenticationRequest request){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.getEmail(), request.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
+    }*/
 
     @PostMapping("/registration")
     public ResponseEntity<UsersDTO> register(@RequestParam("username") String username,@RequestParam("password") String password,
@@ -107,6 +128,7 @@ public class LoginController {
         usersDTO.setUsername(username);
         usersDTO.setEmail(email);
         usersDTO.setUserRole(userRole);
+        usersDTO.setSuspended(false);
         usersDTO.setDescription(description);
         usersDTO.setDisplayName(displayName);
         Users users = userService.save(usersDTO.ToUsersEntity());

@@ -10,18 +10,16 @@ import { AuthService } from 'src/app/services/authService/auth.service';
 export class NavBarComponent implements OnInit {
 
   user: any;
-
+  isUserLoggedIn:boolean;
 
   constructor(private route: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit(): void {
-
-    //this.user = this.authService.getToken()
-
-
+    this.authService.getUserLoggedIn().subscribe(value =>{this.isUserLoggedIn = value})
   }
 
   logout(){
-    //this.authService.logout();
+    this.authService.logout();
+    this.authService.setUserLoggedIn(false);
   }
 }

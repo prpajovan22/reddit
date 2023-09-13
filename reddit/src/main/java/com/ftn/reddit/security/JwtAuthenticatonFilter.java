@@ -1,3 +1,4 @@
+/*
 package com.ftn.reddit.security;
 
 import jakarta.servlet.FilterChain;
@@ -58,3 +59,4 @@ public class JwtAuthenticatonFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 }
+*/

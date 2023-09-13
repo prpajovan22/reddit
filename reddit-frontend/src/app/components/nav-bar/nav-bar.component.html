@@ -3,9 +3,9 @@
         <ul>
             <li><a href="home">Posts</a></li>
             <li><a href="communitys">Community</a></li>
-            <li><a href="examDates">Exam Dates</a></li>
-            <li><a href="lecturers">Lecturers</a></li>
-            <li><a href="login">Login</a></li>
+            <li *ngIf="!isUserLoggedIn"><a href="registration">Registration</a></li>
+            <li *ngIf="!isUserLoggedIn"><a href="login">Login</a></li>
+            <li *ngIf="isUserLoggedIn"><a href="#" (click)="logout()">Logout</a></li>
           </ul> 
     </div>
     

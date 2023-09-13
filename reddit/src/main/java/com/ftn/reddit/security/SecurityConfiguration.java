@@ -5,10 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,16 +26,29 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private final JwtAuthenticatonFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+    /*private final JwtAuthenticatonFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;*/
+
+    private UserDetailsService userDetailsService;
+
+    public SecurityConfiguration(UserDetailsService userDetailsService){
+        this.userDetailsService = userDetailsService;
+    }
+
 
     @Bean
-    public PasswordEncoder encoder() {
+    public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -44,7 +62,7 @@ public class SecurityConfiguration {
         return source;
     }
 
-    @Bean
+   /* @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors()
@@ -66,6 +84,25 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
+
+        return http.build();
+    }*/
+
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf().disable()
+                .authorizeHttpRequests((authorize) ->
+                        //authorize.anyRequest().authenticated()
+                        authorize.requestMatchers("/api/login/**", "api/post/search", "/api/community/**"
+                                        , "api/post/byCommunity/**","api/post/{post_id}/**","api/comment/searchInPost/{post_id}"
+                                        ,"api/comment/byPost/{post_id}","api/post/create/{communityId}","api/comment/search",
+                                        "api/community/allWithTotalReactions","api/comment/{comment_id}/replies").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .anyRequest().authenticated()
+
+                );
 
         return http.build();
     }

@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -85,6 +86,26 @@ public class CommentController {
         commentService.save(comment);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+
+
+    @PutMapping("/{comment_id}")
+    public ResponseEntity<Comment> updateComment(
+            @PathVariable Integer comment_id,
+            @RequestPart("text") String text){
+
+        Comment existingComment = commentService.findById(comment_id);
+        if (existingComment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post originalPost = existingComment.getPost();
+        existingComment.setPost(originalPost);
+        existingComment.setText(text);
+        Comment updated = commentService.save(existingComment);
+        return ResponseEntity.ok(updated);
+    }
+
+
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable("id") Integer id, Authentication authentication) {

@@ -24,8 +24,9 @@ public class UsersDTO {
     private CommentDTO commentDTO;
     private ReportDTO reportDTO;
     private String token;
+    private boolean suspended;
 
-    public UsersDTO(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, PostDTO postDTO, BannedDTO bannedDTO, FlairDTO flairDTO, CommentDTO commentDTO, ReportDTO reportDTO, String token) {
+    public UsersDTO(Integer user_id, String username, String password, String email, String avatar, LocalDate registrationDate, String description, String displayName, UserRole userRole, PostDTO postDTO, BannedDTO bannedDTO, FlairDTO flairDTO, CommentDTO commentDTO, ReportDTO reportDTO, String token,boolean suspended) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -41,6 +42,7 @@ public class UsersDTO {
         this.commentDTO = commentDTO;
         this.reportDTO = reportDTO;
         this.token = token;
+        this.suspended = suspended;
     }
 
     public UsersDTO(Users users) {
@@ -59,6 +61,7 @@ public class UsersDTO {
         users.setDisplayName(this.displayName);
         users.setRegistrationDate(this.registrationDate);
         users.setUserRole(this.userRole);
+        users.setSuspended(this.suspended);
         return users;
     }
 
