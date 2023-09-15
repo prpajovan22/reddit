@@ -1,1 +1,11 @@
-<p>create-comment works!</p>
+<div class="card col-md-6 offset-md-3">
+    <h3>Create Comment</h3>
+        <form (ngSubmit)="onSubmit()">
+            
+            <div class="form-group">
+                <label for="name">Text</label>
+                <input type="text" class="form-control" [(ngModel)]="comments.text" id="text" required name="text">
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form> 
+</div>

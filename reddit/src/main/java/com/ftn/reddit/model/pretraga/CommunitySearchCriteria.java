@@ -4,19 +4,21 @@ public class CommunitySearchCriteria {
 
     private String name;
     private String description;
-
+    private String communityPDFName;
     private Long fromPostCount;
     private Long toPostCount;
     private Long fromReactionCount;
     private Long toReactionCount;
 
-    public CommunitySearchCriteria(String name, String description, Long fromPostCount, Long toPostCount, Long fromReactionCount, Long toReactionCount) {
+    public CommunitySearchCriteria(String name, String description, Long fromPostCount,
+                                   Long toPostCount, Long fromReactionCount, Long toReactionCount,String communityPDFName) {
         this.name = name;
         this.description = description;
         this.fromPostCount = fromPostCount;
         this.toPostCount = toPostCount;
         this.fromReactionCount = fromReactionCount;
         this.toReactionCount = toReactionCount;
+        this.communityPDFName = communityPDFName;
     }
 
     public CommunitySearchCriteria(){
@@ -69,5 +71,13 @@ public class CommunitySearchCriteria {
 
     public void setToReactionCount(Long toReactionCount) {
         this.toReactionCount = toReactionCount;
+    }
+
+    public String getCommunityPDFName() {
+        return communityPDFName;
+    }
+
+    public void setCommunityPDFName(String communityPDFName) {
+        this.communityPDFName = communityPDFName;
     }
 }

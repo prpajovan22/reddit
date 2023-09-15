@@ -47,8 +47,9 @@ export class CommunityService {
 
   }
 
-  createCommunity(communitys: Community) : Observable<Community>{
-    return this.http.post<Community>(this.apiCommunityUrl, communitys, createHeader);
+  createCommunity(communitys: any) : Observable<Community>{
+    console.log(communitys);
+    return this.http.post<Community>(this.apiCommunityUrl, communitys);
   }
 
   deleteCommunity(id:any) : Observable<any>{

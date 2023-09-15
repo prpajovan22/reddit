@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       this.password = '';
       this.authService.setUserLoggedIn(true);
   
-      this.router.navigate(['home']);
+      this.router.navigate(['profile']);
     }else{
       alert(authResponse.message)
     }

@@ -1,31 +1,8 @@
-<div class="center">
-    <h2 style="margin-left: auto; margin-right: auto;">User profilr</h2> 
-    
-    <hr/>
-    <div *ngIf="user">
-      <div class="field">
-        <label><b>Username: </b></label> {{user.username}}
-      </div>
-      <div  class="field">
-        <label><b>Display name: </b></label> {{user.displayName}}
-      </div>
-      <div  class="field">
-        <label><b>Email: </b></label> {{user.email}}
-      </div>
-      <div  class="field">
-        <label><b>Avatar: </b></label> {{user.avatar}}
-      </div>
-      <div  class="field">
-        <label><b>Description</b></label> {{user.description}}
-      </div>  
-    </div>
-    
-    <br>
-    <br>
-    <div class="buttons">
-        <button (click)="goHome()" class="btn btn-primary">Home</button><br>
-        <button style="margin-left: 10px;" class="btn btn-danger">Change Password</button><br>
-    
-    </div>
-    
-    </div>
+<div *ngIf="user">
+  <h2>User Profile</h2>
+  <p><strong>Name:</strong> {{ user.name }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+</div>
+<div *ngIf="!user">
+  <p>No user is logged in.</p>
+</div>

@@ -49,4 +49,9 @@ upvoteComment(comment_id: number): Observable<any> {
 downvoteComment(comment_id: number): Observable<any> {
   return this.http.post<any>(`${this.apiCommentUrl}/downvote/${comment_id}`, {});
 }
+
+createComment(communitys: any) : Observable<Comments>{
+  console.log(communitys);
+  return this.http.post<Comments>(this.apiCommentUrl, communitys);
+}
 }

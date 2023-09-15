@@ -70,9 +70,15 @@ export class AllCommunitysComponent implements OnInit {
     this.router.navigate(['communityPosts', community_id]);
   }
 
-  public updateCommunity(community_id:number){
-    this.router.navigate(['updateCommunity', community_id]);
+  public createPost(community_id:number){
+    this.router.navigate(['createPost', community_id]);
   }
+
+  public updateCommunity(community_id:number){
+    this.router.navigate(['updateComment', community_id]);
+  }
+
+  
 }
 
   

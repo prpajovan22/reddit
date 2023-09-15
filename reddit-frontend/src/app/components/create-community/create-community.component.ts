@@ -31,7 +31,7 @@ export class CreateCommunityComponent implements OnInit {
       formData.append('communityPDF', this.selectedPDF);
     }
     
-    this.communityService.createCommunity(this.communitys).subscribe(
+    this.communityService.createCommunity(formData).subscribe(
       data=>{
       console.log(data);
       this.communitys = new Community();
@@ -45,7 +45,7 @@ export class CreateCommunityComponent implements OnInit {
   }
 
   onFileChange(event: any): void {
-    this.selectedPDF = event.target.files[0]; // Get the selected PDF file
+    this.selectedPDF = event.target.files[0]; 
   }
 
 }

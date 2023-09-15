@@ -14,6 +14,9 @@ import { UpdatePostComponent } from './components/update-post/update-post.compon
 import { RepliesComponent } from './components/replies/replies.component';
 import { OneCommunityComponent } from './components/one-community/one-community.component';
 import { UpdateCommunityComponent } from './components/update-community/update-community.component';
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
+import { UpdateCommentComponent } from './components/update-comment/update-comment.component';
+import { CreateCommentComponent } from './components/create-comment/create-comment.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -21,6 +24,7 @@ const routes: Routes = [
   {path:'login',component:LoginComponent},
   {path:'registration',component:RegisterComponent},
   {path:'users',component:AllUsersComponent},
+  {path:'profile',component:ProfileUserComponent},
   {path:'communitys',component:AllCommunitysComponent},
   {path:'createCommunity',component:CreateCommunityComponent},
   {path:'createPost/:community_id',component:CreatePostComponent},
@@ -31,6 +35,8 @@ const routes: Routes = [
   {path:'replies/:comment_id',component:RepliesComponent},
   {path:'one-community/:community_id',component:OneCommunityComponent},
   {path:'updateCommunity/:community_id',component:UpdateCommunityComponent},
+  {path:'updateComment/:comment_id',component:UpdateCommentComponent},
+  {path:'createComment/:post_id',component:CreateCommentComponent},
   {path:'replies/:comment_id',component:RepliesComponent}
 ];
 

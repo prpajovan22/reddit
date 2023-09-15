@@ -16,6 +16,7 @@
         <button style="margin-left: 10px;" class="btn btn-danger" (click)="downvotePost(a.post_id)">Downvote</button>
         <button style="margin-left: 500px;" class="btn btn-info" (click)="updatePost(a.post_id)">Update</button>
         <button class="btn btn-info" (click)="showComments(a.post_id)">Comments</button>
+        <button (click)="navigateToCommentCreation(a.post_id)">Create Comment</button>
       </td>  
     </tr>
 </table>

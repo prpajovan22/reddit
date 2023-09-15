@@ -85,14 +85,13 @@ public class CommunityController {
             author.setUserRole(UserRole.valueOf("MODERATOR"));
             userService.save(author);
         }
-
         LocalDate creationDate = LocalDate.now();
         Community community = new Community();
         community.setName(name);
         community.setDescription(description);
         community.setCreationDate(creationDate);
         community.setSuspended(false);
-        community.getModerators().add(author); // Add the user as a moderator
+        community.getModerators().add(author);
 
         if (communityPDF != null && !communityPDF.isEmpty()) {
             try {

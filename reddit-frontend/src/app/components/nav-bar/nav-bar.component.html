@@ -1,11 +1,14 @@
     <div class="spacer"></div>
     <div >
         <ul>
-            <li><a href="home">Posts</a></li>
-            <li><a href="communitys">Community</a></li>
-            <li *ngIf="!isUserLoggedIn"><a href="registration">Registration</a></li>
-            <li *ngIf="!isUserLoggedIn"><a href="login">Login</a></li>
+            <li><a routerLink="home">Posts</a></li>
+            <li><a routerLink="communitys">Community</a></li>
+            <li *ngIf="!isUserLoggedIn"><a routerLink="registration">Registration</a></li>
+            <li *ngIf="!isUserLoggedIn"><a routerLink="login">Login</a></li>
             <li *ngIf="isUserLoggedIn"><a href="#" (click)="logout()">Logout</a></li>
+            <li *ngIf="isUserLoggedIn"><a routerLink="profile">Profil</a></li>
+            <li *ngIf="isUserLoggedIn"><a routerLink="users">Users</a></li>
+            <li *ngIf="isUserLoggedIn"><a href="createCommunity">Create Community</a></li>
           </ul> 
     </div>
     

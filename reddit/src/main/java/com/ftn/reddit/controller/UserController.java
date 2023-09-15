@@ -4,6 +4,7 @@ import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.model.pretraga.ChangePasswordRequest;
 import com.ftn.reddit.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,14 +25,15 @@ public class UserController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(
             @RequestBody ChangePasswordRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        boolean isOldPasswordValid = userService.verifyOldPassword(username, request.getOldPassword());
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpSession session) {
+        Users loggedInUser = (Users) session.getAttribute("loggedUser");
+        boolean isOldPasswordValid = userService.verifyOldPassword(loggedInUser.getUsername(), request.getOldPassword());
 
         if (!isOldPasswordValid) {
             return ResponseEntity.badRequest().body("Invalid old password");
         }
-        userService.updatePassword(username, request.getNewPassword());
+        userService.updatePassword(loggedInUser.getUsername(), request.getNewPassword());
         return ResponseEntity.ok("Password changed successfully");
     }
 
@@ -49,6 +51,18 @@ public class UserController {
             return ResponseEntity.ok("User role switched to USER successfully.");
         } else {
             return ResponseEntity.badRequest().body("Failed to switch user role.");
+        }
+    }
+
+
+    @GetMapping("/loggedin")
+    public Users getLoggedInUserProfile(HttpSession session) {
+        Users loggedInUser = (Users) session.getAttribute("loggedUser");
+
+        if (loggedInUser != null) {
+            return loggedInUser;
+        } else {
+            return null;
         }
     }
 

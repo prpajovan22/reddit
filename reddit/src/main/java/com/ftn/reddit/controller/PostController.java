@@ -127,7 +127,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/create/{communityId}")
+    @PostMapping("/create/{community_id}")
     public ResponseEntity<Void> createPost(
             @PathVariable Integer community_id,
             @RequestBody PostDTO postRequest,

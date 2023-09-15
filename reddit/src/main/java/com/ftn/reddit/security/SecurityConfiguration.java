@@ -98,7 +98,8 @@ public class SecurityConfiguration {
                         authorize.requestMatchers("/api/login/**", "api/post/search", "/api/community/**"
                                         , "api/post/byCommunity/**","api/post/{post_id}/**","api/comment/searchInPost/{post_id}"
                                         ,"api/comment/byPost/{post_id}","api/post/create/{communityId}","api/comment/search",
-                                        "api/community/allWithTotalReactions","api/comment/{comment_id}/replies").permitAll()
+                                        "api/community/allWithTotalReactions","api/comment/{comment_id}/replies",
+                                        "api/user/loggedin","api/user/all").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
 

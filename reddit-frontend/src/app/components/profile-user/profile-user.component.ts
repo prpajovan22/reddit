@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/User';
+import { AuthService } from 'src/app/services/authService/auth.service';
 import { UserServiceService } from 'src/app/services/userService/user.service';
 
 @Component({
@@ -10,24 +11,20 @@ import { UserServiceService } from 'src/app/services/userService/user.service';
 })
 export class ProfileUserComponent implements OnInit {
 
-  id:number;
-  user: User;
+  user: any;
+  isUserLoggedIn:boolean;
 
-  constructor(private route: ActivatedRoute, private router:Router, private userService: UserServiceService) { }
+  constructor(private userService: UserServiceService,private authService:AuthService) {}
 
-  ngOnInit(): void {
-    this.user = new User()
-
-    this.id = this.route.snapshot.params['id'];
-
-    this.userService.getUserById(this.id).subscribe(
-    {
-      next: data => this.user = data , 
-      error: error => console.log(error)
-    }
+  ngOnInit() {
+    this.userService.getLoggedInUserProfile().subscribe(
+      (response) => {
+        console.log(response);
+        this.user = response;
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
     );
-  }
-  goHome(){
-    this.router.navigate(['home']);
   }
 }

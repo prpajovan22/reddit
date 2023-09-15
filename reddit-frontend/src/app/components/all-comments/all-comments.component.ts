@@ -66,5 +66,9 @@ export class AllCommentsComponent implements OnInit {
     });
   }
 
+  public updateComment(comment_id:number){
+    this.router.navigate(['updateCommunity', comment_id]);
+  }
+
   
 }

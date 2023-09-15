@@ -42,15 +42,17 @@ export class UserServiceService {
   }
 
 
-
-
   getUsers(): Observable<User[]>{
-    return this.http.get<User[]>(this.apiUsersUrl);
+    return this.http.get<User[]>(`http://localhost:8080/api/user/all`);
   }
 
   getUserById(id:number): Observable<any>{
-    return this.http.get(`${this.apiUsersUrl}/${id}`);
+    return this.http.get(`http://localhost:8080/api/user/loggedin`);
     
+  }
+
+  getLoggedInUserProfile(): Observable<any> {
+    return this.http.get(`http://localhost:8080/api/user/loggedin`,{withCredentials:true});
   }
   
   updateUser(id:number, user:User) : Observable<User>{

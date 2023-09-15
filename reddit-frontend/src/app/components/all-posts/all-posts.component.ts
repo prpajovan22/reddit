@@ -70,6 +70,10 @@ export class AllPostsComponent implements OnInit {
     this.router.navigate(['showComments', post_id]);
   }
 
+  navigateToCommentCreation(post_id:number){
+    this.router.navigate(['createComment', post_id]);
+  }
+
   upvotePost(post_id: number): void {
     this.postService.upvotePost(post_id).subscribe(response => {
       const updatedPost = this.searchResults.find(post => post.post_id === post_id);

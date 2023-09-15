@@ -47,7 +47,8 @@ public class CommunityService implements CommunityInterface {
     public List<Community> searchCommunities(CommunitySearchCriteria searchCriteria) {
         Set<Community> combinedSearchResult = new HashSet<>();
         boolean shouldSearchMore = true;
-        if (StringUtils.isEmpty(searchCriteria.getName()) && StringUtils.isEmpty(searchCriteria.getDescription())) {
+        if (StringUtils.isEmpty(searchCriteria.getName()) && StringUtils.isEmpty(searchCriteria.getDescription())
+                && StringUtils.isEmpty(searchCriteria.getCommunityPDFName())) {
             combinedSearchResult.addAll(communityRepository.findAll());
             shouldSearchMore = false;
         }
@@ -60,6 +61,11 @@ public class CommunityService implements CommunityInterface {
 
         if (!StringUtils.isEmpty(searchCriteria.getDescription()) && shouldSearchMore) {
             List<Community> descriptionSearchResult = communityRepository.findByDescriptionContainingIgnoreCase(searchCriteria.getDescription().toLowerCase());
+            combinedSearchResult.addAll(descriptionSearchResult);
+        }
+
+        if (!StringUtils.isEmpty(searchCriteria.getCommunityPDFName()) && shouldSearchMore) {
+            List<Community> descriptionSearchResult = communityRepository.findByCommunityPDFNameContainingIgnoreCase(searchCriteria.getCommunityPDFName().toLowerCase());
             combinedSearchResult.addAll(descriptionSearchResult);
         }
 

@@ -19,6 +19,11 @@ public class CommentService implements CommentInterface {
     @Autowired
     private CommentRepository commentRepository;
 
+
+    public Comment createComment(Comment comment) {
+        return commentRepository.save(comment);
+    }
+
     @Override
     public List<Comment> findAll() {
         return commentRepository.findAll();
