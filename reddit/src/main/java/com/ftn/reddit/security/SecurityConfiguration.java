@@ -103,7 +103,11 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
 
+
                 );
+
+
+        http.sessionManagement().maximumSessions(1);
 
         return http.build();
     }

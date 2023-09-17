@@ -206,7 +206,7 @@ public class PostController {
     ////////////////////////////////// Comments  ////////////////////////////////////////
 
 
-    @GetMapping("/{post_id}/comments")
+    /*@GetMapping("/{post_id}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
         Post post = postService.findById(post_id);
         if (post == null) {
@@ -214,31 +214,104 @@ public class PostController {
         }
         List<CommentDTO> commentDTOs = commentService.findCommentDTOsByPost(post);
         return ResponseEntity.ok(commentDTOs);
+    }*/
+
+    @GetMapping("/{post_id}/comments")
+    public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
+        Post post = postService.findById(post_id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Comment> comments = commentService.getCommentsByPost(post);
+
+        // Fetch CommentDTOs for the comments
+        List<CommentDTO> commentDTOs = comments.stream()
+                .map(comment -> {
+                    CommentDTO commentDTO = createCommentDTO(comment);
+
+                    // Calculate the net reactions for the comment using your method
+                    int netReactions = calculateTotalReactions(comment);
+                    commentDTO.setNetReactions(netReactions);
+
+                    return commentDTO;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(commentDTOs);
+    }
+
+
+    private CommentDTO createCommentDTO(Comment comment) {
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setComment_id(comment.getComment_id());
+        commentDTO.setText(comment.getText());
+        commentDTO.setTimeStamp(comment.getTimestamp());
+        commentDTO.setDeleted(comment.isDeleted());
+
+        return commentDTO;
+    }
+
+    private int calculateTotalReactions(Comment comment) {
+        int totalUpvotes = 0;
+        int totalDownvotes = 0;
+
+        for (Reaction reaction : comment.getReactions()) {
+            if (ReactionType.UPWOTE.equals(reaction.getType())) {
+                totalUpvotes++;
+            } else if (ReactionType.DOWNWOTE.equals(reaction.getType())) {
+                totalDownvotes++;
+            }
+        }
+        int totalReactions = totalUpvotes - totalDownvotes;
+
+        return totalReactions;
     }
 
     ////////////////////////////////// Upwote  ////////////////////////////////////////
 
+
+
     @PostMapping("/upvote/{post_id}")
     public ResponseEntity<String> upvotePost(@PathVariable Integer post_id, HttpSession session) {
-        Users author = (Users) session.getAttribute("loggedUser");
+        Users user = userService.findById(1);
 
-        if (author.isSuspended()) {
+        if (user.isSuspended()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
         }
 
-        reactionService.upvotePost(post_id, author);
+        Post post = postService.findById(post_id);
+
+        boolean hasUpvoted = reactionService.hasUserUpvotedPost(user, post);
+
+            if (hasUpvoted) {
+            reactionService.removeUpvote(post, user);
+            return ResponseEntity.ok().build();
+        }
+
+        reactionService.upvotePost(post.getPost_id(), user);
+
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/downvote/{post_id}")
     public ResponseEntity<String> downvotePost(@PathVariable Integer post_id, HttpSession session) {
-        Users author = (Users) session.getAttribute("loggedUser");
+        Users user = userService.findById(1);
 
-        if (author.isSuspended()) {
+        if (user.isSuspended()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
         }
 
-        reactionService.downvotePost(post_id, author);
+        Post post = postService.findById(post_id);
+
+        boolean hasDownvoted = reactionService.hasUserDownvotedPost(user, post);
+
+        if (hasDownvoted) {
+            reactionService.removeDownvote(post, user);
+            return ResponseEntity.ok().build();
+        }
+
+        reactionService.downvotePost(post.getPost_id(), user);
+
         return ResponseEntity.ok().build();
     }
 

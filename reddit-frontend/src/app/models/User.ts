@@ -19,4 +19,5 @@ export class User{
     flairs:Flair;
     comments:Comments;
     reports:Reports;
+    isSuspended:boolean;
 }

@@ -4,6 +4,7 @@ import com.ftn.reddit.DTO.UsersDTO;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.model.pretraga.ChangePasswordRequest;
 import com.ftn.reddit.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class UserController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(
             @RequestBody ChangePasswordRequest request,
-            @AuthenticationPrincipal UserDetails userDetails,
             HttpSession session) {
-        Users loggedInUser = (Users) session.getAttribute("loggedUser");
+        //Users loggedInUser = (Users) session.getAttribute("loggedUser");
+        Users loggedInUser = userService.findById(1);
         boolean isOldPasswordValid = userService.verifyOldPassword(loggedInUser.getUsername(), request.getOldPassword());
 
         if (!isOldPasswordValid) {
@@ -56,8 +57,8 @@ public class UserController {
 
 
     @GetMapping("/loggedin")
-    public Users getLoggedInUserProfile(HttpSession session) {
-        Users loggedInUser = (Users) session.getAttribute("loggedUser");
+    public Users getLoggedInUserProfile(HttpServletRequest request) {
+        Users loggedInUser = (Users)  request.getSession().getAttribute("loggedUser");
 
         if (loggedInUser != null) {
             return loggedInUser;

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Post } from 'src/app/models/Post';
 import { Reaction } from 'src/app/models/Reaction';
 import { PostSearchCriteria } from 'src/app/models/Searchers/PostSearchCriteria';
+import { AuthService } from 'src/app/services/authService/auth.service';
 import { CommunityService } from 'src/app/services/communityService/community.service';
 import { PostServiceService } from 'src/app/services/postService/post.service';
 
@@ -17,12 +18,15 @@ export class AllPostsComponent implements OnInit {
   searchForm: FormGroup;
   posts: Post[] = [];
   searchResults: Post[] = [];
+  user: any;
 
   constructor(private formBuilder: FormBuilder,
      private postService: PostServiceService,private router:Router,
-     private communityService :CommunityService) {}
+     private communityService :CommunityService,
+     private authService:AuthService) {}
 
   ngOnInit(): void {
+    this.user = this.authService.getLoggedInUser();
     this.searchForm = this.formBuilder.group({
       text: [''],
       title: [''],

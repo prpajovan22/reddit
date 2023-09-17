@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { LoginRequest } from 'src/app/models/LoginRequest';
 import { environment } from 'src/environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { User } from 'src/app/models/User';
 
 export interface AuthenticationResponse{
   message:string,
@@ -21,6 +22,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
+  private loggedInUser: User;
 
   private apiUrl = `${environment.apiURL}/api/login/signIn`;
 
@@ -39,6 +41,10 @@ export class AuthService {
     return this.http.post<AuthenticationResponse>(this.apiUrl,  request, httpOptions)
   }
 
+
+  getLoggedInUser(): any {
+    return this.loggedInUser;
+  }
 
 
   getToken(){

@@ -8,10 +8,12 @@ import com.ftn.reddit.auth.AuthenticationResponse;
 import com.ftn.reddit.model.UserRole;
 import com.ftn.reddit.model.Users;
 import com.ftn.reddit.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,7 +56,7 @@ public class LoginController {
 
 
     @PostMapping("/signIn")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpSession session){
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpServletRequest httpRequest){
 
         Users user = userService.findByUsername(request.getEmail());
         AuthenticationResponse response = new AuthenticationResponse();
@@ -68,7 +70,7 @@ public class LoginController {
             response.setSuccessfull(false);
             return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.BAD_REQUEST);
         }
-        session.setAttribute("loggedUser",user);
+        httpRequest.getSession().setAttribute("loggedUser",user);
         response.setSuccessfull(true);
         response.setRole(user.getUserRole().toString());
 

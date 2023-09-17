@@ -1,15 +1,13 @@
 package com.ftn.reddit.services;
 
 import com.ftn.reddit.Interface.ReactionInterface;
-import com.ftn.reddit.model.Post;
-import com.ftn.reddit.model.Reaction;
-import com.ftn.reddit.model.ReactionType;
-import com.ftn.reddit.model.Users;
+import com.ftn.reddit.model.*;
 import com.ftn.reddit.repositorys.CommentRepository;
 import com.ftn.reddit.repositorys.PostRepository;
 import com.ftn.reddit.repositorys.ReactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -127,5 +125,41 @@ public class ReactionService implements ReactionInterface {
         reaction.setUser(user);
 
         reactionRepository.save(reaction);
+    }
+
+    public boolean hasUserDownvotedPost(Users user, Post post) {
+        return reactionRepository.existsByUserAndPostAndType(user, post, ReactionType.DOWNWOTE);
+    }
+
+    public boolean hasUserUpvotedPost(Users user, Post post) {
+        return reactionRepository.existsByUserAndPostAndType(user, post, ReactionType.UPWOTE);
+    }
+
+
+    public boolean hasUserDownvotedComment(Users user, Comment comment) {
+        return reactionRepository.existsByUserAndCommentAndType(user, comment, ReactionType.DOWNWOTE);
+    }
+
+    public boolean hasUserUpvotedComment(Users user, Comment comment) {
+        return reactionRepository.existsByUserAndCommentAndType(user, comment, ReactionType.UPWOTE);
+    }
+     @Transactional
+    public void removeUpvote(Post post, Users user) {
+        reactionRepository.deleteByPostAndUserAndType(post, user, ReactionType.UPWOTE);
+    }
+
+    @Transactional
+    public void removeDownvote(Post post, Users user) {
+        reactionRepository.deleteByPostAndUserAndType(post, user, ReactionType.DOWNWOTE);
+    }
+
+    @Transactional
+    public void removeUpvoteComment(Comment comment, Users user) {
+        reactionRepository.deleteByCommentAndUserAndType(comment, user, ReactionType.UPWOTE);
+    }
+
+    @Transactional
+    public void removeDownvoteComment(Comment comment, Users user) {
+        reactionRepository.deleteByCommentAndUserAndType(comment, user, ReactionType.DOWNWOTE);
     }
 }

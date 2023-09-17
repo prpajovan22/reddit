@@ -1,5 +1,24 @@
+<form [formGroup]="searchForm" (ngSubmit)="search()">
+  <label for="name">Name:</label>
+  <input type="text" id="name" formControlName="name">
+  <br>
+  <label for="description">Description:</label>
+  <input type="text" id="description" formControlName="description">
+  <br>
+  <label for="fromPostCount">From Post Count:</label>
+  <input type="number" id="fromPostCount" formControlName="fromPostCount">
+
+  <label for="toPostCount">To Post Count:</label>
+  <input type="number" id="toPostCount" formControlName="toPostCount">
+
+  <label for="fromReactionCount">From Reaction Count:</label>
+  <input type="number" id="fromReactionCount" formControlName="fromReactionCount">
+
+  <label for="toReactionCount">To Reaction Count:</label>
+  <input type="number" id="toReactionCount" formControlName="toReactionCount">
+  <button type="submit">Search</button>
+</form>
 <table id="post-table">
-  
     <tr>
       <th>Name</th>
       <th>Description</th>
@@ -21,23 +40,4 @@
     </tr>
 </table>
 <button class="btn btn-primary" (click)="createCommunity()">Add</button>
-<form [formGroup]="searchForm" (ngSubmit)="search()">
-  <label for="name">Name:</label>
-  <input type="text" id="name" formControlName="name">
-  <br>
-  <label for="description">Description:</label>
-  <input type="text" id="description" formControlName="description">
-  <br>
-  <label for="fromPostCount">From Post Count:</label>
-  <input type="number" id="fromPostCount" formControlName="fromPostCount">
 
-  <label for="toPostCount">To Post Count:</label>
-  <input type="number" id="toPostCount" formControlName="toPostCount">
-
-  <label for="fromReactionCount">From Reaction Count:</label>
-  <input type="number" id="fromReactionCount" formControlName="fromReactionCount">
-
-  <label for="toReactionCount">To Reaction Count:</label>
-  <input type="number" id="toReactionCount" formControlName="toReactionCount">
-  <button type="submit">Search</button>
-</form>

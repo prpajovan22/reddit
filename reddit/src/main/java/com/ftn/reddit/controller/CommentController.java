@@ -139,7 +139,8 @@ public class CommentController {
 
     @PostMapping(value = "/createComment")
     public ResponseEntity<Void> createComment(@PathVariable("id") Integer post_id, @RequestBody @Validated CommentDTO commentDTO, HttpSession session) {
-        Users loggedInUser = (Users) session.getAttribute("loggedUser");
+        //Users loggedInUser = (Users) session.getAttribute("loggedUser");
+        Users loggedInUser = userService.findById(1);
         Post post = postService.findById(post_id);
         LocalDate creationDate = LocalDate.now();
         Comment comment = new Comment();
@@ -182,7 +183,7 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/byPost/{post_id}")
+    /*@GetMapping("/byPost/{post_id}")
     public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Integer post_id) {
         Post post = postService.findById(post_id);
         if (post == null) {
@@ -190,6 +191,28 @@ public class CommentController {
         }
         List<Comment> comments = commentService.getCommentsByPost(post);
         return ResponseEntity.ok(comments);
+    }*/
+
+    @GetMapping("/byPost/{post_id}")
+    public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
+        Post post = postService.findById(post_id);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Comment> comments = commentService.getCommentsByPost(post);
+
+        List<CommentDTO> commentDTOs = comments.stream()
+                .map(comment -> {
+                    CommentDTO commentDTO = new CommentDTO(comment);
+
+                    int netReactions = calculateTotalReactions(comment);
+                    commentDTO.setNetReactions(netReactions);
+
+                    return commentDTO;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(commentDTOs);
     }
 
     @PostMapping("/searchInPost/{post_id}")
@@ -229,20 +252,46 @@ public class CommentController {
     }
 
     @PostMapping("/upvote/{comment_id}")
-    public ResponseEntity<Void> upvoteComment(@PathVariable Integer comment_id, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Users user = userService.findByUsername(userDetails.getUsername());
+    public ResponseEntity<String> upvoteComment(@PathVariable Integer comment_id, HttpSession session) {
+        Users user = userService.findById(1);
 
-        reactionService.upvoteComment(comment_id, user);
+        if (user.isSuspended()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
+        }
+
+        Comment comment = commentService.findById(comment_id);
+
+        boolean hasUpvoted = reactionService.hasUserUpvotedComment(user, comment);
+
+        if (hasUpvoted) {
+            reactionService.removeUpvoteComment(comment, user);
+            return ResponseEntity.ok().build();
+        }
+
+        reactionService.upvoteComment(comment.getComment_id(), user);
+
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/downvote/{comment_id}")
-    public ResponseEntity<Void> downvoteComment(@PathVariable Integer comment_id, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Users user = userService.findByUsername(userDetails.getUsername());
+    public ResponseEntity<String> downvoteComment(@PathVariable Integer comment_id, HttpSession session) {
+        Users user = userService.findById(1);
 
-        reactionService.downvoteComment(comment_id, user);
+        if (user.isSuspended()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
+        }
+
+        Comment comment = commentService.findById(comment_id);
+
+        boolean hasDownvoted = reactionService.hasUserDownvotedComment(user, comment);
+
+        if (hasDownvoted) {
+            reactionService.removeDownvoteComment(comment, user);
+            return ResponseEntity.ok().build();
+        }
+
+        reactionService.downvoteComment(comment.getComment_id(), user);
+
         return ResponseEntity.ok().build();
     }
 }
