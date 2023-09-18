@@ -19,12 +19,14 @@ export class CommunityPostsComponent implements OnInit {
   searchForm: FormGroup;
   posts: Post[] = [];
   searchResults: Post[] = [];
+  community: Community = new Community(); 
 
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private postService: PostServiceService,
-    private router: Router
+    private router: Router,
+    private communityService:CommunityService
   ) {
     this.searchForm = this.formBuilder.group({
       text: [''],
@@ -38,6 +40,11 @@ export class CommunityPostsComponent implements OnInit {
   ngOnInit(): void {
     const community_id = this.route.snapshot.params['id'];
     this.searchForm.patchValue({community_id:community_id})
+    
+    this.communityService.getCommunityById(community_id).subscribe((community) => {
+      this.community = community;
+    });
+
     this.search();
   }
 

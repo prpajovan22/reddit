@@ -3,14 +3,12 @@ package com.ftn.reddit.services;
 import com.ftn.reddit.DTO.PostDTO;
 import com.ftn.reddit.DTO.ReactionDTO;
 import com.ftn.reddit.Interface.PostInterface;
-import com.ftn.reddit.model.Community;
-import com.ftn.reddit.model.Post;
-import com.ftn.reddit.model.Reaction;
-import com.ftn.reddit.model.ReactionType;
+import com.ftn.reddit.model.*;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.repositorys.PostRepository;
 import com.ftn.reddit.repositorys.ReactionRepository;
+import com.ftn.reddit.repositorys.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +26,11 @@ public class PostService implements PostInterface {
     @Autowired
     private ReactionService reactionService;
 
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private ReportRepository reportRepository;
+
     @Override
     public List<Post> findAll() {
         return postRepository.findAll();
@@ -37,6 +40,7 @@ public class PostService implements PostInterface {
     public Post save(Post post) {
         return postRepository.save(post);
     }
+
 
     @Override
     public Post findById(Integer id) {
@@ -108,5 +112,12 @@ public class PostService implements PostInterface {
         return 0L;
     }
 
+    public List<Report> getAllReportsExcludingAccepted() {
+        return reportRepository.findByAccepted(false);
+    }
+
+    public List<Post> findAllExcludingPostsWithAcceptedReports() {
+        return postRepository.findAllExcludingPostsWithAcceptedReports();
+    }
 
 }

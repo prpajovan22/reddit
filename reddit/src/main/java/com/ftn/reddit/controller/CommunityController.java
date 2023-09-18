@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,16 +75,20 @@ public class CommunityController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Void> createCommunity(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam(value = "communityPDF", required = false) MultipartFile communityPDF,
             HttpSession session) {
-        Users author = (Users) session.getAttribute("loggedUser");
+        //Users author = (Users) session.getAttribute("loggedUser");
+
+        Users author = userService.findById(1);
 
         if (!author.getUserRole().equals("MODERATOR")) {
             author.setUserRole(UserRole.valueOf("MODERATOR"));
             userService.save(author);
+
         }
         LocalDate creationDate = LocalDate.now();
         Community community = new Community();
@@ -94,13 +99,15 @@ public class CommunityController {
         community.getModerators().add(author);
 
         if (communityPDF != null && !communityPDF.isEmpty()) {
-            try {
-                String communityPDFPath = saveCommunityPDF(communityPDF);
-                community.setCommunityPDFPath(communityPDFPath);
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            String pdfFilePath = savePDFFile(communityPDF);
+            community.setCommunityPDFPath(pdfFilePath);
+
+            String originalFilename = communityPDF.getOriginalFilename();
+            if (originalFilename != null && !originalFilename.isEmpty()) {
+                community.setCommunityPDFName(originalFilename);
             }
         }
+
 
         communityService.save(community);
 

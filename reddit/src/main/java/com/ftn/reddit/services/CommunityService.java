@@ -115,7 +115,7 @@ public class CommunityService implements CommunityInterface {
                     .count();
 
             double averageReactionsPerPost = (double) totalReactions / posts.size();
-            return averageReactionsPerPost;
+            return Double.isNaN(averageReactionsPerPost) ? 0: averageReactionsPerPost;
         }
 
         return 0.0;

@@ -39,4 +39,8 @@ export class UpdatePostComponent implements OnInit {
   onSubmit(){
     this.updatePost();
   }
+
+  handleFileInput(event: any) {
+    this.posts.postPDFPath = event.target.files[0];
+}
 }

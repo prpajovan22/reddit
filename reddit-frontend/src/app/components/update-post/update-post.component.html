@@ -9,6 +9,10 @@
                 <label for="name">Text</label>
                 <input type="text" class="form-control" id="text" required [(ngModel)]="posts.text" name="text">
             </div>
+            <div class="form-group">
+                <label for="pdfFile">PDF File</label>
+                <input type="file" class="form-control" id="postPDFPath" (change)="handleFileInput($event)" name="postPDFPath">
+            </div>
             <button type="submit" class="btn btn-success">Submit</button>
         </form> 
 </div>

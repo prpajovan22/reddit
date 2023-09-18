@@ -50,9 +50,25 @@ public class PostController {
 
     @Autowired
     private ReactionService reactionService;
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<PostDTO>> getPosts() {
         List<Post> posts = postService.findAll();
+
+        List<PostDTO> postDTOs = posts.stream()
+                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
+                .map(post -> {
+                    int netReactions = calculateNetReactions(post.getReactions());
+                    return new PostDTO(post, netReactions);
+                })
+                .collect(Collectors.toList());
+
+        Collections.shuffle(postDTOs);
+        return ResponseEntity.ok(postDTOs);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<List<PostDTO>> getPosts() {
+        List<Post> posts = postService.findAllExcludingPostsWithAcceptedReports();
 
         List<PostDTO> postDTOs = posts.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
@@ -81,8 +97,7 @@ public class PostController {
             @PathVariable Integer post_id,
             @RequestParam(value = "postPDFPath", required = false) MultipartFile postPDFPath,
             @RequestPart("text") String text,
-            @RequestPart("title") String title,
-            @RequestPart(value = "descriptionPDF", required = false) String descriptionPDF) {
+            @RequestPart("title") String title) {
 
         Post existingPost = postService.findById(post_id);
         if (existingPost == null) {
@@ -98,10 +113,11 @@ public class PostController {
         if (postPDFPath != null && !postPDFPath.isEmpty()) {
             String pdfFilePath = savePDFFile(postPDFPath);
             existingPost.setPostPDFPath(pdfFilePath);
-        }
 
-        if (descriptionPDF != null && !descriptionPDF.isEmpty()) {
-            existingPost.setDescriptionPDF(descriptionPDF);
+            String originalFilename = postPDFPath.getOriginalFilename();
+            if (originalFilename != null && !originalFilename.isEmpty()) {
+                existingPost.setDescriptionPDF(originalFilename);
+            }
         }
         Post updated = postService.save(existingPost);
         return ResponseEntity.ok(updated);
@@ -131,11 +147,13 @@ public class PostController {
     public ResponseEntity<Void> createPost(
             @PathVariable Integer community_id,
             @RequestBody PostDTO postRequest,
+            @RequestParam(value = "postPDFPath", required = false) MultipartFile postPDFPath,
             HttpSession session
     ) {
         //user koristiti svuda
-        Users author = (Users) session.getAttribute("loggedUser");
+        //Users author = (Users) session.getAttribute("loggedUser");
 
+        Users author = userService.findById(1);
         Community community = communityService.findById(community_id);
         if (community == null) {
             return ResponseEntity.notFound().build();
@@ -147,6 +165,15 @@ public class PostController {
         post.setCommunity(community);
         post.setUsers(author);
         post.setCreationDate(LocalDate.from(LocalDateTime.now()));
+        if (postPDFPath != null && !postPDFPath.isEmpty()) {
+            String pdfFilePath = savePDFFile(postPDFPath);
+            post.setPostPDFPath(pdfFilePath);
+
+            String originalFilename = postPDFPath.getOriginalFilename();
+            if (originalFilename != null && !originalFilename.isEmpty()) {
+                post.setDescriptionPDF(originalFilename);
+            }
+        }
 
         postService.save(post);
 
@@ -206,15 +233,6 @@ public class PostController {
     ////////////////////////////////// Comments  ////////////////////////////////////////
 
 
-    /*@GetMapping("/{post_id}/comments")
-    public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
-        Post post = postService.findById(post_id);
-        if (post == null) {
-            return ResponseEntity.notFound().build();
-        }
-        List<CommentDTO> commentDTOs = commentService.findCommentDTOsByPost(post);
-        return ResponseEntity.ok(commentDTOs);
-    }*/
 
     @GetMapping("/{post_id}/comments")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
@@ -224,12 +242,10 @@ public class PostController {
         }
         List<Comment> comments = commentService.getCommentsByPost(post);
 
-        // Fetch CommentDTOs for the comments
         List<CommentDTO> commentDTOs = comments.stream()
                 .map(comment -> {
                     CommentDTO commentDTO = createCommentDTO(comment);
 
-                    // Calculate the net reactions for the comment using your method
                     int netReactions = calculateTotalReactions(comment);
                     commentDTO.setNetReactions(netReactions);
 

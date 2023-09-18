@@ -96,4 +96,9 @@ export class AllPostsComponent implements OnInit {
     });
   }
 
+  
+  public reportPost(post_id:number){
+    this.router.navigate(['reportPost', post_id]);
+  }
+
 }

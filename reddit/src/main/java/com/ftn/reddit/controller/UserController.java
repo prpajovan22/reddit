@@ -28,7 +28,7 @@ public class UserController {
             @RequestBody ChangePasswordRequest request,
             HttpSession session) {
         //Users loggedInUser = (Users) session.getAttribute("loggedUser");
-        Users loggedInUser = userService.findById(1);
+        Users loggedInUser = userService.findById(5);
         boolean isOldPasswordValid = userService.verifyOldPassword(loggedInUser.getUsername(), request.getOldPassword());
 
         if (!isOldPasswordValid) {

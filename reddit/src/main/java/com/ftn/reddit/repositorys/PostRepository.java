@@ -20,4 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             Community community, String title, String text
     );
 
+    @Query("SELECT p FROM Post p WHERE p.post_id NOT IN (SELECT r.post.post_id FROM Report r WHERE r.accepted = true)")
+    List<Post> findAllExcludingPostsWithAcceptedReports();
+
 }

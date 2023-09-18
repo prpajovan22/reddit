@@ -27,6 +27,9 @@ import { OneCommunityComponent } from './components/one-community/one-community.
 import { UpdateCommunityComponent } from './components/update-community/update-community.component';
 import { UpdateCommentComponent } from './components/update-comment/update-comment.component';
 import { CreateCommentComponent } from './components/create-comment/create-comment.component';
+import { ReportPostComponent } from './components/report-post/report-post.component';
+import { ReportCommentComponent } from './components/report-comment/report-comment.component';
+import { AllReportsComponent } from './components/all-reports/all-reports.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,10 @@ import { CreateCommentComponent } from './components/create-comment/create-comme
     OneCommunityComponent,
     UpdateCommunityComponent,
     UpdateCommentComponent,
-    CreateCommentComponent
+    CreateCommentComponent,
+    ReportPostComponent,
+    ReportCommentComponent,
+    AllReportsComponent
   ],
   imports: [
     BrowserModule,

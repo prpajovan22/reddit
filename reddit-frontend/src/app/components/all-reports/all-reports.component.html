@@ -1,0 +1,16 @@
+<table id="post-table">
+    <tr>
+      <th>Reason for report</th>
+      <th>Remove report</th>
+      <th>Accept report</th>
+    </tr>
+    <tr *ngFor="let a of reports">
+      <td> {{ a.reason }} </td>
+      <td>
+        <button (click)="deleteReport(a.report_id)" class="btn btn-danger">Delete</button>
+    </td>
+    <td>
+      <button class="btn btn-success" (click)="acceptReport(a.report_id)">Accept</button>
+  </td>
+    </tr>
+</table>

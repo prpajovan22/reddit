@@ -17,6 +17,8 @@ import { UpdateCommunityComponent } from './components/update-community/update-c
 import { ProfileUserComponent } from './components/profile-user/profile-user.component';
 import { UpdateCommentComponent } from './components/update-comment/update-comment.component';
 import { CreateCommentComponent } from './components/create-comment/create-comment.component';
+import { ReportPostComponent } from './components/report-post/report-post.component';
+import { AllReportsComponent } from './components/all-reports/all-reports.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -37,7 +39,9 @@ const routes: Routes = [
   {path:'updateCommunity/:community_id',component:UpdateCommunityComponent},
   {path:'updateComment/:comment_id',component:UpdateCommentComponent},
   {path:'createComment/:post_id',component:CreateCommentComponent},
-  {path:'replies/:comment_id',component:RepliesComponent}
+  {path:'replies/:comment_id',component:RepliesComponent},
+  {path:'reportPost/:post_id',component:ReportPostComponent},
+  {path:'allReports',component:AllReportsComponent}
 ];
 
 @NgModule({

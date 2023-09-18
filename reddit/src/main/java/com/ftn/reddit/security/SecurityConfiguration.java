@@ -99,7 +99,8 @@ public class SecurityConfiguration {
                                         , "api/post/byCommunity/**","api/post/{post_id}/**","api/comment/searchInPost/{post_id}"
                                         ,"api/comment/byPost/{post_id}","api/post/create/{communityId}","api/comment/search",
                                         "api/community/allWithTotalReactions","api/comment/{comment_id}/replies",
-                                        "api/user/loggedin","api/user/all").permitAll()
+                                        "api/user/loggedin","api/user/all","api/user/change-password","api/report/submit/{post_id}",
+                                        "api/report/all","api/report/delete/{report_id}","api/report/accept/{report_id}").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
 
