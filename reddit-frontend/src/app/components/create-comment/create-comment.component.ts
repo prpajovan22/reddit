@@ -11,14 +11,14 @@ import { CommentService } from 'src/app/services/commentService/comment.service'
 export class CreateCommentComponent implements OnInit {
 
   post_id: number;
-    comments: Comments;
+  comments: any;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private communityService: CommentService
     ) {
-        this.comments = new Comments();
+        this.comments = { text: '' };
     }
 
     ngOnInit(): void {
@@ -32,20 +32,17 @@ export class CreateCommentComponent implements OnInit {
     }
 
     createComment(): void {
-        const formData = new FormData();
-        formData.append('text', this.comments.text);
-        formData.append('post_id', this.post_id.toString()); 
-
-        this.communityService.createComment(formData).subscribe(
-            data => {
-                console.log(data);
-                this.comments = new Comments();
-                console.log(this.comments);
-                this.redirectToCommunitys();
-            },
-            error => console.log(error)
+        const commentData = { text: this.comments.text }; // Use an object for JSON data
+    
+        this.communityService.createComment(this.post_id, commentData).subscribe(
+          data => {
+            console.log(data);
+            this.comments.text = ''; // Clear the text field
+            this.redirectToCommunitys();
+          },
+          error => console.log(error)
         );
-    }
+      }
 
     onSubmit() {
         this.createComment();

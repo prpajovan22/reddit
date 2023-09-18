@@ -34,6 +34,16 @@ getCommentsByPost(postId: number): Observable<Comments[]> {
   return this.http.get<Comments[]>(`${this.apiPostUrl}/${postId}/comments`);
 }
 
+getCommentById(comment_id_id:number): Observable<any>{
+  return this.http.get(`${this.apiCommentUrl}/byId/${comment_id_id}`);
+  
+}
+
+updateCommunity(comment_id:number,formData: FormData) : Observable<Comments>{
+  return this.http.put<Comments>(`${this.apiCommentUrl}/${comment_id}`, formData);
+
+}
+
 getRepliesForComment(comment_id: number): Observable<Comments[]> {
   return this.http.get<Comments[]>(`${this.apiCommentUrl}/${comment_id}/replies`);
 }
@@ -50,8 +60,8 @@ downvoteComment(comment_id: number): Observable<any> {
   return this.http.post<any>(`${this.apiCommentUrl}/downvote/${comment_id}`, {});
 }
 
-createComment(communitys: any) : Observable<Comments>{
-  console.log(communitys);
-  return this.http.post<Comments>(this.apiCommentUrl, communitys);
+createComment(post_id: number, commentData: any): Observable<any> {
+  const url = `${this.apiCommentUrl}/createComment/${post_id}`; 
+  return this.http.post(url, commentData);
 }
 }

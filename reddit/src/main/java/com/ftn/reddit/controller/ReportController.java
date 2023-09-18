@@ -1,10 +1,8 @@
 package com.ftn.reddit.controller;
 
 import com.ftn.reddit.DTO.ReportDTO;
-import com.ftn.reddit.model.Post;
-import com.ftn.reddit.model.Report;
-import com.ftn.reddit.model.ReportReason;
-import com.ftn.reddit.model.Users;
+import com.ftn.reddit.model.*;
+import com.ftn.reddit.services.CommentService;
 import com.ftn.reddit.services.PostService;
 import com.ftn.reddit.services.ReportService;
 import com.ftn.reddit.services.UserService;
@@ -29,6 +27,9 @@ public class ReportController {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private CommentService commentService;
 
 
     @PostMapping("/create/{post_id}")
@@ -88,6 +89,32 @@ public class ReportController {
         }
     }
 
+
+    @PostMapping("/submitReport/{comment_id}")
+    public ResponseEntity<String> submitCommentReport(
+            @PathVariable Integer comment_id,
+            @RequestBody ReportDTO reportRequest
+    ) {
+        try {
+            LocalDate creationDate = LocalDate.now();
+            Comment post = commentService.findById(comment_id);
+            Users users = userService.findById(1);
+
+            Report report = new Report();
+            report.setComment(post);
+            report.setReason(reportRequest.getReason());
+            report.setTimestamp(creationDate);
+            report.setAccepted(false);
+            report.setByUser(users);
+
+            reportService.createReport(report);
+
+            return ResponseEntity.ok("Report submitted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error submitting report: " + e.getMessage());
+        }
+    }
 
     @DeleteMapping("/delete/{report_id}")
     public ResponseEntity<String> deleteReport(@PathVariable Integer report_id) {

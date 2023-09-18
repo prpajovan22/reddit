@@ -1,1 +1,11 @@
-<p>update-comment works!</p>
+<div class="card col-md-6 offset-md-3">
+    <h3>Update Comment</h3>
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="name">Text</label>
+                <input type="text" class="form-control" id="text" required [(ngModel)]="commentData.text" name="text">
+            </div>
+            
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form> 
+</div>

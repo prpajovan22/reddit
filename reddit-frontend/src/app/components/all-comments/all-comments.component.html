@@ -1,21 +1,27 @@
-<form [formGroup]="searchForm" (ngSubmit)="search()">
-  <label for="description">Text:</label>
-  <input type="text" id="text" formControlName="text">
-  <br>
-  <button type="submit">Search</button>
-</form>
+<table id="comments-table">
+  <tr>
+    <th>Post</th>
+  </tr>
+  <tr>
+    <td>{{ posts.text }}</td>
+  </tr>
+</table>
 <table id="comments-table">
   <tr>
     <th>Text</th>
     <th>Reaction</th>
+    <th></th>
+    <th></th>
   </tr>
   <tr *ngFor="let post of comments">
     <td>{{ post.text }}</td> 
     <td>{{ post.netReactions}}</td>
-    <button (click)="navigateToReplies(post.comment_id)">Show Replies</button>
+    <td><button (click)="navigateToReplies(post.comment_id)">Show Replies</button></td>
+    <td><button style="margin-left: 500px;" class="btn btn-info" (click)="updateComment(post.comment_id)">Update</button></td>
     <button style="margin-left: 20px;" class="btn btn-success" (click)="upvoteComment(post.comment_id)">Upvote</button>
     <button style="margin-left: 10px;" class="btn btn-danger" (click)="downvoteComment(post.comment_id)">Downvote</button>
-    <button style="margin-left: 500px;" class="btn btn-info" (click)="updateComment(post.comment_id)">Update</button>
-  </tr>   
+    <button style="margin-left: 20px;" class="btn btn-info" (click)="reportComment(post.comment_id)">Report</button>
+  </tr>  
+ 
 </table>
 

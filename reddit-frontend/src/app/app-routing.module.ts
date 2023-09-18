@@ -19,6 +19,7 @@ import { UpdateCommentComponent } from './components/update-comment/update-comme
 import { CreateCommentComponent } from './components/create-comment/create-comment.component';
 import { ReportPostComponent } from './components/report-post/report-post.component';
 import { AllReportsComponent } from './components/all-reports/all-reports.component';
+import { ReportCommentComponent } from './components/report-comment/report-comment.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -41,6 +42,7 @@ const routes: Routes = [
   {path:'createComment/:post_id',component:CreateCommentComponent},
   {path:'replies/:comment_id',component:RepliesComponent},
   {path:'reportPost/:post_id',component:ReportPostComponent},
+  {path:'reportComment/:comment_id',component:ReportCommentComponent},
   {path:'allReports',component:AllReportsComponent}
 ];
 

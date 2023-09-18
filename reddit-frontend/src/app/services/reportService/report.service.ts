@@ -19,6 +19,12 @@ export class ReportService {
     return this.http.post(url, reportData);
   }
 
+  createReportComment(comment_id: number, reportData: any) {
+    const url = `${this.apiReportUrl}/submitReport/${comment_id}`;
+
+    return this.http.post(url, reportData);
+  }
+
   getReports(): Observable<Reports[]>{
     return this.http.get<Reports[]>(`${this.apiReportUrl}/all`,);
   }

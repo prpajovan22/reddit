@@ -137,9 +137,12 @@ public class CommentController {
     }
 
 
-    @PostMapping(value = "/createComment")
-    public ResponseEntity<Void> createComment(@PathVariable("id") Integer post_id, @RequestBody @Validated CommentDTO commentDTO, HttpSession session) {
-        //Users loggedInUser = (Users) session.getAttribute("loggedUser");
+    @PostMapping("/createComment/{post_id}")
+    public ResponseEntity<Void> createComment(
+            @PathVariable("post_id") Integer post_id,
+            @RequestBody @Validated CommentDTO commentDTO,
+            HttpSession session) {
+        // Users loggedInUser = (Users) session.getAttribute("loggedUser");
         Users loggedInUser = userService.findById(1);
         Post post = postService.findById(post_id);
         LocalDate creationDate = LocalDate.now();
@@ -157,16 +160,15 @@ public class CommentController {
     @PutMapping("/{comment_id}")
     public ResponseEntity<Comment> updateComment(
             @PathVariable Integer comment_id,
-            @RequestPart("text") String text){
+            @RequestParam("text") String text) {
 
         Comment existingComment = commentService.findById(comment_id);
         if (existingComment == null) {
             return ResponseEntity.notFound().build();
         }
 
-        Post originalPost = existingComment.getPost();
-        existingComment.setPost(originalPost);
         existingComment.setText(text);
+
         Comment updated = commentService.save(existingComment);
         return ResponseEntity.ok(updated);
     }
@@ -294,4 +296,7 @@ public class CommentController {
 
         return ResponseEntity.ok().build();
     }
+
+
+
 }

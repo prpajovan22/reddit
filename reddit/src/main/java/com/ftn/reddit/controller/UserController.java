@@ -7,6 +7,7 @@ import com.ftn.reddit.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,13 +58,14 @@ public class UserController {
 
 
     @GetMapping("/loggedin")
-    public Users getLoggedInUserProfile(HttpServletRequest request) {
-        Users loggedInUser = (Users)  request.getSession().getAttribute("loggedUser");
-
+    public ResponseEntity<Users> getLoggedInUserProfile(HttpServletRequest httpRequest) {
+        //Users loggedInUser = (Users)  request.getSession().getAttribute("loggedUser");
+        //Users loggedInUser = (Users) httpRequest.getSession().getAttribute("loggedUser");
+        Users loggedInUser = userService.findById(5);
         if (loggedInUser != null) {
-            return loggedInUser;
+            return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 

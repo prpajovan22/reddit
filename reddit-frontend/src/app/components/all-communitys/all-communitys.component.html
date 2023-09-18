@@ -28,6 +28,8 @@
       <th>PDF</th>
       <th>Post count</th>
       <th>Average reactions</th>
+      <th></th>
+      <th></th>
     </tr>
     <tr *ngFor="let a of searchResults">
       <td>{{ a.name }}</td>
@@ -35,11 +37,9 @@
       <td>{{ a.communityPDFName}} </td>
       <td>{{ a.postCount }}</td>
       <td>{{ a.totalReaction}}</td>
-      <td>  
-        <button style="margin-left: 500px;" class="btn btn-info" (click)="updateCommunity(a.community_id)">Update</button>
-        <button style="margin-left: 500px;" class="btn btn-info" (click)="showPost(a.community_id)">Posts</button>
-        <button style="margin-left: 500px;" class="btn btn-info" (click)="createPost(a.community_id)">Create Post</button>
-      </td>  
+      <td><button  class="btn btn-info" (click)="updateCommunity(a.community_id)">Update</button></td>
+      <td><button  class="btn btn-info" (click)="showPost(a.community_id)">Posts</button></td>
+      <td><button  class="btn btn-info" (click)="createPost(a.community_id)">Create Post</button></td>  
     </tr>
 </table>
 <button class="btn btn-primary" (click)="createCommunity()">Add</button>

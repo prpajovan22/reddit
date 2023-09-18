@@ -51,9 +51,9 @@ export class PostServiceService {
 
   }
 
-  createPost(communityId: number, postRequest: PostRequestDto): Observable<any> {
+  createPost(communityId: number, formData: FormData): Observable<any> {
     const url = `${this.apiPostUrl}/create/${communityId}`;
-    return this.http.post(url, postRequest);
+    return this.http.post(url, formData);
   }
 
   deletePost(id:any) : Observable<any>{

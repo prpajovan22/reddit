@@ -9,6 +9,10 @@
         <label for="text">Text:</label>
         <textarea id="text" formControlName="text" class="form-control" rows="5"></textarea>
       </div>
+      <div class="form-group">
+        <label for="postPDFPath">Post PDF</label>
+        <input type="file" class="form-control-file" (change)="onFileChange($event)" id="postPDFPath" accept=".pdf">
+      </div>
       <button type="submit" class="btn btn-primary">Create Post</button>
     </form>
   </div>

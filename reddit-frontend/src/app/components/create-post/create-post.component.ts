@@ -22,7 +22,8 @@ export class CreatePostComponent{
     this.community_id = this.route.snapshot.params['community_id'];
     this.createPostForm = this.formBuilder.group({
       title: ['', Validators.required],
-      text: ['', Validators.required]
+      text: ['', Validators.required],
+      postPDFPath: [null] 
     });
   }
 
@@ -31,8 +32,22 @@ export class CreatePostComponent{
       return;
     }
 
-    this.postService.createPost(this.community_id, this.createPostForm.value)
+    const formData = new FormData();
+    formData.append('title', this.createPostForm.get('title').value);
+    formData.append('text', this.createPostForm.get('text').value);
+    formData.append('community_id', this.community_id.toString());
+    formData.append('postPDFPath', this.createPostForm.get('postPDFPath').value);
+
+    this.postService.createPost(this.community_id, formData)
       .subscribe(response => {
+        // Handle the response from your backend
       });
+  }
+
+  onFileChange(event: any): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.createPostForm.get('postPDFPath').setValue(file);
+    }
   }
 }

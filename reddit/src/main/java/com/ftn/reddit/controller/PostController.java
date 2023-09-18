@@ -8,6 +8,7 @@ import com.ftn.reddit.model.*;
 import com.ftn.reddit.model.pretraga.CommunitySearchCriteria;
 import com.ftn.reddit.model.pretraga.PostSearchCriteria;
 import com.ftn.reddit.services.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
@@ -148,12 +149,13 @@ public class PostController {
             @PathVariable Integer community_id,
             @RequestBody PostDTO postRequest,
             @RequestParam(value = "postPDFPath", required = false) MultipartFile postPDFPath,
-            HttpSession session
+            //HttpSession session
+            HttpServletRequest httpRequest
     ) {
         //user koristiti svuda
-        //Users author = (Users) session.getAttribute("loggedUser");
-
+        //Users author = (Users) httpRequest.getSession().getAttribute("loggedUser");
         Users author = userService.findById(1);
+        //Users author = userService.findById(1);
         Community community = communityService.findById(community_id);
         if (community == null) {
             return ResponseEntity.notFound().build();

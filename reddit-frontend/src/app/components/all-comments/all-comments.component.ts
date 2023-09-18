@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Comments } from 'src/app/models/Comments';
+import { Post } from 'src/app/models/Post';
 import { CommentSearchCriteria } from 'src/app/models/Searchers/CommentSearchCriteria';
 import { CommentService } from 'src/app/services/commentService/comment.service';
 import { PostServiceService } from 'src/app/services/postService/post.service';
@@ -16,13 +17,15 @@ export class AllCommentsComponent implements OnInit {
   comments: Comments[] = [];
   searchResults: Comments[] = [];
   searchForm: FormGroup;
+  posts: Post = new Post();
 
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private postService: CommentService,
     private router: Router,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private postService1 :PostServiceService
   ) {
     this.searchForm = this.formBuilder.group({
       text: ['']
@@ -31,6 +34,8 @@ export class AllCommentsComponent implements OnInit {
 
   ngOnInit(): void {
     const post_id = this.route.snapshot.params['post_id'];
+    this.postService1.getPostById(post_id).subscribe((posts) => {
+      this.posts = posts;})
     this.postService.getCommentsByPost(post_id).subscribe(comments => {
       this.comments = comments; 
       this.search();
@@ -67,8 +72,11 @@ export class AllCommentsComponent implements OnInit {
   }
 
   public updateComment(comment_id:number){
-    this.router.navigate(['updateCommunity', comment_id]);
+    this.router.navigate(['updateComment', comment_id]);
   }
 
+  public reportComment(comment_id:number){
+    this.router.navigate(['reportComment', comment_id]);
+  }
   
 }
