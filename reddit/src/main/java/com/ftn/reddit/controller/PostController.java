@@ -194,6 +194,13 @@ public class PostController {
         }
 
         postService.save(post);
+        Reaction reaction = new Reaction();
+        reaction.setTimestamp(LocalDate.from(LocalDateTime.now()));
+        reaction.setUser(author);
+        reaction.setPost(post);
+        reaction.setType(ReactionType.UPWOTE);
+
+        reactionService.save(reaction);
 
         return ResponseEntity.ok().build();
     }

@@ -44,21 +44,6 @@ public class CommentController {
     private ReactionService reactionService;
 
 
-    /*@GetMapping
-    public ResponseEntity<List<CommentDTO>> getComments() {
-        List<Comment> comments = commentService.findAll();
-
-        List<CommentDTO> commentDTOs = comments.stream()
-                .map(comment -> {
-                    CommentDTO commentDTO = new CommentDTO(comment);
-                    return commentDTO;
-                })
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(commentDTOs, HttpStatus.OK);
-    }
-*/
-
     @GetMapping
     public ResponseEntity<List<CommentDTO>> getComments() {
         List<Comment> comments = commentService.findAll();
@@ -252,14 +237,24 @@ public class CommentController {
     }
 
     @GetMapping("/{comment_id}/replies")
-    public ResponseEntity<List<Comment>> getRepliesForComment(@PathVariable Integer comment_id) {
+    public ResponseEntity<List<CommentDTO>> getRepliesForComment(@PathVariable Integer comment_id) {
         Comment comment = commentService.findById(comment_id);
         if (comment == null) {
             return ResponseEntity.notFound().build();
         }
 
         List<Comment> replies = commentService.getRepliesForComment(comment);
-        return ResponseEntity.ok(replies);
+
+        List<CommentDTO> replyDTOs = replies.stream()
+                .map(reply -> {
+                    CommentDTO replyDTO = new CommentDTO(reply);
+                    int totalReactions = calculateTotalReactions(reply);
+                    replyDTO.setNetReactions(totalReactions);
+                    return replyDTO;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(replyDTOs);
     }
 
     @PostMapping("/search")
