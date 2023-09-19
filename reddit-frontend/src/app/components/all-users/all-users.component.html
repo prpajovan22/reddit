@@ -11,8 +11,11 @@
       <td>{{ a.email }}</td>
       <td>{{ a.displayName }}</td>
       <td>{{ a.userRole}}</td>
-      <td>{{ a.isSuspended}}</td>
-      <td><button (click)="switchUserRole(a.user_id)">Switch Role</button></td>
-      <td><button (click)="suspendUser(a.user_id)">Suspend User</button></td>
+      <td>
+        {{ a.isSuspended ? 'BANNED' : 'UNBANNED' }}
+      </td>
+      <td><button  (click)="switchUserRole(a.user_id)">Switch Role</button></td>
+      <td><button  (click)="suspendUser(a.user_id)">Suspend User</button></td>
+      <td><button  (click)="returnUser(a.user_id)">Unsuspend User</button></td>
     </tr>
 </table>

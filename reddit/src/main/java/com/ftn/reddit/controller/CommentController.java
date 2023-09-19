@@ -111,9 +111,9 @@ public class CommentController {
         }
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable("id") Integer id) {
-        Comment comment = commentService.findById(id);
+    @GetMapping(value = "/{comment_id}")
+    public ResponseEntity<Comment> getCommentById(@PathVariable("comment_id") Integer comment_id) {
+        Comment comment = commentService.findById(comment_id);
         if (comment == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -129,6 +129,9 @@ public class CommentController {
             HttpSession session) {
         // Users loggedInUser = (Users) session.getAttribute("loggedUser");
         Users loggedInUser = userService.findById(1);
+        if (loggedInUser.isSuspended()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         Post post = postService.findById(post_id);
         LocalDate creationDate = LocalDate.now();
         Comment comment = new Comment();
@@ -144,7 +147,11 @@ public class CommentController {
     @PostMapping("/createReply/{comment_id}")
     public ResponseEntity<Comment> createReply(@PathVariable("comment_id") Integer comment_id, @RequestBody CommentDTO commentRequest) {
         Comment parentComment = commentService.findById(comment_id);
+        Users loggedInUser = userService.findById(1);
 
+        if (loggedInUser.isSuspended()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         if (parentComment == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -154,7 +161,7 @@ public class CommentController {
         reply.setTimestamp(LocalDate.now());
         reply.setDeleted(false);
 
-        Users loggedInUser = userService.findById(1);
+
         reply.setUser(loggedInUser);
 
         reply.setParentComment(parentComment);
@@ -237,24 +244,13 @@ public class CommentController {
     }
 
     @GetMapping("/{comment_id}/replies")
-    public ResponseEntity<List<CommentDTO>> getRepliesForComment(@PathVariable Integer comment_id) {
+    public ResponseEntity<List<Comment>> getRepliesForComment(@PathVariable Integer comment_id) {
         Comment comment = commentService.findById(comment_id);
         if (comment == null) {
             return ResponseEntity.notFound().build();
         }
-
         List<Comment> replies = commentService.getRepliesForComment(comment);
-
-        List<CommentDTO> replyDTOs = replies.stream()
-                .map(reply -> {
-                    CommentDTO replyDTO = new CommentDTO(reply);
-                    int totalReactions = calculateTotalReactions(reply);
-                    replyDTO.setNetReactions(totalReactions);
-                    return replyDTO;
-                })
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(replyDTOs);
+        return ResponseEntity.ok(replies);
     }
 
     @PostMapping("/search")

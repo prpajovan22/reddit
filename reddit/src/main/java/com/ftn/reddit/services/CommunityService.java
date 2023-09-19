@@ -49,7 +49,7 @@ public class CommunityService implements CommunityInterface {
     }
 
     public List<Community> searchCommunities(CommunitySearchCriteria searchCriteria) {
-        Set<Community> combinedSearchResult = new HashSet<>();
+        List<Community> combinedSearchResult = new ArrayList<>();
         boolean shouldSearchMore = true;
         if (StringUtils.isEmpty(searchCriteria.getName()) && StringUtils.isEmpty(searchCriteria.getDescription())
                 && StringUtils.isEmpty(searchCriteria.getCommunityPDFName())) {
@@ -57,20 +57,18 @@ public class CommunityService implements CommunityInterface {
             shouldSearchMore = false;
         }
 
-
         if (!StringUtils.isEmpty(searchCriteria.getName()) && shouldSearchMore) {
-            List<Community> nameSearchResult = communityRepository.findByNameContainingIgnoreCase(searchCriteria.getName().toLowerCase());
-            combinedSearchResult.addAll(nameSearchResult);
+            combinedSearchResult.addAll(communityRepository.findByNameContainingIgnoreCase(searchCriteria.getName().toLowerCase()));
         }
 
         if (!StringUtils.isEmpty(searchCriteria.getDescription()) && shouldSearchMore) {
-            List<Community> descriptionSearchResult = communityRepository.findByDescriptionContainingIgnoreCase(searchCriteria.getDescription().toLowerCase());
-            combinedSearchResult.addAll(descriptionSearchResult);
+            combinedSearchResult.addAll(communityRepository.findByDescriptionContainingIgnoreCase(searchCriteria.getDescription().toLowerCase()));
+
         }
 
         if (!StringUtils.isEmpty(searchCriteria.getCommunityPDFName()) && shouldSearchMore) {
-            List<Community> descriptionSearchResult = communityRepository.findByCommunityPDFNameContainingIgnoreCase(searchCriteria.getCommunityPDFName().toLowerCase());
-            combinedSearchResult.addAll(descriptionSearchResult);
+            combinedSearchResult.addAll(communityRepository.findByCommunityPDFNameContainingIgnoreCase(searchCriteria.getCommunityPDFName().toLowerCase()));
+
         }
 
         Set<Community> uniqueResault = new HashSet<>(combinedSearchResult);
@@ -78,6 +76,19 @@ public class CommunityService implements CommunityInterface {
         if(searchCriteria.getFromPostCount() > 0 || searchCriteria.getToPostCount() > 0){
             uniqueResault = uniqueResault.stream().filter(post -> {
                 return post.getPosts().size() >= searchCriteria.getFromPostCount() && post.getPosts().size() <= searchCriteria.getToPostCount();
+            }).collect(Collectors.toSet());
+        }
+
+        if (searchCriteria.getFromReactionCount() > 0 || searchCriteria.getToReactionCount() > 0) {
+            uniqueResault = uniqueResault.stream().filter(community -> {
+                long totalReactionDifference = community.getPosts().stream()
+                        .flatMap(post -> post.getReactions().stream())
+                        .filter(reaction -> reaction.getType() == ReactionType.UPWOTE || reaction.getType() == ReactionType.DOWNWOTE)
+                        .mapToInt(reaction -> reaction.getType() == ReactionType.UPWOTE ? 1 : -1)
+                        .sum();
+
+                return totalReactionDifference >= searchCriteria.getFromReactionCount() &&
+                        totalReactionDifference <= searchCriteria.getToReactionCount();
             }).collect(Collectors.toSet());
         }
 

@@ -80,4 +80,9 @@ export class UserServiceService {
     const url = `${this.apiUsersUrl}/suspend-user/${user_id}`;
     return this.http.put<string>(url, {});
   }
+
+  returnUser(user_id: number): Observable<string> {
+    const url = `${this.apiUsersUrl}/return/${user_id}`;
+    return this.http.put<string>(url, {});
+  }
 }

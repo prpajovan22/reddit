@@ -31,6 +31,7 @@ import { ReportPostComponent } from './components/report-post/report-post.compon
 import { ReportCommentComponent } from './components/report-comment/report-comment.component';
 import { AllReportsComponent } from './components/all-reports/all-reports.component';
 import { CreateReplyComponent } from './components/create-reply/create-reply.component';
+import { SuspendCommnuityComponent } from './components/suspend-commnuity/suspend-commnuity.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { CreateReplyComponent } from './components/create-reply/create-reply.com
     ReportPostComponent,
     ReportCommentComponent,
     AllReportsComponent,
-    CreateReplyComponent
+    CreateReplyComponent,
+    SuspendCommnuityComponent
   ],
   imports: [
     BrowserModule,

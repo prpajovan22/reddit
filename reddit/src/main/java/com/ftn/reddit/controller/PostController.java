@@ -69,7 +69,7 @@ public class PostController {
 
     @PostMapping("/search")
     public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
-        List<Post> searchResults = postService.findAllExcludingPostsWithAcceptedReports();
+        List<Post> searchResults = postService.searchPosts(searchCriteria);
 
         List<PostDTO> postDTOs = searchResults.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))

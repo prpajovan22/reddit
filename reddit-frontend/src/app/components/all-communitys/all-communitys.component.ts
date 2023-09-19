@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Community } from 'src/app/models/Community';
 import { CommunitySearchCriteria } from 'src/app/models/Searchers/CommunitySearchCriteria';
+import { AuthService } from 'src/app/services/authService/auth.service';
 import { CommunityService } from 'src/app/services/communityService/community.service';
 
 @Component({
@@ -14,14 +15,16 @@ export class AllCommunitysComponent implements OnInit {
 
   searchForm: FormGroup;
   searchResults: Community[] = [];
+  isUserLoggedIn:boolean;
 
-  constructor(private formBuilder: FormBuilder, private communityService: CommunityService,private router:Router) {}
+  constructor(private formBuilder: FormBuilder, private communityService: CommunityService,
+    private authService: AuthService,private router:Router) {}
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
       name: [''],
       description: [''],
-      communityPDF: [''],
+      communityPDFName: [''],
       fromPostCount: [0], 
       toPostCount: [0],
       fromReactionCount:[0],
@@ -30,8 +33,19 @@ export class AllCommunitysComponent implements OnInit {
     this.search();
   }
 
+  isModeratorOrAdmin(): boolean {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'MODERATOR' || userRole === 'ADMIN';
+}
+
+  isAdmin(): boolean {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'ADMIN';
+}
+
 
   search(): void {
+    this.authService.getUserLoggedIn().subscribe(value =>{this.isUserLoggedIn = value})
     const searchCriteria: CommunitySearchCriteria = this.searchForm.value;
     this.communityService.searchCommunities(searchCriteria).subscribe(results => {
       this.searchResults = results;
@@ -41,10 +55,8 @@ export class AllCommunitysComponent implements OnInit {
     });
   }
 
-  deleteCommunity(community_id: any): void {
-    this.communityService.deleteCommunity(community_id).subscribe(() => {
-      this.searchResults = this.searchResults.filter((community) => community.community_id !== community_id);
-    });
+  public deleteCommunity(community_id:number){
+    this.router.navigate(['suspendCommunity', community_id]);
   }
 
   private async fetchPostCountsForCommunities(): Promise<void> {

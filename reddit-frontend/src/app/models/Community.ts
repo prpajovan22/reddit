@@ -8,7 +8,7 @@ export class Community{
     description:string;
     creationDate:Date;
     isSuspended:boolean;
-    suspendedReason:String;
+    suspendedReason:string;
     communityPDF:string;
     communityPDFName:string;
     banned:Banned;

@@ -57,6 +57,7 @@ public class UserController {
     }
 
 
+
     @GetMapping("/loggedin")
     public ResponseEntity<Users> getLoggedInUserProfile(HttpServletRequest httpRequest) {
         //Users loggedInUser = (Users)  request.getSession().getAttribute("loggedUser");
@@ -77,6 +78,17 @@ public class UserController {
             return ResponseEntity.ok("User suspended successfully.");
         } else {
             return ResponseEntity.badRequest().body("Failed to suspend user.");
+        }
+    }
+
+    @PutMapping("/return/{user_id}")
+    public ResponseEntity<String> returnUser(@PathVariable Integer user_id) {
+        boolean success = userService.returnUser(user_id);
+
+        if (success) {
+            return ResponseEntity.ok("User returned successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to returned user.");
         }
     }
 

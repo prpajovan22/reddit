@@ -18,11 +18,10 @@
     <td>{{ post.netReactions}}</td>
     <td><button (click)="navigateToReplies(post.comment_id)">Show Replies</button></td>
     <td><button  class="btn btn-info" (click)="updateComment(post.comment_id)">Update</button></td>
-    <button style="margin-left: 20px;" class="btn btn-success" (click)="upvoteComment(post.comment_id)">Upvote</button>
-    <button style="margin-left: 10px;" class="btn btn-danger" (click)="downvoteComment(post.comment_id)">Downvote</button>
+    <button *ngIf="isUserLoggedIn" style="margin-left: 20px;" class="btn btn-success" (click)="upvoteComment(post.comment_id)">Upvote</button>
+    <button *ngIf="isUserLoggedIn" style="margin-left: 10px;" class="btn btn-danger" (click)="downvoteComment(post.comment_id)">Downvote</button>
     <button style="margin-left: 20px;" class="btn btn-info" (click)="reportComment(post.comment_id)">Report</button>
-    <button style="margin-left: 20px;" class="btn btn-info" (click)="createReply(post.comment_id)">Reply</button>
+    <button *ngIf="isUserLoggedIn" style="margin-left: 20px;" class="btn btn-info" (click)="createReply(post.comment_id)">Reply</button>
   </tr>  
- 
 </table>
 

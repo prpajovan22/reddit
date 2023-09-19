@@ -140,6 +140,24 @@ public class CommunityController {
         return ResponseEntity.ok(updated);
     }
 
+    @PutMapping("/update2/{community_id}")
+    public ResponseEntity<Community> updateCommunity2(
+            @PathVariable Integer community_id,
+            @RequestPart("suspendedReason") String suspendedReason) {
+
+        Community existingCommunity = communityService.findById(community_id);
+        if (existingCommunity == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        existingCommunity.setSuspendedReason(suspendedReason);
+        existingCommunity.setSuspended(true);
+
+
+        Community updated = communityService.save(existingCommunity);
+        return ResponseEntity.ok(updated);
+    }
+
     private String savePDFFile(MultipartFile pdfFile) {
         if (pdfFile == null || pdfFile.isEmpty()) {
             return null;

@@ -47,6 +47,11 @@ export class CommunityService {
 
   }
 
+  updateCommunity2(community_id:number,formData: FormData) : Observable<Community>{
+    return this.http.put<Community>(`${this.apiCommunityUrl}/update2/${community_id}`, formData);
+
+  }
+
   createCommunity(communitys: any) : Observable<Community>{
     console.log(communitys);
     return this.http.post<Community>(this.apiCommunityUrl, communitys);

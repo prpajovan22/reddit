@@ -35,7 +35,7 @@ getCommentsByPost(postId: number): Observable<Comments[]> {
 }
 
 getCommentById(comment_id_id:number): Observable<any>{
-  return this.http.get(`${this.apiCommentUrl}/byId/${comment_id_id}`);
+  return this.http.get(`${this.apiCommentUrl}/${comment_id_id}`);
   
 }
 

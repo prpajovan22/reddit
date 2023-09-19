@@ -96,4 +96,22 @@ public class UserService implements UserInterface {
             return false;
         }
     }
+
+    public boolean returnUser(Integer user_id) {
+        try {
+            Users user = usersRepository.findById(user_id).orElse(null);
+
+            if (user != null) {
+                user.setSuspended(false);
+
+                usersRepository.save(user);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -32,19 +32,19 @@
       <td>{{ a.netReactions}} </td>
       <td>{{ a.commentCount }}</td>
       <td> 
-        <button  style="margin-left: 20px;" class="btn btn-success" (click)="upvotePost(a.post_id)">Upvote</button>
-        <button style="margin-left: 10px;" class="btn btn-danger" (click)="downvotePost(a.post_id)">Downvote</button>
+        <button *ngIf="isUserLoggedIn"  style="margin-left: 20px;" class="btn btn-success" (click)="upvotePost(a.post_id)">Upvote</button>
+        <button *ngIf="isUserLoggedIn" style="margin-left: 10px;" class="btn btn-danger" (click)="downvotePost(a.post_id)">Downvote</button>
       </td> 
       <td>
         <button (click)="navigateToCommunity(a.community_id)">View Community</button>
         <button class="btn btn-info" (click)="showComments(a.post_id)">View Comments</button>
       </td>
       <td> 
-        <button (click)="navigateToCommentCreation(a.post_id)">Create Comment</button>
+        <button *ngIf="isUserLoggedIn" (click)="navigateToCommentCreation(a.post_id)">Create Comment</button>
       </td> 
       
       <td>
-        <button style="margin-left: 20px;" class="btn btn-info" (click)="updatePost(a.post_id)">Update</button>
+        <button *ngIf="isUserLoggedIn && isModeratorOrAdmin()" style="margin-left: 20px;" class="btn btn-info" (click)="updatePost(a.post_id)">Update</button>
       </td> 
       <td>
         <button style="margin-left: 20px;" class="btn btn-info" (click)="reportPost(a.post_id)">Report</button>

@@ -19,6 +19,7 @@ export class AllPostsComponent implements OnInit {
   posts: Post[] = [];
   searchResults: Post[] = [];
   user: any;
+  isUserLoggedIn:boolean;
 
   constructor(private formBuilder: FormBuilder,
      private postService: PostServiceService,private router:Router,
@@ -39,6 +40,7 @@ export class AllPostsComponent implements OnInit {
   }
 
   search(): void {
+    this.authService.getUserLoggedIn().subscribe(value =>{this.isUserLoggedIn = value})
     const searchCriteria: PostSearchCriteria = this.searchForm.value;
     this.postService.searchPosts(searchCriteria).subscribe(results => {
       this.searchResults = results;      
@@ -57,6 +59,15 @@ export class AllPostsComponent implements OnInit {
     }
   }
 
+  isModeratorOrAdmin(): boolean {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'MODERATOR' || userRole === 'ADMIN';
+}
+
+  isAdmin(): boolean {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'ADMIN';
+}
   
   navigateToCommunity(community_id: number): void {
     this.router.navigate(['one-community', community_id]);

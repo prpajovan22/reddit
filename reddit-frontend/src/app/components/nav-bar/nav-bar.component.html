@@ -7,7 +7,7 @@
             <li *ngIf="!isUserLoggedIn"><a routerLink="login">Login</a></li>
             <li *ngIf="isUserLoggedIn"><a href="#" (click)="logout()">Logout</a></li>
             <li *ngIf="isUserLoggedIn"><a routerLink="profile">Profil</a></li>
-            <li *ngIf="isUserLoggedIn"><a routerLink="users">Users</a></li>
+            <li *ngIf="isUserLoggedIn && isModeratorOrAdmin()"><a routerLink="users">Users</a></li>
             <li *ngIf="isUserLoggedIn"><a href="createCommunity">Create Community</a></li>
             <li *ngIf="isUserLoggedIn && isModeratorOrAdmin()"><a href="allReports">All reports</a></li>
             <li *ngIf="isUserLoggedIn"><a href="updateUser">Change password</a></li>

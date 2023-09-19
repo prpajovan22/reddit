@@ -5,8 +5,8 @@
   <label for="description">Description:</label>
   <input type="text" id="description" formControlName="description">
   <br>
-  <label for="communityPDF">PDF Name:</label>
-  <input type="text" id="communityPDF" formControlName="communityPDF">
+  <label for="communityPDFName">PDF Name:</label>
+  <input type="text" id="communityPDFName" formControlName="communityPDFName">
   <br>
   <label for="fromPostCount">From Post Count:</label>
   <input type="number" id="fromPostCount" formControlName="fromPostCount">
@@ -37,10 +37,10 @@
       <td>{{ a.communityPDFName}} </td>
       <td>{{ a.postCount }}</td>
       <td>{{ a.totalReaction}}</td>
-      <td><button  class="btn btn-info" (click)="updateCommunity(a.community_id)">Update</button></td>
+      <td><button *ngIf="isUserLoggedIn && isModeratorOrAdmin()" class="btn btn-info" (click)="updateCommunity(a.community_id)">Update</button></td>
       <td><button  class="btn btn-info" (click)="showPost(a.community_id)">Posts</button></td>
-      <td><button  class="btn btn-info" (click)="createPost(a.community_id)">Create Post</button></td>
-      <td><button (click)="deleteCommunity(a.community_id)">Delete</button></td>  
+      <td><button *ngIf="isUserLoggedIn" class="btn btn-info" (click)="createPost(a.community_id)">Create Post</button></td>
+      <td><button *ngIf="isUserLoggedIn && isModeratorOrAdmin()" (click)="deleteCommunity(a.community_id)">Delete</button></td>  
     </tr>
 </table>
 <button class="btn btn-primary" (click)="createCommunity()">Add</button>
