@@ -22,4 +22,14 @@ export class NavBarComponent implements OnInit {
     this.authService.logout();
     this.authService.setUserLoggedIn(false);
   }
+
+  isModeratorOrAdmin(): boolean {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'MODERATOR' || userRole === 'ADMIN';
+}
+
+  isAdmin(): boolean {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'ADMIN';
+}
 }

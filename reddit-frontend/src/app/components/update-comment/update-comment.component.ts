@@ -39,6 +39,7 @@ export class UpdateCommentComponent implements OnInit {
       },
       error => {
         console.log(error);
+        this.redirectToCommentList();
       }
     );
   }

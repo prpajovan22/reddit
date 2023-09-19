@@ -156,6 +156,28 @@ public class CommentController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+    @PostMapping("/createReply/{comment_id}")
+    public ResponseEntity<Comment> createReply(@PathVariable("comment_id") Integer comment_id, @RequestBody CommentDTO commentRequest) {
+        Comment parentComment = commentService.findById(comment_id);
+
+        if (parentComment == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Comment reply = new Comment();
+        reply.setText(commentRequest.getText());
+        reply.setTimestamp(LocalDate.now());
+        reply.setDeleted(false);
+
+        Users loggedInUser = userService.findById(1);
+        reply.setUser(loggedInUser);
+
+        reply.setParentComment(parentComment);
+
+        Comment savedComment = commentService.save(reply);
+        return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
+    }
+
 
     @PutMapping("/{comment_id}")
     public ResponseEntity<Comment> updateComment(

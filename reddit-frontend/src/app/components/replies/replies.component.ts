@@ -12,6 +12,7 @@ export class RepliesComponent implements OnInit {
 
   comment_id: number;
   replies: Comments[];
+  searchResults: Comments[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -35,5 +36,35 @@ export class RepliesComponent implements OnInit {
 
   navigateToReplies(commentId: number): void {
     this.router.navigate(['/replies', commentId], { relativeTo: this.route });
+  }
+
+  createReply(comment_id:number){
+    this.router.navigate(['createReply', comment_id]);
+  }
+
+  public reportComment(comment_id:number){
+    this.router.navigate(['reportComment', comment_id]);
+  }
+
+  upvoteComment(comment_id: number): void {
+    this.commentService.upvoteComment(comment_id).subscribe(response => {
+      const updatedPost = this.searchResults.find(post => post.comment_id === comment_id);
+      if (updatedPost) {
+        updatedPost.netReactions++;
+      }
+    });
+  }
+
+  downvoteComment(comment_id: number): void {
+    this.commentService.downvoteComment(comment_id).subscribe(response => {
+      const updatedPost = this.searchResults.find(post => post.comment_id === comment_id);
+      if (updatedPost) {
+        updatedPost.netReactions--; 
+      }
+    });
+  }
+
+  public updateComment(comment_id:number){
+    this.router.navigate(['updateComment', comment_id]);
   }
 }

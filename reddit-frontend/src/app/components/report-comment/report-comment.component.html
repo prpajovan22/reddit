@@ -1,1 +1,15 @@
-<p>report-comment works!</p>
+<div class="card col-md-6 offset-md-3">
+    <h3>Report Post</h3>
+    <div class="form-group">
+      <label for="reason">Reason for report</label>
+      <select id="reason" [(ngModel)]="reportReason" name="reason">
+        <option value="BREAKS_RULES">Broke rules</option>
+        <option value="HARASSMENT">Harassment</option>
+        <option value="HATE">Hate</option>
+        <option value="SHARING_PERSONAL_INFORMATION">Sharing personal information</option>
+        <option value="IMPERSONATION">Impersonation</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-success" (click)="submitReport()">Submit</button>
+  </div>
+  

@@ -28,7 +28,7 @@ export class CommunityService {
 
   constructor(private http: HttpClient) { }
 
-  getCommunitys(): Observable<Community[]>{
+  getCommunitys(): Observable<Community[]> {
     return this.http.get<Community[]>(this.apiCommunityUrl);
   }
 
@@ -52,8 +52,8 @@ export class CommunityService {
     return this.http.post<Community>(this.apiCommunityUrl, communitys);
   }
 
-  deleteCommunity(id:any) : Observable<any>{
-    return this.http.delete<Community>(`${this.apiCommunityUrl}/${id}`);
+  deleteCommunity(community_id: any): Observable<any> {
+    return this.http.delete<Community>(`${this.apiCommunityUrl}/${community_id}`);
   }
 
   searchCommunities(searchCriteria: CommunitySearchCriteria): Observable<Community[]> {

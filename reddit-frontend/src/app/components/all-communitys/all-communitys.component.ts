@@ -21,6 +21,7 @@ export class AllCommunitysComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       name: [''],
       description: [''],
+      communityPDF: [''],
       fromPostCount: [0], 
       toPostCount: [0],
       fromReactionCount:[0],
@@ -37,6 +38,12 @@ export class AllCommunitysComponent implements OnInit {
 
       this.fetchPostCountsForCommunities();
       this.fetchTotalReactionsForCommunities();
+    });
+  }
+
+  deleteCommunity(community_id: any): void {
+    this.communityService.deleteCommunity(community_id).subscribe(() => {
+      this.searchResults = this.searchResults.filter((community) => community.community_id !== community_id);
     });
   }
 
@@ -75,7 +82,7 @@ export class AllCommunitysComponent implements OnInit {
   }
 
   public updateCommunity(community_id:number){
-    this.router.navigate(['updateComment', community_id]);
+    this.router.navigate(['updateCommunity', community_id]);
   }
 
   

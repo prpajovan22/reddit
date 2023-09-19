@@ -70,4 +70,14 @@ export class UserServiceService {
   getUserByUsername(korisnicko: string): Observable<any>{
     return this.http.get(`${this.apiUsersUrl}/korisnicko/${korisnicko}`);
   }
+
+  switchUserRole(user_id: number): Observable<string> {
+    const url = `${this.apiUsersUrl}/switch-role/${user_id}`;
+    return this.http.post<string>(url, {});
+  }
+
+  suspendUser(user_id: number): Observable<string> {
+    const url = `${this.apiUsersUrl}/suspend-user/${user_id}`;
+    return this.http.put<string>(url, {});
+  }
 }

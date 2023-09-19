@@ -44,15 +44,11 @@ public class CommunityController {
 
 
     @GetMapping
-    public ResponseEntity<List<CommunityDTO>> getCommunities() {
-        List<Community> communities = communityService.findAll();
-
-        List<CommunityDTO> communityDTOs = communities.stream()
+    public List<Community> findAll() {
+        List<Community> allCommunities = communityService.findAllNonSuspended();
+        return allCommunities.stream()
                 .filter(community -> !community.isSuspended())
-                .map(CommunityDTO::new)
                 .collect(Collectors.toList());
-
-        return new ResponseEntity<>(communityDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/byId/{id}")
@@ -181,7 +177,7 @@ public class CommunityController {
         return uploadDir + "/" + uniqueFileName;
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{community_id}")
     public ResponseEntity<Void> deleteCommunity(@PathVariable("community_id") Integer community_id, Authentication authentication) {
         Community community = communityService.findById(community_id);
         community.setSuspended(true);
@@ -190,9 +186,14 @@ public class CommunityController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<Community>> seacrchCommunities(@RequestBody CommunitySearchCriteria searchCriteria){
-        List<Community> searchResault = communityService.searchCommunities(searchCriteria);
-        return ResponseEntity.ok(searchResault);
+    public ResponseEntity<List<Community>> seacrchCommunities(@RequestBody CommunitySearchCriteria searchCriteria) {
+        List<Community> searchResult = communityService.searchCommunities(searchCriteria);
+
+        List<Community> filteredResult = searchResult.stream()
+                .filter(community -> !community.isSuspended())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredResult);
     }
 
     @GetMapping("/{community_id}/postCount")

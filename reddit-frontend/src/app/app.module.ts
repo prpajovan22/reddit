@@ -30,6 +30,7 @@ import { CreateCommentComponent } from './components/create-comment/create-comme
 import { ReportPostComponent } from './components/report-post/report-post.component';
 import { ReportCommentComponent } from './components/report-comment/report-comment.component';
 import { AllReportsComponent } from './components/all-reports/all-reports.component';
+import { CreateReplyComponent } from './components/create-reply/create-reply.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { AllReportsComponent } from './components/all-reports/all-reports.compon
     CreateCommentComponent,
     ReportPostComponent,
     ReportCommentComponent,
-    AllReportsComponent
+    AllReportsComponent,
+    CreateReplyComponent
   ],
   imports: [
     BrowserModule,

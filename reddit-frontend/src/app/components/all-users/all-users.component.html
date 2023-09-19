@@ -3,10 +3,16 @@
       <th>Ime</th>
       <th>Prezime</th>
       <th>Adresa</th>
+      <th>User Role</th>
+      <th>Suspend</th>
     </tr>
     <tr *ngFor="let a of users">
       <td> {{ a.username }} </td>
       <td>{{ a.email }}</td>
       <td>{{ a.displayName }}</td>
+      <td>{{ a.userRole}}</td>
+      <td>{{ a.isSuspended}}</td>
+      <td><button (click)="switchUserRole(a.user_id)">Switch Role</button></td>
+      <td><button (click)="suspendUser(a.user_id)">Suspend User</button></td>
     </tr>
 </table>

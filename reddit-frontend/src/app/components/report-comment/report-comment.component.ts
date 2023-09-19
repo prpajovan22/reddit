@@ -29,10 +29,11 @@ export class ReportCommentComponent {
       this.reportsService.createReportComment(this.comment_id, reportData).subscribe(
         (response) => {
           console.log('Report submitted successfully');
-          this.redirectToHome();
+          this.redirectToCommunitys();
         },
         (error) => {
           console.error('Error submitting report:', error);
+          this.redirectToCommunitys();
         }
       );
     } else {
@@ -40,7 +41,7 @@ export class ReportCommentComponent {
     }
   }
 
-  redirectToHome(){
+  redirectToCommunitys() {
     this.router.navigate(['/home']);
-  }
+}
 }

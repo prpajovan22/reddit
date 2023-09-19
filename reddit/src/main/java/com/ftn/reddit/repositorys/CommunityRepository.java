@@ -15,6 +15,8 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
             String name,String description
     );
 
+    List<Community> findAllByIsSuspendedFalse();
+
     List<Community> findByNameContainingIgnoreCase(String name);
 
     List<Community> findByDescriptionContainingIgnoreCase(String description);

@@ -29,6 +29,10 @@ public class CommunityService implements CommunityInterface {
         return communityRepository.findAll();
     }
 
+    public List<Community> findAllNonSuspended() {
+        return communityRepository.findAllByIsSuspendedFalse();
+    }
+
     @Override
     public Community save(Community post) {
         return communityRepository.save(post);

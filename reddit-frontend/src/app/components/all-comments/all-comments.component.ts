@@ -79,4 +79,7 @@ export class AllCommentsComponent implements OnInit {
     this.router.navigate(['reportComment', comment_id]);
   }
   
+  createReply(comment_id:number){
+    this.router.navigate(['createReply', comment_id]);
+  }
 }

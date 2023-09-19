@@ -14,4 +14,5 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
     boolean existsByPostAndAccepted(Post post, boolean accepted);
 
     List<Report> findByAccepted(boolean accepted);
+
 }

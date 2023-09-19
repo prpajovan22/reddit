@@ -3,4 +3,5 @@ export class Reports{
     reason:string;
     timestamp:Date;
     accepted:boolean;
+    reportedText: string;
 }

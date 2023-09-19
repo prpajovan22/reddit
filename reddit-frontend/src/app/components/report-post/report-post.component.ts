@@ -34,6 +34,7 @@ export class ReportPostComponent{
         },
         (error) => {
           console.error('Error submitting report:', error);
+          this.redirectToHome();
         }
       );
     } else {

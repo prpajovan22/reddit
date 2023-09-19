@@ -1,5 +1,6 @@
 package com.ftn.reddit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -19,17 +20,18 @@ public class Report {
     @Column(name = "timestamp", unique = false, nullable = false)
     private LocalDate timestamp;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", referencedColumnName = "user_id")
     private Users byUser;
 
     @Column(name = "accepted", unique = false, nullable = false)
     private boolean accepted;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id", referencedColumnName = "comment_id")
     private Comment comment;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", referencedColumnName = "post_id")
     private Post post;

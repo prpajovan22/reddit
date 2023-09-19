@@ -44,7 +44,7 @@ public class UserController {
         return userService.findAll();
     }
 
-    @PostMapping("/switch-role/{userId}")
+    @PostMapping("/switch-role/{user_id}")
     public ResponseEntity<String> switchUserRoleToUser(@PathVariable Integer user_id) {
 
         boolean success = userService.switchUserRoleToUser(user_id);
@@ -66,6 +66,17 @@ public class UserController {
             return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PutMapping("/suspend-user/{user_id}")
+    public ResponseEntity<String> suspendUser(@PathVariable Integer user_id) {
+        boolean success = userService.suspendUser(user_id);
+
+        if (success) {
+            return ResponseEntity.ok("User suspended successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to suspend user.");
         }
     }
 

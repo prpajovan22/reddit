@@ -64,4 +64,9 @@ createComment(post_id: number, commentData: any): Observable<any> {
   const url = `${this.apiCommentUrl}/createComment/${post_id}`; 
   return this.http.post(url, commentData);
 }
+
+createReply(comment_id: number, commentData: any): Observable<any> {
+  const url = `${this.apiCommentUrl}/createReply/${comment_id}`; 
+  return this.http.post(url, commentData);
+}
 }

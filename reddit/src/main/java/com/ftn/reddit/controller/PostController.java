@@ -67,20 +67,36 @@ public class PostController {
         return ResponseEntity.ok(postDTOs);
     }*/
 
-    @GetMapping
-    public ResponseEntity<List<PostDTO>> getPosts() {
-        List<Post> posts = postService.findAllExcludingPostsWithAcceptedReports();
+    @PostMapping("/search")
+    public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
+        List<Post> searchResults = postService.findAllExcludingPostsWithAcceptedReports();
 
-        List<PostDTO> postDTOs = posts.stream()
+        List<PostDTO> postDTOs = searchResults.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
                 .map(post -> {
-                    int netReactions = calculateNetReactions(post.getReactions());
-                    return new PostDTO(post, netReactions);
+                    List<ReactionDTO> reactions = reactionService.findByPost(post).stream()
+                            .map(ReactionDTO::new)
+                            .collect(Collectors.toList());
+
+                    int upvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.UPWOTE).count();
+                    int downvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.DOWNWOTE).count();
+                    int netReaction = upvotes - downvotes;
+
+                    return new PostDTO(post, netReaction);
                 })
                 .collect(Collectors.toList());
 
         Collections.shuffle(postDTOs);
-        return ResponseEntity.ok(postDTOs);
+        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
+    }
+
+    private boolean hasAcceptedReport(Post post) {
+        for (Report report : post.getReports()) {
+            if (report.isAccepted()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @GetMapping(value = "/{id}")
@@ -196,13 +212,14 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+/*
     @PostMapping("/search")
     public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
         List<Post> searchResults = postService.searchPosts(searchCriteria);
 
         List<PostDTO> postDTOs = searchResults.stream()
                 .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
+                .filter(post -> !postService.findAllExcludingPostsWithAcceptedReports(post.getP())) // Check for accepted reports
                 .map(post -> {
                     List<ReactionDTO> reactions = reactionService.findByPost(post).stream()
                             .map(ReactionDTO::new)
@@ -218,7 +235,7 @@ public class PostController {
 
         Collections.shuffle(postDTOs);
         return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }
+    }*/
 
     ////////////////////////////////// Community  ////////////////////////////////////////
 
