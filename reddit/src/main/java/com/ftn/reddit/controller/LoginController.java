@@ -45,9 +45,6 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /*@Autowired
-    private AuthenticationService authenticationService;*/
-
     @Autowired
     private ResourceLoader resourceLoader;
 
@@ -56,21 +53,21 @@ public class LoginController {
 
 
     @PostMapping("/signIn")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpServletRequest httpRequest){
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request, HttpServletRequest httpRequest) {
 
         Users user = userService.findByUsername(request.getEmail());
         AuthenticationResponse response = new AuthenticationResponse();
-        if(user == null){
+        if (user == null) {
             response.setMessage("User does not exist!");
             response.setSuccessfull(false);
             return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.BAD_REQUEST);
         }
-        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             response.setMessage("Wrong username or password!.");
             response.setSuccessfull(false);
             return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.BAD_REQUEST);
         }
-        httpRequest.getSession().setAttribute("loggedUser",user);
+        httpRequest.getSession().setAttribute("loggedUser", user);
         response.setSuccessfull(true);
         response.setRole(user.getUserRole().toString());
 
@@ -79,19 +76,10 @@ public class LoginController {
 
 
 
-    /*@PostMapping("/signIn")
-    public ResponseEntity<String> login(@RequestBody AuthenticationRequest request){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getEmail(), request.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
-    }*/
-
     @PostMapping("/registration")
-    public ResponseEntity<UsersDTO> register(@RequestParam("username") String username,@RequestParam("password") String password,
-                                             @RequestParam("email") String email,@RequestParam("description") String description,
-                                             @RequestParam("displayName") String displayName,@RequestParam("userRole") UserRole userRole,
+    public ResponseEntity<UsersDTO> register(@RequestParam("username") String username, @RequestParam("password") String password,
+                                             @RequestParam("email") String email, @RequestParam("description") String description,
+                                             @RequestParam("displayName") String displayName, @RequestParam("userRole") UserRole userRole,
                                              @RequestParam(value = "avatar", required = false) MultipartFile avatarFile
     ) throws IOException {
 
@@ -121,6 +109,7 @@ public class LoginController {
         if (userRole == null || Objects.equals(userRole, "")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
 
         UsersDTO usersDTO = new UsersDTO();
         LocalDate registrationDate = LocalDate.now();

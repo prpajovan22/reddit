@@ -79,12 +79,11 @@ public class CommunityController {
             HttpSession session) {
         //Users author = (Users) session.getAttribute("loggedUser");
 
-        Users author = userService.findById(1);
+        Users author = userService.findById(5);
 
-        if (!author.getUserRole().equals("MODERATOR")) {
+        if (!author.getUserRole().equals("MODERATOR") && !author.getUserRole().equals("ADMIN")) {
             author.setUserRole(UserRole.valueOf("MODERATOR"));
             userService.save(author);
-
         }
         LocalDate creationDate = LocalDate.now();
         Community community = new Community();
@@ -178,22 +177,6 @@ public class CommunityController {
         }
     }
 
-    private String saveCommunityPDF(MultipartFile communityPDF) throws IOException {
-        String uploadDir = "files";
-        Path uploadPath = Path.of(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        String uniqueFileName = System.currentTimeMillis() + "_" + communityPDF.getOriginalFilename();
-        Path filePath = uploadPath.resolve(uniqueFileName);
-        try {
-            Files.copy(communityPDF.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new IOException("Could not save the PDF file: " + e.getMessage());
-        }
-
-        return uploadDir + "/" + uniqueFileName;
-    }
 
     @DeleteMapping(value = "/{community_id}")
     public ResponseEntity<Void> deleteCommunity(@PathVariable("community_id") Integer community_id, Authentication authentication) {

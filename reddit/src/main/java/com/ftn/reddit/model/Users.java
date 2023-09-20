@@ -30,7 +30,7 @@ public class Users implements Serializable, UserDetails {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "avatar", unique = true)
+    @Column(name = "avatar", unique = false)
     private String avatar;
 
     @Column(name = "registrationDate", unique = false, nullable = false)

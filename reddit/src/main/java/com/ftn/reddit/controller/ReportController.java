@@ -39,7 +39,7 @@ public class ReportController {
         try {
             LocalDate creationDate = LocalDate.now();
             Post post = postService.findById(post_id);
-            Users users = userService.findById(1);
+            Users users = userService.findById(5);
 
             Report report = new Report();
             report.setPost(post);
@@ -71,7 +71,7 @@ public class ReportController {
         try {
             LocalDate creationDate = LocalDate.now();
             Post post = postService.findById(post_id);
-            Users users = userService.findById(1);
+            Users users = userService.findById(5);
 
             Report report = new Report();
             report.setPost(post);
@@ -98,7 +98,7 @@ public class ReportController {
         try {
             LocalDate creationDate = LocalDate.now();
             Comment post = commentService.findById(comment_id);
-            Users users = userService.findById(1);
+            Users users = userService.findById(5);
 
             Report report = new Report();
             report.setComment(post);

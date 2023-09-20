@@ -26,17 +26,23 @@
   </tr>   
 </table>
 <form [formGroup]="searchForm" (ngSubmit)="search()">
-  <label for="title">Title:</label>
+  <label for="title">Text:</label>
   <input type="text" id="title" formControlName="title">
 
-  <label for="text">Text:</label>
+  <label for="text">Title:</label>
   <input type="text" id="text" formControlName="text">
 
-  <label for="fromReactionCount">From Reaction Count:</label>
+  <label for="fromReactionCount">From Comment Count:</label>
   <input type="number" id="fromReactionCount" formControlName="fromReactionCount">
 
-  <label for="toReactionCount">To Reaction Count:</label>
+  <label for="toReactionCount">To Comment Count:</label>
   <input type="number" id="toReactionCount" formControlName="toReactionCount">
+
+  <label for="fromCommentCount">From Reaction Count:</label>
+  <input type="number" id="fromCommentCount" formControlName="fromCommentCount">
+
+  <label for="toCommentCount">To Reaction Count:</label>
+  <input type="number" id="toCommentCount" formControlName="toCommentCount">
 
   <button type="submit">Search</button>
 </form>

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UserFront } from 'src/app/models/Searchers/UserFront';
 import { User } from 'src/app/models/User';
 import { environment } from 'src/environments/environment';
 
@@ -46,8 +47,17 @@ export class UserServiceService {
     return this.http.get<User[]>(`http://localhost:8080/api/user/all`);
   }
 
+  getUsers2(): Observable<UserFront[]>{
+    return this.http.get<UserFront[]>(`http://localhost:8080/api/user/all`);
+  }
+
   getUserById(id:number): Observable<any>{
     return this.http.get(`http://localhost:8080/api/user/loggedin`);
+    
+  }
+
+  getUserById2(user_id:number): Observable<any>{
+    return this.http.get(`http://localhost:8080/api/user/${user_id}`);
     
   }
 
@@ -57,6 +67,11 @@ export class UserServiceService {
   
   updateUser(id:number, user:User) : Observable<User>{
     return this.http.put<User>(`${this.apiUsersUrl}/${id}`,JSON.stringify(user), headers2);
+  }
+
+  updateCommunity(user_id:number,formData: FormData) : Observable<User>{
+    return this.http.put<User>(`${this.apiUsersUrl}/again/${user_id}`, formData);
+
   }
 
   registerUser(korisnik: User) : Observable<User>{

@@ -25,12 +25,14 @@
       <th>Text</th>
       <th>Reaction count</th>
       <th>Comment count</th>
+      <th>pdf name</th>
     </tr>
     <tr *ngFor="let a of searchResults">
       <td>{{ a.title }}</td>
       <td>{{ a.text}} </td>
       <td>{{ a.netReactions}} </td>
       <td>{{ a.commentCount }}</td>
+      <td>{{a.descriptionPDF}}</td>
       <td> 
         <button *ngIf="isUserLoggedIn"  style="margin-left: 20px;" class="btn btn-success" (click)="upvotePost(a.post_id)">Upvote</button>
         <button *ngIf="isUserLoggedIn" style="margin-left: 10px;" class="btn btn-danger" (click)="downvotePost(a.post_id)">Downvote</button>

@@ -85,9 +85,6 @@ public class PostService implements PostInterface {
                 return post.getReactions().size() >= searchCriteria.getFromCommentCount() && post.getReactions().size() <= searchCriteria.getToCommentCount();
             }).collect(Collectors.toSet());
         }
-        /*if(searchCriteria.getCommunity_id() > 0){
-            uniqueResault = uniqueResault.stream().filter(post -> post.getCommunity().getCommunity_id().equals(searchCriteria.getCommunity_id())).collect(Collectors.toSet());
-        }*/
         if (searchCriteria.getCommunity_id() != null && searchCriteria.getCommunity_id() > 0) {
             uniqueResault = uniqueResault.stream()
                     .filter(post -> post.getCommunity() != null &&

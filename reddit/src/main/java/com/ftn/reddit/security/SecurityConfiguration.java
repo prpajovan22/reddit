@@ -103,6 +103,7 @@ public class SecurityConfiguration {
                                         "api/comment/{comment_id}","api/report/submitReport/{comment_id}",
                                         "api/comment/createReply/{comment_id}","api/user/switch-role/{userId}",
                                         "api/user/return/{user_id}","api/community/update2/{community_id}",
+                                        "api/user/again/{user_id}","api/user/{user_id}",
                                         "api/user/loggedin","api/user/all","api/user/change-password","api/report/submit/{post_id}",
                                         "api/report/all","api/report/delete/{report_id}","api/report/accept/{report_id}",
                                         "api/comment/downvote/{comment_id}","api/comment/upvote/{comment_id}","api/user/suspend-user/{user_id}",

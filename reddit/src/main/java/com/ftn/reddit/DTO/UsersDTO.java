@@ -57,6 +57,7 @@ public class UsersDTO {
         users.setUsername(this.username);
         users.setPassword(this.password);
         users.setEmail(this.email);
+        users.setAvatar(this.avatar);
         users.setDescription(this.description);
         users.setDisplayName(this.displayName);
         users.setRegistrationDate(this.registrationDate);

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/models/User';
 import { AuthService } from 'src/app/services/authService/auth.service';
 import { UserServiceService } from 'src/app/services/userService/user.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { UserFront } from 'src/app/models/Searchers/UserFront';
 
 @Component({
   selector: 'app-all-users',
@@ -11,12 +13,12 @@ import { UserServiceService } from 'src/app/services/userService/user.service';
 })
 export class AllUsersComponent implements OnInit {
 
-  users:User[] = [];
+  users:UserFront[] = [];
   user:any;
   isUserLoggedIn:boolean;
 
   constructor(private userService: UserServiceService,
-    private authService:AuthService, private router: Router) { }
+    private authService:AuthService, private router: Router,private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.user = this.authService.getLoggedInUser();
@@ -24,9 +26,12 @@ export class AllUsersComponent implements OnInit {
   }
 
   fetchUsers(): void {
-    this.userService.getUsers().subscribe(
+    this.userService.getUsers2().subscribe(
       (users) => {
         this.users = users;
+        this.users.forEach(user => {
+          user.sanitisedImage = this.sanitizer.bypassSecurityTrustResourceUrl(user.avatar);
+        });
         console.log(users); 
       },
       (error) => {
@@ -46,6 +51,9 @@ export class AllUsersComponent implements OnInit {
 isModeratorOrAdmin(): boolean {
   const userRole = localStorage.getItem('userRole');
   return userRole === 'MODERATOR' || userRole === 'ADMIN';
+}
+public updateCommunity(user_id:number){
+  this.router.navigate(['changeUser', user_id]);
 }
 
   switchUserRole(user_id: number): void {

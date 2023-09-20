@@ -1,3 +1,4 @@
+import { SafeResourceUrl } from "@angular/platform-browser";
 import { Banned } from "./Banned";
 import { Comments } from "./Comments";
 import { Flair } from "./Flair";
@@ -11,13 +12,13 @@ export class User{
     email:string;
     avatar:File;
     registrationDate:Date;
-    description:String;
+    description:string;
     displayName:string;
-    userRole:String;
+    userRole:string;
     post:Post;
     banned:Banned;
     flairs:Flair;
     comments:Comments;
     reports:Reports;
-    isSuspended:boolean;
+    suspended:boolean;
 }

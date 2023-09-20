@@ -22,6 +22,7 @@ import { AllReportsComponent } from './components/all-reports/all-reports.compon
 import { ReportCommentComponent } from './components/report-comment/report-comment.component';
 import { CreateReplyComponent } from './components/create-reply/create-reply.component';
 import { SuspendCommnuityComponent } from './components/suspend-commnuity/suspend-commnuity.component';
+import { ChangeUserComponent } from './components/change-user/change-user.component';
 
 const routes: Routes = [
   {path: '',pathMatch:'full', redirectTo:'home'},
@@ -47,7 +48,8 @@ const routes: Routes = [
   {path:'reportPost/:post_id',component:ReportPostComponent},
   {path:'reportComment/:comment_id',component:ReportCommentComponent},
   {path:'allReports',component:AllReportsComponent},
-  {path:'suspendCommunity/:community_id',component:SuspendCommnuityComponent}
+  {path:'suspendCommunity/:community_id',component:SuspendCommnuityComponent},
+  {path:'changeUser/:user_id',component:ChangeUserComponent}
 ];
 
 @NgModule({

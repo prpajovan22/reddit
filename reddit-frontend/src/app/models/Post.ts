@@ -8,7 +8,7 @@ export class Post{
     title:string;
     text:string;
     creationDate:Date;
-    postPDFPath:String;
+    postPDFPath:string;
     descriptionPDF:string;
     flair:Flair;
     reports:Reports;

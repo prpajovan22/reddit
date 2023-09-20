@@ -82,8 +82,9 @@ public class CommentController {
             @RequestParam String text,
             HttpSession session
     ) {
-        Users loggedInUser = (Users) session.getAttribute("loggedUser");
+        //Users loggedInUser = (Users) session.getAttribute("loggedUser");
 
+        Users loggedInUser = userService.findById(5);
         if (loggedInUser == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -128,7 +129,7 @@ public class CommentController {
             @RequestBody @Validated CommentDTO commentDTO,
             HttpSession session) {
         // Users loggedInUser = (Users) session.getAttribute("loggedUser");
-        Users loggedInUser = userService.findById(1);
+        Users loggedInUser = userService.findById(5);
         if (loggedInUser.isSuspended()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -147,7 +148,7 @@ public class CommentController {
     @PostMapping("/createReply/{comment_id}")
     public ResponseEntity<Comment> createReply(@PathVariable("comment_id") Integer comment_id, @RequestBody CommentDTO commentRequest) {
         Comment parentComment = commentService.findById(comment_id);
-        Users loggedInUser = userService.findById(1);
+        Users loggedInUser = userService.findById(5);
 
         if (loggedInUser.isSuspended()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -198,16 +199,6 @@ public class CommentController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    /*@GetMapping("/byPost/{post_id}")
-    public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable Integer post_id) {
-        Post post = postService.findById(post_id);
-        if (post == null) {
-            return ResponseEntity.notFound().build();
-        }
-        List<Comment> comments = commentService.getCommentsByPost(post);
-        return ResponseEntity.ok(comments);
-    }*/
 
     @GetMapping("/byPost/{post_id}")
     public ResponseEntity<List<CommentDTO>> getCommentsByPost(@PathVariable Integer post_id) {
@@ -268,7 +259,7 @@ public class CommentController {
 
     @PostMapping("/upvote/{comment_id}")
     public ResponseEntity<String> upvoteComment(@PathVariable Integer comment_id, HttpSession session) {
-        Users user = userService.findById(1);
+        Users user = userService.findById(5);
 
         if (user.isSuspended()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
@@ -290,7 +281,7 @@ public class CommentController {
 
     @PostMapping("/downvote/{comment_id}")
     public ResponseEntity<String> downvoteComment(@PathVariable Integer comment_id, HttpSession session) {
-        Users user = userService.findById(1);
+        Users user = userService.findById(5);
 
         if (user.isSuspended()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");

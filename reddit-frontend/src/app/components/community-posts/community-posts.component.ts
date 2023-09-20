@@ -33,6 +33,8 @@ export class CommunityPostsComponent implements OnInit {
       title: [''],
       fromReactionCount: [0], 
       toReactionCount: [0],
+      fromCommentCount: [0], 
+      toCommentCount: [0],
       community_id:0
     });
   }

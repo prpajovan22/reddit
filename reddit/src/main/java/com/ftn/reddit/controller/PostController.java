@@ -51,22 +51,7 @@ public class PostController {
 
     @Autowired
     private ReactionService reactionService;
-    /*@GetMapping
-    public ResponseEntity<List<PostDTO>> getPosts() {
-        List<Post> posts = postService.findAll();
-
-        List<PostDTO> postDTOs = posts.stream()
-                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
-                .map(post -> {
-                    int netReactions = calculateNetReactions(post.getReactions());
-                    return new PostDTO(post, netReactions);
-                })
-                .collect(Collectors.toList());
-
-        Collections.shuffle(postDTOs);
-        return ResponseEntity.ok(postDTOs);
-    }*/
-
+/*
     @PostMapping("/search")
     public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
         List<Post> searchResults = postService.searchPosts(searchCriteria);
@@ -88,15 +73,30 @@ public class PostController {
 
         Collections.shuffle(postDTOs);
         return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }
+    }*/
+    @PostMapping("/search")
+    public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
+        List<Post> searchResults = postService.searchPosts(searchCriteria);
 
-    private boolean hasAcceptedReport(Post post) {
-        for (Report report : post.getReports()) {
-            if (report.isAccepted()) {
-                return true;
-            }
-        }
-        return false;
+        List<PostDTO> postDTOs = searchResults.stream()
+                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
+                .map(post -> {
+                    List<ReactionDTO> reactions = reactionService.findByPost(post).stream()
+                            .map(ReactionDTO::new)
+                            .collect(Collectors.toList());
+
+                    int upvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.UPWOTE).count();
+                    int downvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.DOWNWOTE).count();
+                    int netReaction = upvotes - downvotes;
+
+                    double averageReaction = (double) netReaction / reactions.size();
+
+                    return new PostDTO(post, netReaction, averageReaction);
+                })
+                .collect(Collectors.toList());
+
+        Collections.shuffle(postDTOs);
+        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
@@ -109,6 +109,7 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    @Transactional
     @PutMapping("/{post_id}")
     public ResponseEntity<Post> updatePost(
             @PathVariable Integer post_id,
@@ -160,10 +161,13 @@ public class PostController {
         }
     }
 
+    @Transactional
     @PostMapping("/create/{community_id}")
-    public ResponseEntity<Void> createPost(
+    public ResponseEntity<Void> createPost(/*
+            @RequestBody PostDTO postRequest,*/
             @PathVariable Integer community_id,
-            @RequestBody PostDTO postRequest,
+            @RequestParam("title") String title,
+            @RequestParam("text") String text,
             @RequestParam(value = "postPDFPath", required = false) MultipartFile postPDFPath,
             //HttpSession session
             HttpServletRequest httpRequest
@@ -171,15 +175,15 @@ public class PostController {
         //user koristiti svuda
         //Users author = (Users) httpRequest.getSession().getAttribute("loggedUser");
         Users author = userService.findById(1);
-        //Users author = userService.findById(1);
+
         Community community = communityService.findById(community_id);
         if (community == null) {
             return ResponseEntity.notFound().build();
         }
 
         Post post = new Post();
-        post.setTitle(postRequest.getTitle());
-        post.setText(postRequest.getText());
+        post.setTitle(title);
+        post.setText(text);
         post.setCommunity(community);
         post.setUsers(author);
         post.setCreationDate(LocalDate.from(LocalDateTime.now()));
@@ -219,30 +223,6 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-/*
-    @PostMapping("/search")
-    public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
-        List<Post> searchResults = postService.searchPosts(searchCriteria);
-
-        List<PostDTO> postDTOs = searchResults.stream()
-                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
-                .filter(post -> !postService.findAllExcludingPostsWithAcceptedReports(post.getP())) // Check for accepted reports
-                .map(post -> {
-                    List<ReactionDTO> reactions = reactionService.findByPost(post).stream()
-                            .map(ReactionDTO::new)
-                            .collect(Collectors.toList());
-
-                    int upvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.UPWOTE).count();
-                    int downvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.DOWNWOTE).count();
-                    int netReaction = upvotes - downvotes;
-
-                    return new PostDTO(post, netReaction);
-                })
-                .collect(Collectors.toList());
-
-        Collections.shuffle(postDTOs);
-        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }*/
 
     ////////////////////////////////// Community  ////////////////////////////////////////
 
@@ -309,13 +289,15 @@ public class PostController {
         return totalReactions;
     }
 
+
+
     ////////////////////////////////// Upwote  ////////////////////////////////////////
 
 
 
     @PostMapping("/upvote/{post_id}")
     public ResponseEntity<String> upvotePost(@PathVariable Integer post_id, HttpSession session) {
-        Users user = userService.findById(1);
+        Users user = userService.findById(5);
 
         if (user.isSuspended()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
@@ -337,7 +319,7 @@ public class PostController {
 
     @PostMapping("/downvote/{post_id}")
     public ResponseEntity<String> downvotePost(@PathVariable Integer post_id, HttpSession session) {
-        Users user = userService.findById(1);
+        Users user = userService.findById(5);
 
         if (user.isSuspended()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is suspended and cannot vote.");
@@ -357,15 +339,4 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    private int calculateNetReactions(List<Reaction> reactions) {
-        int netReactions = 0;
-        for (Reaction reaction : reactions) {
-            if (reaction.getType() == ReactionType.UPWOTE) {
-                netReactions++;
-            } else if (reaction.getType() == ReactionType.DOWNWOTE) {
-                netReactions--;
-            }
-        }
-        return netReactions;
-    }
 }

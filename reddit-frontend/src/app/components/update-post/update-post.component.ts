@@ -29,15 +29,19 @@ export class UpdatePostComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  updatePost(){
-    this.postService.updatePost(this.post_id, this.posts).subscribe(data=>{
+  updateDepartment(){
+    const formData = new FormData();
+    formData.append("postPDFPath", this.posts.postPDFPath);
+    formData.append("title", this.posts.title);
+    formData.append("text", this.posts.text);
+    this.postService.updatePost(this.post_id, formData).subscribe(data=>{
       console.log(data);
       this.posts = new Post();
       this.redirectToListOfAllPosts();
     }, error=>console.log(error));
   }
   onSubmit(){
-    this.updatePost();
+    this.updateDepartment();
   }
 
   handleFileInput(event: any) {
