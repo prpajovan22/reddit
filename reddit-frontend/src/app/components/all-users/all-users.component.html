@@ -1,21 +1,20 @@
 <table id="user-table">
     <tr>
+      <th>Avatar</th>
       <th>Ime</th>
       <th>Prezime</th>
       <th>Adresa</th>
       <th>User Role</th>
       <th>Suspend</th>
-      <th>Avatar</th>
     </tr>
     <tr *ngFor="let a of users">
+      <td><img height="50" width="50" [src]="a.sanitisedImage" /></td>
       <td> {{ a.username }} </td>
       <td>{{ a.email }}</td>
       <td>{{ a.displayName }}</td>
       <td>{{ a.userRole}}</td><td>
         {{ a.suspended ? 'BANNED' : 'UNBANNED' }}
       </td>
-      <td><img height="50" width="50" [src]="a.sanitisedImage" /></td>
-      
       <td><button  (click)="updateCommunity(a.user_id)">Update</button></td>
       <td><button  (click)="switchUserRole(a.user_id)">Switch Role</button></td>
       <td><button  (click)="suspendUser(a.user_id)">Suspend User</button></td>

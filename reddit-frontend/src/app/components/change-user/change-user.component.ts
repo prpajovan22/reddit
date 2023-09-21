@@ -33,6 +33,7 @@ export class ChangeUserComponent implements OnInit {
     const formData = new FormData();
     formData.append("username", this.communities.username);
     formData.append("email", this.communities.email);
+    formData.append("avatar", this.communities.avatar);
     this.communityService.updateCommunity(this.user_id, formData).subscribe(data=>{
       console.log(data);
       this.communities = new User();

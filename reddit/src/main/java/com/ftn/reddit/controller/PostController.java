@@ -51,7 +51,7 @@ public class PostController {
 
     @Autowired
     private ReactionService reactionService;
-/*
+
     @PostMapping("/search")
     public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
         List<Post> searchResults = postService.searchPosts(searchCriteria);
@@ -73,8 +73,8 @@ public class PostController {
 
         Collections.shuffle(postDTOs);
         return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }*/
-    @PostMapping("/search")
+    }
+   /* @PostMapping("/search")
     public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
         List<Post> searchResults = postService.searchPosts(searchCriteria);
 
@@ -97,7 +97,7 @@ public class PostController {
 
         Collections.shuffle(postDTOs);
         return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable("id") Integer id) {
