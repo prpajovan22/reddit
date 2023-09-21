@@ -6,6 +6,8 @@ public class PostSearchCriteria {
 
     String title;
 
+    String descriptionPDF;
+
     Long fromReactionCount;
 
     Long toReactionCount;
@@ -16,7 +18,7 @@ public class PostSearchCriteria {
 
     Integer community_id;
 
-    public PostSearchCriteria(String text, String title, Long fromReactionCount, Long toReactionCount, Long fromCommentCount, Long toCommentCount, Integer community_id) {
+    public PostSearchCriteria(String text, String title,String descriptionPDF, Long fromReactionCount, Long toReactionCount, Long fromCommentCount, Long toCommentCount, Integer community_id) {
         this.text = text;
         this.title = title;
         this.fromReactionCount = fromReactionCount;
@@ -24,6 +26,7 @@ public class PostSearchCriteria {
         this.fromCommentCount = fromCommentCount;
         this.toCommentCount = toCommentCount;
         this.community_id = community_id;
+        this.descriptionPDF = descriptionPDF;
     }
 
     public  PostSearchCriteria(){}
@@ -83,4 +86,13 @@ public class PostSearchCriteria {
     public void setToCommentCount(Long toCommentCount) {
         this.toCommentCount = toCommentCount;
     }
+
+    public String getDescriptionPDF() {
+        return descriptionPDF;
+    }
+
+    public void setDescriptionPDF(String descriptionPDF) {
+        this.descriptionPDF = descriptionPDF;
+    }
 }
+

@@ -1,5 +1,7 @@
 package com.ftn.reddit.DTO;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ftn.reddit.model.Comment;
 import com.ftn.reddit.model.Reaction;
 import com.ftn.reddit.model.ReactionType;
@@ -9,6 +11,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class CommentDTO implements Serializable {
@@ -23,6 +26,7 @@ public class CommentDTO implements Serializable {
 
     private ReactionType reactionType;
 
+    @JsonBackReference
     private CommentDTO commentDTO;
 
     private PostDTO postDTO;
@@ -58,8 +62,10 @@ public class CommentDTO implements Serializable {
         this.isDeleted = comment.isDeleted();
         this.commentDTO = this;
         this.usersDTO = new UsersDTO(comment.getUser());
-        this.postDTO = new PostDTO(comment.getPost());
-        this.netReactions = calculateNetReactions((List<Reaction>) comment.getReactions());
+        if(comment.getPost() != null){
+            this.postDTO = new PostDTO(comment.getPost());
+        }
+        this.netReactions = calculateNetReactions(comment.getReactions().stream().collect(Collectors.toList()));
     }
 
     public Integer getComment_id() {

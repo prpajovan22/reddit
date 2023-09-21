@@ -24,11 +24,6 @@ public class PostService implements PostInterface {
     private PostRepository postRepository;
 
     @Autowired
-    private ReactionService reactionService;
-
-    @Autowired
-    private ReportService reportService;
-    @Autowired
     private ReportRepository reportRepository;
 
     @Override
@@ -60,7 +55,8 @@ public class PostService implements PostInterface {
     public List<Post> searchPosts(PostSearchCriteria searchCriteria) {
         List<Post> posts = new ArrayList<>();
         boolean shouldSearchMore = true;
-        if (StringUtils.isEmpty(searchCriteria.getTitle()) && StringUtils.isEmpty(searchCriteria.getText())) {
+        if (StringUtils.isEmpty(searchCriteria.getTitle()) && StringUtils.isEmpty(searchCriteria.getText())
+                && StringUtils.isEmpty(searchCriteria.getDescriptionPDF())) {
             posts.addAll(postRepository.findAll());
             shouldSearchMore = false;
         }
@@ -73,16 +69,23 @@ public class PostService implements PostInterface {
             posts.addAll(postRepository.findByTextContainingIgnoreCase(searchCriteria.getText().toLowerCase()));
         }
 
+        if (!StringUtils.isEmpty(searchCriteria.getDescriptionPDF())&& shouldSearchMore) {
+            posts.addAll(postRepository.findByDescriptionPDFContainingIgnoreCase(searchCriteria.getDescriptionPDF().toLowerCase()));
+        }
+
         Set<Post> uniqueResault = new HashSet<>(posts);
 
         if(searchCriteria.getFromReactionCount() > 0 || searchCriteria.getToReactionCount() > 0){
             uniqueResault = uniqueResault.stream().filter(post -> {
-                return post.getComments().size() >= searchCriteria.getFromReactionCount() && post.getComments().size() <= searchCriteria.getToReactionCount();
+                long upvoteCount = post.getReactions().stream().filter(reaction -> reaction.getType().equals(ReactionType.UPWOTE)).count();
+                long downvoteCount = post.getReactions().stream().filter(reaction -> reaction.getType().equals(ReactionType.DOWNWOTE)).count();
+                int karma = (int) (upvoteCount - downvoteCount);
+                return karma >= searchCriteria.getFromReactionCount() && karma <= searchCriteria.getToReactionCount();
             }).collect(Collectors.toSet());
         }
         if((searchCriteria.getFromCommentCount() != null && searchCriteria.getFromCommentCount() > 0) || (searchCriteria.getToCommentCount() != null && searchCriteria.getToCommentCount() > 0)){
             uniqueResault = uniqueResault.stream().filter(post -> {
-                return post.getReactions().size() >= searchCriteria.getFromCommentCount() && post.getReactions().size() <= searchCriteria.getToCommentCount();
+                return post.getComments().size() >= searchCriteria.getFromCommentCount() && post.getComments().size() <= searchCriteria.getToCommentCount();
             }).collect(Collectors.toSet());
         }
         if (searchCriteria.getCommunity_id() != null && searchCriteria.getCommunity_id() > 0) {

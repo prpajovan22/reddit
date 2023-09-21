@@ -31,6 +31,7 @@ export class AllPostsComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       text: [''],
       title: [''],
+      descriptionPDF:[''],
       fromReactionCount: [0], 
       toReactionCount: [0],
       fromCommentCount:[0],

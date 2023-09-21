@@ -30,4 +30,8 @@ export class OneCommunityComponent implements OnInit {
   goHome(){
     this.router.navigate(['home']);
   }
+
+  public showPost(community_id:number){
+    this.router.navigate(['communityPosts', community_id]);
+  }
 }

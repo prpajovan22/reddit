@@ -39,16 +39,12 @@ public class PostController {
 
     @Autowired
     private PostService postService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CommentService commentService;
-
     @Autowired
     private CommunityService communityService;
-
     @Autowired
     private ReactionService reactionService;
 
@@ -74,30 +70,7 @@ public class PostController {
         Collections.shuffle(postDTOs);
         return new ResponseEntity<>(postDTOs, HttpStatus.OK);
     }
-   /* @PostMapping("/search")
-    public ResponseEntity<List<PostDTO>> searchPosts(@RequestBody PostSearchCriteria searchCriteria) {
-        List<Post> searchResults = postService.searchPosts(searchCriteria);
 
-        List<PostDTO> postDTOs = searchResults.stream()
-                .filter(post -> !communityService.isSuspended(post.getCommunity().getCommunity_id()))
-                .map(post -> {
-                    List<ReactionDTO> reactions = reactionService.findByPost(post).stream()
-                            .map(ReactionDTO::new)
-                            .collect(Collectors.toList());
-
-                    int upvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.UPWOTE).count();
-                    int downvotes = (int) reactions.stream().filter(r -> r.getType() == ReactionType.DOWNWOTE).count();
-                    int netReaction = upvotes - downvotes;
-
-                    double averageReaction = (double) netReaction / reactions.size();
-
-                    return new PostDTO(post, netReaction, averageReaction);
-                })
-                .collect(Collectors.toList());
-
-        Collections.shuffle(postDTOs);
-        return new ResponseEntity<>(postDTOs, HttpStatus.OK);
-    }*/
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable("id") Integer id) {

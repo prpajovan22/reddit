@@ -62,20 +62,6 @@ public class PostDTO implements Serializable {
         this.descriptionPDF = post.getDescriptionPDF();
     }
 
-    public PostDTO(Post post, int netReactions, double averageReaction
-    ) {
-        this.post_id = post.getPost_id();
-        this.title = post.getTitle();
-        this.text = post.getText();
-        this.creationDate = post.getCreationDate();
-        this.postPDFPath = post.getPostPDFPath();
-        this.descriptionPDF = post.getDescriptionPDF();
-        this.community = new CommunityDTO(post.getCommunity());
-        this.community_id = post.getCommunity().getCommunity_id();
-        this.user = new UsersDTO(post.getUsers());
-        this.netReactions = netReactions;
-        this.averageRection = averageReaction;
-    }
 
     public PostDTO(Post post, int netReaction) {
         this.post_id = post.getPost_id();

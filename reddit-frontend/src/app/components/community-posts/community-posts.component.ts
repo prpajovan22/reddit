@@ -20,6 +20,7 @@ export class CommunityPostsComponent implements OnInit {
   posts: Post[] = [];
   searchResults: Post[] = [];
   community: Community = new Community(); 
+  isUserLoggedIn:boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -97,5 +98,11 @@ export class CommunityPostsComponent implements OnInit {
       if (updatedPost) {
         updatedPost.netReactions--; 
       }
-    });
-}}
+    });  
+}
+
+public createPost(community_id:number){
+  this.router.navigate(['createPost', community_id]);
+}
+
+}

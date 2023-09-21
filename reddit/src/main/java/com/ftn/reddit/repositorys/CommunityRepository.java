@@ -11,10 +11,6 @@ import java.util.List;
 @Repository
 public interface CommunityRepository extends JpaRepository<Community, Integer> {
 
-    List<Community> findByNameContainingIgnoreCaseAndDescriptionContainingIgnoreCase(
-            String name,String description
-    );
-
     List<Community> findAllByIsSuspendedFalse();
 
     List<Community> findByNameContainingIgnoreCase(String name);

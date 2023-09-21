@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftn.reddit.DTO.UsersDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Setting;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +16,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+//@Document(indexName = "users")
+//@Setting(settingPath = "/analyzers/customAnalyzer.json")
 public class Users implements Serializable, UserDetails {
 
     @Id

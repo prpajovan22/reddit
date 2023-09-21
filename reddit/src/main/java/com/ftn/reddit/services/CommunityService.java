@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,19 +83,20 @@ public class CommunityService implements CommunityInterface {
 
         if (searchCriteria.getFromReactionCount() > 0 || searchCriteria.getToReactionCount() > 0) {
             uniqueResault = uniqueResault.stream().filter(community -> {
-                long totalReactionDifference = community.getPosts().stream()
+                long totalReactionCount = community.getPosts().stream()
                         .flatMap(post -> post.getReactions().stream())
                         .filter(reaction -> reaction.getType() == ReactionType.UPWOTE || reaction.getType() == ReactionType.DOWNWOTE)
-                        .mapToInt(reaction -> reaction.getType() == ReactionType.UPWOTE ? 1 : -1)
-                        .sum();
+                        .count();
 
-                return totalReactionDifference >= searchCriteria.getFromReactionCount() &&
-                        totalReactionDifference <= searchCriteria.getToReactionCount();
+                double averageReactionsPerPost = (double) totalReactionCount / community.getPosts().size();
+                return averageReactionsPerPost >= searchCriteria.getFromReactionCount() &&
+                        averageReactionsPerPost <= searchCriteria.getToReactionCount();
             }).collect(Collectors.toSet());
         }
 
         return new ArrayList<>(uniqueResault);
     }
+
 
     public Long getPostCountForCommunity(Integer communityId) {
         Optional<Community> communityOptional = communityRepository.findById(communityId);

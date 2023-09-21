@@ -37,9 +37,11 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Reaction> reactions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Report> reports;
 
+    @JsonIgnore
     @ManyToOne(fetch =FetchType.EAGER)
     @JoinColumn(name="post_id", referencedColumnName = "post_id")
     private Post post;

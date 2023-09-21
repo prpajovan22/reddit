@@ -3,11 +3,17 @@ package com.ftn.reddit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+//@Document(indexName = "community")
+//@Setting(settingPath = "/analyzers/customAnalyzer.json")
 @Entity
 @Table(name = "community")
 public class Community {
@@ -17,9 +23,10 @@ public class Community {
     @Column(name = "community_id", unique = true, nullable = false)
     private Integer community_id;
 
+    @Field(type = FieldType.Text, analyzer = "serbian_analyzer")
     @Column(name = "name", unique = false, nullable = false)
     private String name;
-
+    @Field(type = FieldType.Text, analyzer = "serbian_analyzer")
     @Column(name = "description", unique = false, nullable = true)
     private String description;
 
@@ -35,6 +42,7 @@ public class Community {
     @Column(name = "communityPDFPath", unique = false, nullable = true)
     private String communityPDFPath;
 
+    @Field(type = FieldType.Text, analyzer = "serbian_analyzer")
     @Column(name = "communityPDFName", unique = false, nullable = true)
     private String communityPDFName;
 
@@ -42,9 +50,9 @@ public class Community {
     @JoinColumn(name = "rule_id", referencedColumnName = "rule_id")
     private Rule rule;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "banned_id", referencedColumnName = "banned_id")
-    private Banned banned;
+    private Banned banned;*/
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Users> moderators = new HashSet<>();
@@ -61,7 +69,7 @@ public class Community {
 
     }
 
-    public Community(Integer community_id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String communityPDFPath, String communityPDFName, Rule rule, Banned banned, Set<Users> moderators, Set<Post> posts, Flair flair) {
+    public Community(Integer community_id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String communityPDFPath, String communityPDFName, Rule rule, Set<Users> moderators, Set<Post> posts, Flair flair) {
         this.community_id = community_id;
         this.name = name;
         this.description = description;
@@ -71,7 +79,6 @@ public class Community {
         this.communityPDFPath = communityPDFPath;
         this.communityPDFName = communityPDFName;
         this.rule = rule;
-        this.banned = banned;
         this.moderators = moderators;
         this.posts = posts;
         this.flair = flair;
@@ -139,14 +146,6 @@ public class Community {
 
     public void setRule(Rule rule) {
         this.rule = rule;
-    }
-
-    public Banned getBanned() {
-        return banned;
-    }
-
-    public void setBanned(Banned banned) {
-        this.banned = banned;
     }
 
     public Set<Users> getModerators() {

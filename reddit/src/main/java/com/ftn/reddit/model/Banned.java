@@ -3,6 +3,9 @@ package com.ftn.reddit.model;
 import org.apache.catalina.User;
 
 import jakarta.persistence.*;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDate;
 
@@ -15,6 +18,7 @@ public class Banned {
     @Column(name = "banned_id", unique = true, nullable = false)
     private Integer banned_id;
 
+    @Field(type = FieldType.Date, format = DateFormat.date_optional_time)
     @Column(name = "timestamp", unique = false, nullable = false)
     private LocalDate timestamp;
 
@@ -23,9 +27,9 @@ public class Banned {
     @JoinColumn(name="user_id", referencedColumnName = "user_id")
     private Users user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "community_id", referencedColumnName = "community_id")
-    private Community community;
+    private Community community;*/
 
     public Banned() {
 
@@ -36,7 +40,7 @@ public class Banned {
         this.timestamp = timestamp;
         //this.bannedBy = bannedBy;
         this.user = user;
-        this.community = community;
+        //this.community = community;
     }
 
     public Integer getBanned_id() {
@@ -63,7 +67,7 @@ public class Banned {
         this.user = user;
     }
 
-
+/*
     public Community getCommunity() {
         return community;
     }
@@ -72,7 +76,7 @@ public class Banned {
         this.community = community;
     }
 
-    /*public Users getBannedBy() {
+    public Users getBannedBy() {
         return bannedBy;
     }
 

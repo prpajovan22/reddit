@@ -235,13 +235,23 @@ public class CommentController {
     }
 
     @GetMapping("/{comment_id}/replies")
-    public ResponseEntity<List<Comment>> getRepliesForComment(@PathVariable Integer comment_id) {
+    public ResponseEntity<List<CommentDTO>> getRepliesForComment(@PathVariable Integer comment_id) {
         Comment comment = commentService.findById(comment_id);
         if (comment == null) {
             return ResponseEntity.notFound().build();
         }
+
         List<Comment> replies = commentService.getRepliesForComment(comment);
-        return ResponseEntity.ok(replies);
+
+        List<CommentDTO> commentDTOs = replies.stream()
+                .map(comments -> {
+                    CommentDTO commentDTO = new CommentDTO(comments);
+                    int totalReactions = calculateTotalReactions(comments);
+                    commentDTO.setNetReactions(totalReactions);
+                    return commentDTO;
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(commentDTOs);
     }
 
     @PostMapping("/search")
